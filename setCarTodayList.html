@@ -3,6 +3,8 @@ include "inc_html/header.html";
 
 
 
+
+
 $today				= date("Y-m-d");
 //$today			= "2017-11-27";
 
@@ -15,7 +17,6 @@ if($meridiemType==null){
 }
 
 
-
 $db = new Mysql();
 
 //거점 번호 가져오기
@@ -24,20 +25,11 @@ $db->que = "SELECT ci_no FROM companyInfo WHERE ci_guestId='".$ci_guestId."'";
 $db->query();
 $locationId = $db->getOne();
 
+//SELECT ci_no FROM companyInfo WHERE ci_guestId='admin'
 
 //오전 오후 배차 갯수
 $amCount = "0";
 $pmCount = "0";
-
-/******************************************************************************************
-$db->que = "SELECT 		count(distinct vr_deliveryDate) AS vehicleCount
-						,vr_meridiemType				AS meridiemType 
-							FROM vehicleAllocateResult 
-							WHERE vr_deliveryDate = '".$today."' AND 
-									vr_locationId='".$locationId."' 
-							GROUP BY vr_meridiemType
-							ORDER BY vr_meridiemType ASC";
-******************************************************************************************/
 
 $db->que = "SELECT	count(distinct vr_meridiemFlag) AS vehicleCount
 					,vr_meridiemType				AS meridiemType 
@@ -83,6 +75,7 @@ $db->que = "SELECT 		vr_deliveryDate AS deliveryDate
 									AND vr_locationId='".$locationId."' 
 									AND vr_deguestID != 'admin'
 							GROUP BY vr_meridiemFlag ";
+//echo $db->que;
 
 $db->query();
 $vehicleList = $db->getRows();
