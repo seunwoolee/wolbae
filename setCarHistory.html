@@ -1,0 +1,423 @@
+<?php
+include "inc_html/header.html";
+
+$year				= $_GET["year"];
+$month				= $_GET["month"];
+$locationId			= $_GET["locationId"];
+$meridiemType		= $_GET["meridiemType"];
+
+$today				= date("Y-m-d");
+
+if($year==null){
+	$year	= date('Y');
+}
+if($month==null){
+	$month	= date('m');
+}
+if($meridiemType==null){
+	$meridiemType = "0";
+}
+
+// 해당월의 마지막날짜 구하긔
+$endDay = date("t", mktime(0, 0, 0, $month, 1, $year));
+
+$db = new Mysql();
+
+//거점 번호 가져오기
+$ci_guestId = $_SESSION["OMember_id"];
+$db->que = "SELECT ci_no FROM companyInfo WHERE ci_guestId='".$ci_guestId."'";
+$db->query();
+$locationId = $db->getOne();
+
+
+//오전 오후 배차 갯수
+$amCount = "0";
+$pmCount = "0";
+
+/******************************************************************************************
+$db->que = "SELECT 		count(distinct vr_deliveryDate) AS vehicleCount
+						,vr_meridiemType				AS meridiemType 
+							FROM vehicleAllocateResult 
+							WHERE vr_deliveryDate >= '".$year."-".$month."-01 00:00:00' AND 
+									vr_deliveryDate < '".$year."-".$month."-".$endDay." 24:00:00' AND 
+									vr_deliveryDate!= '".$today."' AND 
+									vr_locationId='".$locationId."' 
+							GROUP BY vr_meridiemType
+							ORDER BY vr_meridiemType ASC";
+******************************************************************************************/
+
+// 오전배차갯수 구하긔
+$db->que = "SELECT 		count(*) AS vehicleCount
+							FROM vehicleAllocateStatus 
+							WHERE 1=1
+								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+								AND vs_deliveryDate!= '".$today."' 
+								AND vs_locationId='".$locationId."'
+								AND vs_vehicleEndStatus='Y'
+								AND vs_meridiemType='0'";
+/*
+if($_SERVER['REMOTE_ADDR'] == '118.220.204.2'){
+echo "SELECT 		count(*) AS vehicleCount
+							FROM vehicleAllocateStatus 
+							WHERE 1=1
+								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+								AND vs_deliveryDate!= '".$today."' 
+								AND vs_locationId='".$locationId."'
+								AND vs_meridiemType='0'<br>";
+}
+*/
+$db->query();
+$row = $db->getRow();
+$amCount = $row['vehicleCount'];
+
+// 오후배차갯수 구하긔
+$db->que = "SELECT 		count(*) AS vehicleCount
+							FROM vehicleAllocateStatus 
+							WHERE 1=1
+								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+								AND vs_deliveryDate!= '".$today."' 
+								AND vs_locationId='".$locationId."'
+								AND vs_vehicleEndStatus='Y'
+								AND vs_meridiemType='1'";
+/*
+echo "SELECT 		count(*) AS vehicleCount
+							FROM vehicleAllocateStatus 
+							WHERE 1=1
+								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+								AND vs_deliveryDate!= '".$today."' 
+								AND vs_locationId='".$locationId."'
+								AND vs_meridiemType='1'"; */
+
+$db->query();
+$row = $db->getRow();
+$pmCount = $row['vehicleCount'];
+
+
+if($meridiemType == "1"){	// 오후
+	$meridiemCount = $pmCount;
+} else {					// 오전
+	$meridiemCount = $amCount;
+}
+
+$db->que = "SELECT 		*
+						FROM vehicleAllocateStatus 
+						WHERE 1=1
+							AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+							AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+							AND vs_deliveryDate!= '".$today."' 
+							AND vs_locationId='".$locationId."'
+							AND vs_meridiemType='".$meridiemType."'
+							AND vs_vehicleEndStatus='Y'
+							ORDER BY vs_deliveryDate DESC";
+
+/*
+echo "SELECT 		*
+						FROM vehicleAllocateStatus 
+						WHERE 1=1
+							AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+							AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+							AND vs_deliveryDate!= '".$today."' 
+							AND vs_locationId='".$locationId."'
+							AND vs_meridiemType='".$meridiemType."'
+							ORDER BY vs_deliveryDate DESC<br>"; */
+
+$db->query();
+$row = $db->getRows();
+
+$resultDistanceValue = '0';
+$resultCount = '0';
+$resultPay = '0';
+$resultMeridiemFlag = '';
+
+for($i=0;$i<$meridiemCount;$i++){
+	
+	$db->que = "SELECT	vr_deliveryDate AS deliveryDate,
+						SUM(vr_distanceValue) AS distanceValue,
+						COUNT(vr_seq) AS count,
+						SUM(vr_deguestPay) AS pay,
+						vr_meridiemFlag
+							FROM vehicleAllocateResult 
+							WHERE 1=1
+								AND vr_deliveryDate = '".$row[$i]['vs_deliveryDate']."'
+								AND vr_meridiemType = '".$row[$i]['vs_meridiemType']."'
+								AND vr_meridiemFlag = '".$row[$i]['vs_meridiemFlag']."' 
+								AND vr_locationId='".$row[$i]['vs_locationId']."'"; 
+	/*
+	echo "SELECT	vr_deliveryDate AS deliveryDate,
+						SUM(vr_distanceValue) AS distanceValue,
+						COUNT(vr_seq) AS count,
+						SUM(vr_deguestPay) AS pay,
+						vr_meridiemFlag
+							FROM vehicleAllocateResult 
+							WHERE 1=1
+								AND vr_deliveryDate = '".$row[$i]['vs_deliveryDate']."'
+								AND vr_meridiemType = '".$row[$i]['vs_meridiemType']."'
+								AND vr_meridiemFlag = '".$row[$i]['vs_meridiemFlag']."' 
+								AND vr_locationId='".$row[$i]['vs_locationId']."'"; 
+	echo "<br>";
+	*/
+
+	$db->query();
+	$result = $db->getRow();
+	$vehicleList[$i]['distanceValue']	= $result['distanceValue'];
+	$vehicleList[$i]['count']			= $result['count'];
+	$vehicleList[$i]['pay']				= $result['pay'];
+	$vehicleList[$i]['deliveryDate']	= $result['deliveryDate'];
+	$vehicleList[$i]['vr_meridiemFlag']	= $result['vr_meridiemFlag'];
+
+}
+
+//월 배차 조회
+/*************************************************************************************
+$db->que = "SELECT 		vr_deliveryDate AS deliveryDate
+						,sum(vr_distanceValue)	AS distanceValue
+						,count(vr_seq)			AS count
+						,sum(vr_deguestPay)		AS pay
+						,vr_meridiemFlag
+							FROM vehicleAllocateResult 
+								WHERE 1=1
+									AND vr_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
+									AND vr_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
+									AND vr_deliveryDate != '".$today."' 
+									AND vr_meridiemType = '".$meridiemType."' 
+									AND vr_locationId='".$locationId."' 
+										GROUP BY vr_deliveryDate 
+										ORDER BY vr_deliveryDate DESC"; 
+*************************************************************************************/
+
+//$db->query();
+//$vehicleList = $db->getRows();
+
+for($i=0;$i<count($vehicleList);$i++){	
+
+	$row = $vehicleList[$i];
+	$distance = $row['distanceValue'];
+
+	if($distance > 999){
+		$distance = sprintf("%2.1f",$distance*0.001)."km";
+	}
+	else{
+		$distance = $distance."m";
+	}
+	$pay = number_format($row["pay"]);
+	$deliveryDate = $row["deliveryDate"];
+
+	$LIST .= "<tr height='30'>
+				<td align='center'>".$deliveryDate."</td>
+				<td align='center'>".$row['vr_meridiemFlag']."번</td>
+				<td align='center'>".$distance."</td>
+				<td align='center'>".$row["count"]."개</td>
+				<td align='center'>".$pay."원</td>
+				<td align='center'><a href=\"javascript:moveMap('".$deliveryDate."', '".$row['vr_meridiemFlag']."');\" class='btn btn-new-ok'>경로보기</a></td>
+			</tr>";
+}
+
+?>
+
+<script>
+var meridiemType = "<?=$meridiemType?>";
+var locationId	 = "<?=$locationId?>";
+
+$(function() {
+	$("#setDate").datepicker({
+		dateFormat: 'yy-mm-dd',
+		prevText: '이전 달',
+		nextText: '다음 달',
+		monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		dayNames: ['일','월','화','수','목','금','토'],
+		dayNamesShort: ['일','월','화','수','목','금','토'],
+		dayNamesMin: ['일','월','화','수','목','금','토'],
+		yearSuffix: ' / ',
+		changeMonth : true,
+		changeYear : true
+	});
+});
+
+//현재 페이지 이동
+function moveThis(){
+	var year	= $("#year").val();
+	var month	= $("#month").val();
+
+	window.location.href="setCarHistory.html?year="+year+"&month="+month+
+						 "&meridiemType="+meridiemType+"&locationId="+locationId;
+}
+//오전 오후 선택
+function setMeridiemType(type){
+	meridiemType = type;
+	moveThis();
+}
+//지도 보기 이동
+function moveMap(deliveryDate, meridiemFlag){
+
+	if(meridiemType=='0'){
+		meridiemType = "오전";
+	} else {
+		meridiemType = "오후";
+	}
+	window.location.href="setCarListTest.html?deliveryDate="+deliveryDate+"&meridiemType="+meridiemType+"&locationId="+locationId+"&meridiemFlag="+meridiemFlag;
+	
+}
+function detail() {
+	$("#detailModal").modal();
+}
+function add() {
+	$("#addModal").modal();
+}
+
+$(document).ready(function(){
+	$('#am').removeClass('active');
+	$('#pm').removeClass('active');
+	if(meridiemType=='0'){
+		$('#am').addClass('active');
+	}
+	else{
+		$('#pm').addClass('active');
+	}
+});
+</script>
+<style>
+.cardTab { padding:0; border-bottom:1px solid #dfdfdf; font-size:0; text-align:center;}
+.cardTab a { display:inline-block; padding:20px 32px; color:#737373; font-size:14px; float:none; margin:0 auto;}
+.cardTab a:focus { color:#000; background:#fafafa; font-weight:600;}
+.cardTab .active { color:#000; padding:20px 32px 17px 32px; border-bottom:3px solid #d5610a; font-weight:600;}
+.cardTab .done { background:#eee;}
+.cardTab .badge { background:#777;}
+.cardTab .active .badge { background:#e06732;}
+.cardTab .done .badge { background:#ccc;}
+.cardTab a:active { background:#ececec;}
+.cardCont .done { background:#eee;}
+.stepCont { min-height:72px; padding:20px 0; border-left:1px solid #eee;}
+.stepCont:first-child { border-left:none;}
+</style>
+<div class="row">
+	<div class="col-md-12 col-lg-12">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">배차내역 날짜조회&nbsp;
+					<?=LIB::selectDate("Y", "year", "class='input'", $year)?>
+					<?=LIB::selectDate("m", "month", "class='input'", $month)?>&nbsp;
+					<a href="javascript:moveThis();" class="btn btn-new-ok">검색</a>
+				</span>
+			</div>
+			<div class="cardTab row" style="margin:0; font-size:0;">
+				<div class="row">
+					<a href="javascript:setMeridiemType('0');" id="am" class="col-md-3 active">오전 배차<span class="badge" style="margin-left:8px;"><?=$amCount?></span></a>
+					<a href="javascript:setMeridiemType('1');" id="pm" class="col-md-3">오후 배차<span class="badge" style="margin-left:8px;"><?=$pmCount?></span></a>
+				</div>
+			</div>
+			<div class="cardCont">
+				<div>목록 갯수 : <strong><?=count($vehicleList)?>개</strong></div>
+				<table class="tblBasic mt10">
+					<colgroup>
+						<col width="" />
+						<col width="" />
+						<col width="" />
+						<col width="" />
+						<col width="" />
+						<col width="80" />
+					</colgroup>
+					<thead>
+					<tr height="30">
+						<th align="center" class="text-center">날짜</th>
+						<th align="center" class="text-center"><?php echo $meridiemType=="0"?"오전":"오후";?> </th>
+						<th align="center" class="text-center">총 배송거리</th>
+						<th align="center" class="text-center">배송 지점 수</th>
+						<th align="center" class="text-center">총 가격</th>
+						<th align="center" class="text-center">경로보기</th>
+					</tr>
+					</thead>
+					<tbody>
+						<?=$LIST?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script>
+	$(".openTr").click(function(){
+		if($(this).parent("tr").hasClass("on")) {
+			$(this).parent("tr").removeClass("on");
+			$(this).parent("tr").next(".hiddenTr").stop().slideUp(0);
+		} else {
+			$(".openTr").parent("tr").next(".hiddenTr").stop().slideUp(0);
+			$(".openTr").parent("tr").removeClass("on");
+			$(this).parent("tr").addClass("on");
+			$(this).parent("tr").next(".hiddenTr").stop().slideDown(0);
+		}
+	});
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		$(".matchHeight").outerHeight(matchH);
+	});
+
+	$(window).resize(function(){
+		matchHresize = '';
+		$(".matchHeight").removeAttr("style");
+		$(".matchHeight").each(function(){
+			var thisHeight = $(this).outerHeight();
+			if (matchHresize){
+				if(thisHeight > matchHresize){
+					matchHresize = thisHeight;
+				}		
+			} else {
+				matchHresize = thisHeight;
+			}
+		});
+		$(".matchHeight").outerHeight(matchHresize);
+	});
+	</script>
+</div>
+
+</article>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<form name="submitForm" id="setCarMap" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="단일 경로 지도 모달">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">01경로 상세 보기</h4>
+			</div>
+			<div class="modal-body" style="height:400px;">
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" id="setCarAlert" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="배차 내역 경고 모달">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">해당 배차 데이터가 없습니다.</h4>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

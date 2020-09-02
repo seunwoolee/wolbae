@@ -1,0 +1,184 @@
+<?
+include "inc_html/popupHeader.html";
+//include "inc/department.inc.php";
+include "inc/user.inc.php";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$deliveryDate		= $_GET["deliveryDate"];
+$locationId			= $_GET["locationId"];
+$meridiemType		= $_GET["meridiemType"];
+$meridiemFlag		= $_GET["meridiemFlag"];
+
+$ci_guestId			=	$_SESSION["OMember_id"];
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db	= new Mysql();
+$db2 = new Mysql();
+
+$db->que = "SELECT vr_vehicleNo AS vehicleNo 
+					FROM vehicleAllocateResult 
+					WHERE 1=1
+						AND vr_deliveryDate='".$deliveryDate."' 
+						AND vr_locationId='".$locationId."' 
+						AND vr_meridiemType='".$meridiemType."' 
+						AND vr_meridiemFlag='".$meridiemFlag."' 
+					GROUP BY vr_vehicleNo 
+					ORDER BY vr_vehicleNo*1 ASC";
+$db->query();
+$nCount = $db->numRows();
+?>
+
+<script>
+
+	// to do...
+function printfVehicle(){
+
+	if(confirm("인쇄하시겠습니까?")){
+		$('#printfDiv').css('display', 'none');
+		window.print();
+	} 
+	return;
+}
+
+</script>
+
+<?php
+	$LIST = "";
+	$nIndex = 0;
+
+	$LIST .= "<div id='printfDiv' class='popup_title'><input type='button' value='인쇄하기' class='btn btn-lg btn-oil' onclick=\"printfVehicle();\"></div>";
+	while($row = $db->getRow()) {
+
+		$num = 1;
+
+		$LIST .= "<div class='popup_title'>".($nIndex+1)."번 차량</div>";
+
+		$LIST .= "<div class=\"popup_content\">
+					<table class=\"tbl_none\">
+						<colgroup>
+							<col width=\"50\" />
+							<col width=\"50\" />
+							<col width=\"50\" />
+							<col width=\"50\" />
+							<col width=\"130\" />
+							<col width=\"\" />
+							<col width=\"50\" />
+						</colgroup>
+						<tr class=\"border_top\">
+							<th>번호</th>
+							<th>주문금액</th>
+							<th>배차번호</th>
+							<th>배차순서</th>
+							<th>고객명</th>
+							<th>도착주소</th>
+							<th>거리</th>
+						</tr>";
+
+		$db2->que = "SELECT	vr_vehicleNo		AS vehicleNo
+						,vr_vehicleNoIndex		AS vehicleNoIndex 
+						,vr_deguestAccno		AS accno 
+						,vr_deguestId			AS deguestId 
+						,vr_guestLat			AS guestLat 
+						,vr_guestLon			AS guestLon 
+						,vr_deguestLat			AS deguestLat 
+						,vr_deguestLon			AS deguestLon 
+						,vr_deguestName			AS deguestName
+						,vr_Juso				AS Juso 
+						,vr_deguestTel			AS deguestTel
+						,vr_distanceValue		AS distanceValue 
+						,vr_deliveryDate		AS deliveryDate 
+						,vr_meridiemType		AS meridiemType 
+						,vr_meridiemFlag		AS meridiemFlag 
+						,vr_delivererId			AS deliveryId 
+						,vr_deliveryStatus		AS deliveryStatus
+						,vr_deliveryEndDate		AS deliveryEndDate
+						,vr_deguestPay			AS deguestPay
+						,vr_accnoDupleJuso		AS accnoDupleJuso
+						,vr_errorJusoFlag		AS errorJusoFlag
+							FROM vehicleAllocateResult 
+								WHERE 1=1
+									AND vr_deliveryDate='".$deliveryDate."' 
+									AND vr_locationId='".$locationId."' 
+									AND vr_meridiemType='".$meridiemType."' 
+									AND vr_meridiemFlag='".$meridiemFlag."' 
+									AND vr_vehicleNo='".$row["vehicleNo"]."' 
+									AND vr_deguestId!='".$ci_guestId."'  
+									ORDER BY vr_vehicleNoIndex ";
+
+		$db2->query();
+		while($row2 = $db2->getRow()) {
+
+			$strAccnoDupleFlag	= '';	// 주소 중첩지역 메시지처리
+			$strErrorJusoFlag	= '';	// 주소 오류지역 메시지처리(배송경로오류건, 배송경로추가건 포함)
+
+			$meridiem ="오전";
+			$deliveryEndDate = $row2["deliveryEndDate"];
+			$addDelivery = "";
+			if($row2["meridiemType"]=='1'){
+				$meridiem = "오후";
+			}
+
+			if($deliveryEndDate=='1900-01-01 00:00:00'){
+				$deliveryEndDate = "";
+			}
+			
+			if($row2["guestLat"]==0 && $row2["guestLon"]==0){
+				$addDelivery = "추가배송";
+			}
+			$distance = $row2["distanceValue"];
+
+			if($distance > 999){
+				$distance = sprintf("%2.1f",$distance*0.001)."km";
+			} else {
+				$distance = $distance."m";
+			}
+
+			$accnoDupleJuso = $row2['accnoDupleJuso'];
+			$deguestId = $row2['deguestId'];
+			if($accnoDupleJuso != '' && ($accnoDupleJusoCopy == $accnoDupleJuso) && ($deguestIdCopy != $deguestId)){
+				//$accnoDupleCnt++;
+				$strAccnoDupleFlag = ' (중첩)';
+				$num--;
+			} else {
+				$accnoDupleJusoCopy = $accnoDupleJuso;
+				$deguestIdCopy = $deguestId;
+			}
+
+			if($row2['errorJusoFlag'] == 'Y'){
+				$strErrorJusoFlag = '(배송경로추가건)';
+			}
+			
+			$LIST .= "<tr>
+						<td>".$num.$strAccnoDupleFlag.$strErrorJusoFlag."</td>
+						<td>".number_format($row2['deguestPay'])."</td>
+						<td>".(($row2['vehicleNo'])+1)."</td>
+						<td>".(($row2['vehicleNoIndex'])+1)."</td>
+						<td>".$row2['deguestId']." ".$row2['deguestName']."</td>
+						<td>".$row2['Juso']."</td>
+						<td>".$distance."</td>
+					</tr>";
+
+
+			$num++;
+
+		} // END WHILE
+
+		$LIST .= "</table>
+					</div>";
+
+		if($nIndex == ($nCount -1)){
+			$LIST .= "";
+		} else {
+			$LIST .= "<div style='page-break-before:always'></div>";
+		}
+
+		$nIndex++;
+	} // END WHILE
+	echo $LIST;
+?>
+
+<? include "inc_html/popupFooter.html"; ?>

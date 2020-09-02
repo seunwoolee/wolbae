@@ -1,0 +1,7 @@
+
+// Sample Data vehicleGuestInfoErp 
+load data infile "/data/www/jangbogo/tmp/loadData_CustomerInfoErp.txt" into table vehicleGuestInfoErp fields terminated by ',' lines terminated by '\n';
+
+
+// Sample Data vehicleAllocateResult
+load data infile "/data/www/jangbogo/tmp/loadData_AllocateResult.txt" into table vehicleAllocateResult fields terminated by ',' lines terminated by '\n';

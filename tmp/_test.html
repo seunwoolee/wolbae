@@ -1,0 +1,502 @@
+<?php
+include "inc_html/header.html";
+include "inc/drivingLog.inc.php";
+include "inc/paging.inc.php";
+include "inc/user.inc.php";
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$companySeq			= $COMPANY_SEQ;
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+
+
+
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 신규 운행기록
+$db->que = "SELECT * FROM drivingLog WHERE companySeq=". $companySeq. " ORDER BY startDate DESC, seq DESC  LIMIT 10";
+$db->query();
+
+while($row = $db->getRow())
+{
+
+	$startDate = strToTime($row["startDate"]);
+	$car = $row["carModel"]. " ". $row["carNumber"];
+
+	$startTime = strToTime($row["startTime"]);
+	$stopTime = strToTime($row["stopTime"]);
+
+	if($row["gpsFaked"] == 1) 
+	{
+		$mapBtnColor = "btn_yellow";
+		$title = "GPS 모의 위치 어플 사용 추정";
+	}
+	else
+	{
+		$mapBtnColor = "btn_gray";
+		$title = "";
+	}
+
+
+
+	$LOGS .= "<tr height='30'>
+					<td align='center'>". $row["departmentName"]. "</td>
+					<td align='center'>". $row["name"]. "</td>
+					<td align='center'>". DrivingLog::getPurposeName($row["purpose"]). "</td>
+					<td align='center'>". number_format($row["distance"]). "</td>
+					<td align='left'>". $row["startAddress"]. "</td>
+					<td align='left'>". $row["stopAddress"]. "</td>
+					<td align='center' style='cursor:pointer;' onclick='popupWrite(". $row["seq"]. ")'><b>". date("Y.m.d", $startDate). "</b><br>". date("H:i", $startTime). "~". date("H:i", $stopTime). "</td>
+					<td align='center'><a href='map.html?seq=". $row["seq"]. "' target='_blank' class='btn btn_small ". $mapBtnColor. "' title='". $title. "'>Map</a></td>
+				</tr>";
+}
+
+
+if(empty($LOGS))
+{
+	$LOGS = "	<tr height='30'>
+					<td class='center' colspan='8' style='height:80px;'>운행기록이 없습니다.</td>
+				</tr>";
+}
+
+
+
+
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 신규 유저
+$db->que = "SELECT u.*, de.name AS departmentName, de.fullName, du.name AS dutyName FROM user AS u";
+$db->que .= " LEFT JOIN duty AS du ON u.dutySeq=du.seq ";
+$db->que .= " LEFT JOIN department AS de ON u.departmentSeq=de.seq ";
+$db->que .= " WHERE u.companySeq=". $companySeq. " AND u.enabled IN ('N','C') ORDER BY u.enabled ASC, u.name ASC LIMIT 10";
+$db->query();
+
+while($row = $db->getRow())
+{
+
+	$createTime = strToTime($row["createTime"]);
+
+	$enabledText = User::getEnabled($row["enabled"]);
+	if($row["enabled"] == "N" || $row["enabled"] == "C")
+	{
+		$enabledText = "<font color=blue>". $enabledText. "</font>";
+	}
+
+	if($row["enabled"] == "B")
+	{
+		$enabledText = "<font color=red>". $enabledText. "</font>";
+	}
+
+	$car = $row["carModel"]. " ". $row["carNumber"];
+	$USERS .= "<tr height='30'>
+					<td align='center' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". $enabledText. "</td>
+					<td align='left' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". str_replace("/", " > ", $row["fullName"]). "</td>
+					<td align='center' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". $row["dutyName"]. "</td>
+					<td align='center' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". $row["name"]. "</td>
+					<td align='center' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". trim($car). "</td>
+					<td align='center' style='cursor:pointer' onclick='popupUser(". $row["seq"]. ")'>". date("Y.m.d", $createTime). "</td>
+				</tr>";
+}
+
+
+if(empty($USERS))
+{
+	$USERS = "	<tr height='30'>
+					<td class='center' colspan='6' style='height:80px;'>신규 유저가 없습니다.</td>
+				</tr>";
+}
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 주행거리 및 유류비 통계
+$startTime = mktime(23,59,59, date("m")-5, 1, date("Y"));
+$ymd = date("Y-m-01", $startTime);
+
+$db->que = "SELECT SUM(distance) AS distance, SUM(cost) AS cost, year, month  FROM oilCostPaid WHERE companySeq=". $companySeq. " AND ymd>='". $ymd. "' GROUP BY ymd ORDER BY ymd";
+$db->query();
+$oilCostPaids = $db->getRows();
+
+function getIndex($oilCostPaids, $ym)
+{
+	$count = count($oilCostPaids);
+	for($i=0; $i<$count; $i++)
+	{
+		$yearMonth = $oilCostPaids[$i]["year"].$oilCostPaids[$i]["month"];
+		if($ym == $yearMonth)
+		{
+			return $i;
+		}
+	}
+
+	return -1;
+}
+
+
+for($i=0; $i<=5; $i++)
+{
+	$time = mktime(23,59,59, date("m") + ($i-5), 1, date("Y"));
+	$ym = date("Ym", $time);
+	$index = getIndex($oilCostPaids, $ym);
+	if($index == -1)
+	{
+		$oilGraph[$i]["distance"] = 0;
+		$oilGraph[$i]["cost"] = 0;
+		$oilGraph[$i]["year"] = date("Y", $time);
+		$oilGraph[$i]["month"] = date("m", $time);
+	}
+	else
+	{
+		$oilGraph[$i] = $oilCostPaids[$index];
+		if($oilGraph[$i]["distance"] > 0)
+		{
+			$oilGraph[$i]["distance"] = (int) ($oilGraph[$i]["distance"] / 100);
+		}
+
+		if($oilGraph[$i]["cost"] > 0)
+		{
+			$oilGraph[$i]["cost"] = (int) ($oilGraph[$i]["cost"] / 10000);
+		}
+	}
+	
+}
+
+
+$oilGraph = json_encode($oilGraph, JSON_UNESCAPED_UNICODE);
+
+
+//--------------------------------------------------------------------------------
+// 올래 토탈 주행거리 및 유류비 통계
+$db->que = "SELECT SUM(distance) AS distance, SUM(cost) AS cost  FROM oilCostPaid WHERE companySeq=". $companySeq. " AND ymd>='". date("Y-01-01"). "' AND ymd<='". date("Y-12-31 23:59:59"). "'";
+$db->query();
+$total = $db->getRow();
+
+//--------------------------------------------------------------------------------
+// 활성 사용자수
+$db->que = "SELECT COUNT(*) FROM user WHERE companySeq=". $companySeq. "  AND enabled='Y'";
+$db->query();
+$activeUserCount = $db->getOne();
+?>
+
+<link rel="stylesheet" type="text/css" media="all" href="css/jquery.jqplot.css" />
+<script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="js/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/counter.js"></script>
+<script type="text/javascript" src="js/jqplot.dateAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.logAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.canvasTextRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.highlighter.min.js"></script>
+
+<script>
+function popupUser(seq)
+{
+	popup("userWrite.html?seq=" + seq, 400, 700);
+}
+</script>
+
+<!-- 상단 DATA -->
+<div class="top_info">
+	<ul>
+		<li class="license">
+			<div>
+				<span class="count">0</span>명<br />
+				<span class="title">활성 사용자 수</span>
+			</div>
+		</li>
+		<li class="oil_reduce">
+			<div>
+				<span class="count">0</span>만원<br />
+				<span class="title"><?=date("Y")?>년 총 유류비</span>
+			</div>
+		</li>
+		<li class="ride_location">
+			<div>
+				<span class="count">0</span>km<br />
+				<span class="title"><?=date("Y")?>년 총 주행거리</span>
+			</div>
+		</li>
+	</ul>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		//var now = new Date();
+		//var year= now.getFullYear();	// 올해
+		//$(".oil_reduce b, .ride_location b").html(year);	// 올해 date
+
+
+/*
+		$(".license .count").numCounter({
+			goal	:	"<?=$activeUserCount?>" 		// 등록된 사용자 수
+		});
+		$(".oil_reduce .count").numCounter({
+			goal	:	"<?=$total['cost']?>" 	// 유류비
+		});
+		
+		
+		$(".ride_location .count").numCounter({
+			goal	:	"<?=$total['distance']?>"
+		});*/
+
+		$(".license .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 500,									// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$activeUserCount?>,		// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+
+
+
+		$(".oil_reduce .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 1000,								// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$total['cost']?>,				// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+
+
+
+		$(".ride_location .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 1000,								// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$total['distance']?>,		// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+	})
+
+	</script>
+</div>
+<div class="main-chart w50 mt50">
+	<div class="left-chart">
+		<h2>월별 총 유류비</h2>
+		<div class="label">단위 : 만원</div>
+		<div id="chartOil"></div>
+	</div>
+</div>
+<div class="main-chart w50 mt50">
+	<div class="right-chart">
+		<h2>월별 총 운행거리</h2>
+		<div class="label">단위 : 100KM</div>
+		<div id="chartDrive"></div>
+	</div>
+</div>
+<div class="clear"></div>
+
+<div class="w100 mt50">
+	<h2>신규 등록 사용자</h2>
+	<table class="table-list">
+		<colgroup>
+			<col width="12%" />
+			<col width="25%" />
+			<col width="12%" />
+			<col width="11%" />
+			<col width="20%" />
+			<col width="20%" />
+		</colgroup>
+		<tr height="30">
+			<th>상태</th>
+			<th>부서</th>
+			<th>직책</th>
+			<th>성명</th>
+			<th>차량</th>
+			<th>등록일</th>
+		</tr>
+		<?=$USERS?>
+	</table>
+</div>
+
+<div class="w100 mt50">
+	<h2>차량 운행 내역</h2>
+	<table class="driving-log table-list">
+		<colgroup>
+		<col width="20%" />
+		<col width="9%" />
+		<col width="9%" />
+		<col width="7%" />
+		<col width="20%" />
+		<col width="20%" />
+		<col width="10%" />
+		<col width="5%" />
+		</colgroup>
+		<tr height="30">
+			<th>부서</th>
+			<th>성명</th>
+			<th>목적</th>
+			<th>주행거리</th>
+			<th>출발지</th>
+			<th>도착지</th>
+			<th>운행일자</th>
+			<th>이동경로</th>
+		</tr>
+		<?=$LOGS?>
+	</table>
+</div>
+
+
+<div class="clear" style="height:50px"></div>
+
+
+<script>
+
+$(document).ready(function() {
+	setChartData();
+	setChartData2();
+
+});
+
+$(window).resize(function(){
+	$("#chartOil, #chartDrive").html("");
+	setChartData();
+});
+
+$(window).load(function(){
+	$(".jqplot-yaxis").each(function(){
+		$(this).find("canvas").eq(0).remove();
+	});
+});
+
+function setChartData() {
+	var oilCostPaids = <?=$oilGraph?>;
+	var dataLength = oilCostPaids.length;
+	var oilData = new Array(6, 2);
+	var driveData = new Array(6, 2);
+	$.each(oilCostPaids, function(key) {
+		var date = oilCostPaids[key].year.substr(2) + "년" + oilCostPaids[key].month + "월";
+		oilData[key] = [date, oilCostPaids[key].cost*1];
+		driveData[key] = [date, oilCostPaids[key].distance*1];
+		//alert("주행거리:" + this.distance + ", 유류비:" + this.cost + ", 년도:" + this.year + ", 월:" + this.month);
+	});
+
+	setLineChart("chartOil", oilData);
+	setLineChart("chartDrive", driveData);
+}
+
+function setLineChart(id, data) {
+	var plot = $.jqplot(id, [data], {
+		animate: true,
+		title: '',
+		
+		grid: {
+                drawBorder: false,
+                shadow: false,
+                background: '#fff',
+               	gridLineWidth: 0.5,
+                gridLineColor: '#ccc'
+		},
+            
+        gridPadding: {
+            top: null,
+            bottom: 30,
+            left: 30,
+            right: null
+        },
+		seriesDefaults: {
+            rendererOptions: {
+                //////
+                // Turn on line smoothing.  By default, a constrained cubic spline
+                // interpolation algorithm is used which will not overshoot or
+                // undershoot any data points.
+                //////
+                smooth: true
+            }
+        },
+		series:[{
+				renderer: $.jqplot.OHLCRenderer,
+				candleStick: true,
+				fill:true,
+				fillAlpha:1,
+				color:"#ffcc00",
+				shadow: false,
+				lineWidth: 3, 
+				rendererOptions: {
+					animation: {
+						speed: 1000
+					},
+					highlightMouseOver: false
+				}
+		}],
+		axes: {
+
+			xaxis: {
+				renderer: $.jqplot.CategoryAxisRenderer,
+				tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+				tickOptions: {
+					fontSize : "12px",
+					textColor : "#9d9d9d"
+				}
+			},
+
+			yaxis: {
+				min:0,
+				numberTicks : 6, // 인위적으로 축을 나누는 개수
+				autoscale:true,
+				tickOptions: {
+					fontSize : "12px",
+					textColor : "#9d9d9d"
+				}
+			}
+		}
+		
+	});
+	
+	$(".jqplot-yaxis").css({"left":"-30px", "width":"37px"});
+	$(".jqplot-xaxis").css("bottom","0px");
+}
+</script>
+<? include "inc_html/footer.html"; ?>

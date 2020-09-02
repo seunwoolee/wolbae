@@ -1,0 +1,226 @@
+<? 
+include "inc_html/header.html";
+include "inc/department.inc.php";
+include "inc/paging.inc.php";
+include "inc/user.inc.php";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$companySeq			= $COMPANY_SEQ;
+$pageNum				= $_GET["pageNum"];
+$findkey					= $_GET["findkey"];
+$enabled					= $_GET["enabled"];
+$departmentSeq		= $_GET["departmentSeq"];
+
+if(empty($enabled))
+{
+	$enabled = "ALL";
+}
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+$pg = new Paging(20, 10);
+
+$department = new Department($db, $companySeq);
+$department->loadData();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+if(empty($findkey) == false)
+{
+	$where .= " AND u.name LIKE '%". $findkey. "%' ";
+}
+
+if($departmentSeq > 0 )
+{
+	$where .= " AND u.departmentSeq=". $departmentSeq;
+}
+
+if($enabled != "ALL")
+{
+	$where .= " AND u.enabled='". $enabled. "' ";
+}
+
+
+$db->que = "SELECT COUNT(*) FROM user AS u WHERE u.companySeq=". $companySeq. " AND enabled != 'X' ". $where;
+$db->query();
+$totalCount = $db->getOne();
+$pg->set($totalCount, $pageNum);
+
+
+$db->que = "SELECT u.*, de.name AS departmentName, de.fullName, du.name AS dutyName FROM user AS u";
+$db->que .= " LEFT JOIN duty AS du ON u.dutySeq=du.seq ";
+$db->que .= " LEFT JOIN department AS de ON u.departmentSeq=de.seq ";
+$db->que .= " WHERE u.companySeq=". $companySeq. " AND u.enabled != 'X' ". $where. " ORDER BY u.enabled ASC, u.name ASC LIMIT ". $pg->startRow. ", ". $pg->fetchSize;
+$db->query();
+
+while($row = $db->getRow())
+{
+
+	$createTime = strToTime($row["createTime"]);
+
+	$enabledText = User::getEnabled($row["enabled"]);
+
+	if($row["enabled"] == "N" || $row["enabled"] == "C"){
+		$enabledText = "<span class='label label-danger'>". $enabledText. "</font>";
+	} else if($row["enabled"] == "B"){
+		$enabledText = "<span class='label label-warning'>". $enabledText. "</font>";
+	} else {
+		$enabledText = "<span class='label label-info'>". $enabledText. "</font>";
+	}
+
+	$car = $row["carModel"]. " ". $row["carNumber"];
+
+	$LIST .= "<tr height='30'>
+					<td align='center'><input type='checkbox' name='check[]' class='list-checkbox' value='". $row["seq"]. "'></td>
+					<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". $enabledText. "</td>
+					<td align='left' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". str_replace("/", " > ", $row["fullName"]). "</td>
+					<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". $row["dutyName"]. "</td>
+					<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". $row["name"]. "</td>
+					<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". $row["orgUid"]. "</td>
+					<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". trim($car). "</td>";
+	
+		if($calculateOilType == "Mileage")
+		{
+			if($row["oilMileage"] < 1)
+			{
+				$row["oilMileage"] = "";
+			}
+			else
+			{
+				$row["oilMileage"] = $row["oilMileage"]. " Km/L";
+			}
+
+			$LIST .= "<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". DrivingLog::getOilTypeName($row["oilType"]). "</td>";
+			$LIST .= "<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". $row["oilMileage"]. "</td>";
+		}
+
+	$LIST .= "<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'>". date("Y.m.d", $createTime). "</td>";
+	$LIST .= "<td align='center' style='cursor:pointer' onclick='popupWrite(". $row["seq"]. ")'><a href='javascript:popupWrite(". $row["seq"]. ");' class='btn btn-sm btn-new-ok'><i class='fa fa-pencil mr5'></i>수정</a></td>
+				</tr>";
+}
+if(empty($LIST))
+{
+	$LIST = "	<tr height='30'>
+					<td class='center' colspan='9' style='height:80px;'>데이터가 없습니다.</td>
+				</tr>";
+}
+?>
+
+<script>
+function popupWrite(seq)
+{
+	popup("userWrite.html?seq=" + seq, 510, 750);
+}
+
+function listPaging(pageNum)
+{
+	search(pageNum);
+}
+
+
+function listFormSubmit () {
+	if($('.list-checkbox:checkbox:checked').length<1) {
+		return false;
+	}
+	listForm.submit()
+}
+
+
+function search(pageNum)
+{
+	if(typeof pageNum === "undefined")
+	{
+		pageNum = 1;
+	}
+
+	var key = encodeURIComponent($("#findkey").val());
+	var enabled = $("#enabled").val();
+	var departmentSeq = $("#departmentSeq").val();
+	window.location.href = "user.html?findkey=" + key + "&pageNum=" + pageNum + "&enabled=" + enabled + "&departmentSeq=" + departmentSeq;
+}
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">사용자 목록</span>
+				<span class="txtCard">
+					※ 운전자가 앱에서 사용승인 신청을 할 수도 있습니다.
+				</span>
+			</div>
+			<div class="cardSearch">
+				<select id="enabled" name="enabled" class="input" onchange="search()">
+					<option value="ALL"><?=User::getEnabled("ALL")?></option>
+					<option value="N" <?=LIB::isSelected("N", $enabled)?>><?=User::getEnabled("N")?></option>
+					<option value="C" <?=LIB::isSelected("C", $enabled)?>><?=User::getEnabled("C")?></option>
+					<option value="Y" <?=LIB::isSelected("Y", $enabled)?>><?=User::getEnabled("Y")?></option>
+					<option value="B" <?=LIB::isSelected("B", $enabled)?>><?=User::getEnabled("B")?></option>
+				</select>
+
+				<select id="departmentSeq" name="departmentSeq" class="input" onchange="search()">
+					<option value="0">전체 부서</option>
+					<?=$department->getTreeSelectBoxOptions($departmentSeq)?>
+				</select>
+
+				<input type="text" name="findkey" id="findkey" class="input" style="width:150px" placeholder="성명을 입력 하세요" onkeypress="if(event.keyCode == 13) search()" value="<?=$findkey?>" />
+				<input type="button" value="검색" onclick="search()" class="btn btn-sm btn-new-find ml20" />
+
+				<div class="pull-right"><input type="button" value="사용자 추가" onclick="popupWrite('')" class="btn btn-sm btn-new-ok mobile_clear" /></div>
+			</div>
+			<div class="cardCont">
+				<form class="list-box" name="listForm" action="post/userListPost.php" method="post">
+					<div class="btn-group mb10">
+						<input type="button" value="선택 승인" onclick="listForm.submit()" class="btn btn-sm btn-new-ok" />
+					</div>
+					<div class="table-responsive">
+						<table class="tblBasic" style="min-width:1000px;">
+							<colgroup>
+								<col width="" />
+								<col width="" />
+								<col width="" />
+								<col width="" />
+								<col width="" />
+								<col width="" />
+								<col width="" />
+								<col width="" />
+							</colgroup>
+							<thead>
+							<tr height="30">
+								<th class="text-center"><input type="checkbox" name="check-all" id="check-all" value="Y" onchange="checkAll(this, 'list-checkbox')"></th>
+								<th class="text-center">상태</th>
+								<th class="text-center">부서</th>
+								<th class="text-center">직위</th>
+								<th class="text-center">성명</th>
+								<th class="text-center">사번</th>
+								<th class="text-center">차종</th>
+								<!-- 2017-08-24 박용태 주석(유종, 연비 장보고 db 미보유)
+								<th class="text-center">유종</th>
+								<th class="text-center">연비</th>
+								-->
+								<th class="text-center">등록일</th>
+								<th class="text-center">수정</th>
+							</tr>
+							</thead>
+							<tbody class="bgAdd">
+							<?=$LIST?>
+							</tbody>
+						</table>
+					</div>
+					<ul class="pagination pull-right">
+						<?=$pg->getPages()?>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<? include "inc_html/footer.html"; ?>

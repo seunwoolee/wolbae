@@ -1,0 +1,209 @@
+<?
+include "inc_html/popupHeader.html";
+include "inc/department.inc.php";
+include "inc/user.inc.php";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$companySeq			= $COMPANY_SEQ;
+$seq						= $_GET["seq"];
+$popupTitle				= "";
+
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+
+$department = new Department($db, $companySeq);
+$department->loadData();
+
+if($seq > 0)
+{
+	$db->que = "SELECT * FROM user WHERE seq=". $seq;
+	$db->query();
+	$user = $db->getRow();
+	$readonly = "readonly";
+	$passwordGuid = "비밀번호 변경이 필요할때 입력해 주세요.";
+	$popupTitle	 = "수정";
+	if($companySeq != $user["companySeq"])
+	{
+		exit;
+	}
+}
+else
+{
+	$readonly = "";
+	$passwordGuid = "비밀번호를 입력해 주세요";
+	$popupTitle	 = "추가";
+}
+
+
+$db->que = "select * from duty WHERE companySeq=". $companySeq. " ORDER BY sort ASC";
+$db->query();
+while($row = $db->getRow())
+{
+	if($user["dutySeq"] == $row["seq"])
+	{
+		$dutys .= "<option value='". $row["seq"]. "' selected>". $row["name"]. "</option>\n";
+	}
+	else
+	{
+		$dutys .= "<option value='". $row["seq"]. "'>". $row["name"]. "</option>\n";
+	}
+}
+
+?>
+
+<script>
+
+function save()
+{
+	if($("#orgUid").val().length < 1) {
+		alert("사번을 입력해 주세요.");
+		$("#orgUid").focus();
+		return false;
+	}
+
+	if($("#seq").val().length < 1) {
+		if($("#p_assword").val().length < 1) {
+			alert("비밀번호는 입력해 주세요 (4자 이상)");
+			$("#p_assword").focus();
+			return false;
+		}
+	} else {
+		if($("#p_assword").val().length > 0 && $("#p_assword").val().length < 4) {
+			alert("비밀번호는 4자이상 입력해 주세요.");
+			$("#p_assword").focus();
+			return false;
+		}
+	}
+
+	if($("#departmentSeq").val() == "0") {
+		alert("부서를 선택해 주세요");
+		$("#departmentSeq").focus();
+		return false;
+	}
+
+	if($("#dutySeq").val() == "0") {
+		alert("직책을 선택해 주세요");
+		$("#dutySeq").focus();
+		return false;
+	}
+
+	if($("#name").val().length < 1) {
+		alert("성명 입력해 주세요.");
+		$("#name").focus();
+		return false;
+	}
+
+	$("#mode").val("modify");
+	submitForm.submit();
+}
+
+function removeUser() {
+	if(confirm("삭제할 경우 복구가 불가능 합니다. 그래도 삭제 하시겠습니까?")) {
+		$("#mode").val("remove");
+		submitForm.submit();
+	}
+}
+
+
+</script>
+<div class='popup_title'>사용자 <?=$popupTitle?></div>
+
+<div class="popup_content">
+	<form name="submitForm" method="post" action="post/userPost.php">
+	<input type="hidden" name="seq" id="seq" value="<?=$seq?>" />
+	<input type="hidden" name="mode" id="mode" value="" />
+
+		<table class="tbl_none">
+			<colgroup>
+				<col width="120" />
+				<col width="" />
+			</colgroup>
+			<tr class="border_top">
+				<th>사번 ( 아이디 )</th>
+				<td>
+					<input type="text" name="orgUid" id="orgUid" class="input" value="<?=$user['orgUid']?>" autocomplete="off" <?=$readonly?> />
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td>
+					<!-- 크롬에서 자동완성 문제 때문 =>> p_assword-->
+					<input type="password" name="p_assword" id="p_assword" class="input"  value="" autocomplete="off" placeholder="<?=$passwordGuid?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>부서</th>
+				<td>
+					<select id="departmentSeq" name="departmentSeq" class="select">
+						<option value="0">부서를 선택해 주세요</option>
+						<?=$department->getTreeSelectBoxOptions($user["departmentSeq"])?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>직책</th>
+				<td>
+					<select id="dutySeq" name="dutySeq" class="select">
+						<option value="0">직책을 선택해 주세요</option>
+						<?=$dutys?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>성명</th>
+				<td>
+					<input type="text" name="name" id="name" class="input" value="<?=$user['name']?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>차종</th>
+				<td>
+					<input type="text" name="carModel" id="carModel" class="input" value="<?=$user['carModel']?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>자동차등록번호</th>
+				<td>
+					<input type="text" name="carNumber" id="carNumber" class="input" value="<?=$user['carNumber']?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>누적주행거리</th>
+				<td>
+					<input type="text" name="totalDistance" id="totalDistance" class="input" value="<?=$user['totalDistance']?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>상태</th>
+				<td>
+					<select id="enabled" name="enabled" class="select" onchange="search()">
+						<option value="Y" <?=LIB::isSelected($user["enabled"], "Y")?>><?=User::getEnabled("Y")?></option>
+						<option value="N" <?=LIB::isSelected($user["enabled"], "N")?>><?=User::getEnabled("N")?></option>
+						<option value="C" <?=LIB::isSelected($user["enabled"], "C")?>><?=User::getEnabled("C")?></option>
+						<option value="B" <?=LIB::isSelected($user["enabled"], "B")?>><?=User::getEnabled("B")?></option>
+					</select>
+				</td>
+			</tr>
+			<? if($user['deviceChangeCount'] > 0) { ?>
+			<tr>
+				<th>기기변경 횟수</th>
+				<td><?=$user['deviceChangeCount']?></td>
+			</tr>
+			<? } ?>
+		</table>
+	</form>
+
+	<div class="center mt20">
+		<input type="button" value="<?=$popupTitle	?>" onclick="save()" class="btn btn-lg btn-oil" />
+		<? if($seq > 0) { ?><input type="button" value="삭제" onclick="removeUser()" class="btn btn-lg btn-default" /><? } ?>
+		<input type="button" value="닫기" onclick="window.close()" class="btn btn-lg btn-default" />
+	</div>
+</div>
+
+<? include "inc_html/popupFooter.html"; ?>

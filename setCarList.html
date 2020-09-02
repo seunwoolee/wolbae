@@ -1,0 +1,577 @@
+<? 
+include "inc_html/header.html";
+?>
+
+<script>
+$(function() {
+	$("#setDate").datepicker({
+		dateFormat: 'yy-mm-dd',
+		prevText: '이전 달',
+		nextText: '다음 달',
+		monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		dayNames: ['일','월','화','수','목','금','토'],
+		dayNamesShort: ['일','월','화','수','목','금','토'],
+		dayNamesMin: ['일','월','화','수','목','금','토'],
+		yearSuffix: ' / ',
+		changeMonth : true,
+		changeYear : true,
+		minDate : 0
+	});
+});
+function detail() {
+	$("#detailModal").modal();
+}
+function add() {
+	$("#addModal").modal();
+}
+function alertModal(){
+	$("#alertModal").modal();
+}
+</script>
+<div class="row">
+	<div class="col-md-9">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					배차 경로 지도
+					<a href="javascript:add();" class="btn btn-sm btn-new-ok pull-right">배송 경로 추가</a>
+				</span>
+			</div>
+			<div id="map" class="cardCont" style="padding:0; height:750px; background: url('css/images/bgMap2.png') center center / cover no-repeat;"></div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					2017년 9월 25일 오전 배송 차량 목록
+				</span>
+			</div>
+			<div class="cardSearch text-center">
+				<a href="setCar.html" class="btn btn-sm btn-new-cancle">초기 재설정</a>
+				<input type="button" value="임시 배차 하기" class="btn btn-sm btn-new-find" />
+			</div>
+			<div class="cardCont setCarList" style="height:600px; padding:10px;">
+				<div>총 배송 차량 대수 : <strong>22대</strong></div>
+				<table class="tblBasic table-hover mt10">
+					<colgroup>
+						<col width="80">
+						<col width="">
+						<col width="80">
+						<col width="80">
+					</colgroup>
+					<thead>
+					<tr height="30">
+						<th align="center" class="text-center"><input type="checkbox" name="check-all" id="check-all" value="Y" onchange="checkAll(this, 'setCarItem')" style="margin:0; vertical-align:middle" /> 전체경로</th>
+						<th align="center" class="text-center">경로</th>
+						<th align="center" class="text-center">총 거리</th>
+						<th align="center" class="text-center">배송건수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>01 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>02 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>03 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>04 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>05 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>06 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>07 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>08 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>09 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>10 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>11 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>12 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>13 경로</b></td>
+						<td align="center" style="cursor:pointer" onclick="detail();">12km</td>
+						<td align="center" style="cursor:pointer" onclick="detail();">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer" onclick="detail();"><b>14 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>15 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>16 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>17 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>18 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>19 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>20 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>21 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					<tr height="30">
+						<td align="center"><input type="checkbox" class="setCarItem" style="margin:0; vertical-align:middle" /> 경로보기</td>
+						<td align="left" style="cursor:pointer"><b>22 경로</b></td>
+						<td align="center" style="cursor:pointer">12km</td>
+						<td align="center" style="cursor:pointer">5건</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="cardFoot">
+				<button class="btn btn-lg btn-new-danger" style="width:100%;" onclick="alertModal();">배송 경로 오류<span class="badge" style="margin-left:8px; background:#fff; color:#444;">3</span></button>
+				
+				<!--<button class="btn btn-lg btn-new-danger" style="width:100%;">배차 완료</button> -->
+				<!-- 2017-09-21 박용태
+				<a href="javascript:;" class="btn btn-new-cancle pull-right"><i class="fa fa-file-excel-o mr5"></i>배차 엑셀 출력</a>
+				-->
+			</div>
+		</div>
+	</div>
+	<script>
+	//높이 맞추기
+	/*
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+	*/
+	</script>
+</div>
+
+</article>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">01경로 상세보기</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">차량 배차 정보</label>
+						
+					<table class="tblBasic table-hover">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">#</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">배송건수</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr height="30">
+							<td align="center">1</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						<tr height="30">
+							<td align="center">2</td>
+							<td align="center">유지향</td>
+							<td align="center">010-1234-5647</td>
+							<td align="center">대구시 남구 대명동</td>
+							<td align="center">1</td>
+						</tr>
+						<tr height="30">
+							<td align="center">3</td>
+							<td align="center">이유미</td>
+							<td align="center">010-1234-5676</td>
+							<td align="center">대구시 수성구 지산동</td>
+							<td align="center">4</td>
+						</tr>
+						</tbody>
+					</table>
+					<label for="recipient-name" class="control-label mt20">추가 지정 경로 정보</label>
+						
+					<table class="tblBasic table-hover">
+						<colgroup>
+							<col width="">
+							<col width="">
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">배송건수</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr height="30">
+							<td align="center">박용태</td>
+							<td align="center">010-1234-5674</td>
+							<td align="center">대구시 남구 대명동</td>
+							<td align="center">1</td>
+						</tr>
+						</tbody>
+					</table>
+					
+					<ul class="pagination pull-right">
+						<li>
+							<a href="javascript:;" aria-label="Previous">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_prev.gif" alt="이전 페이지 가기"></span>
+							</a>
+						</li>
+						<li class="active"><a href="javascript:listPaging(1)">1</a></li>	<li>
+							<a href="javascript:;" aria-label="Next">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_next.gif" alt="다음 페이지 가기"></span>
+							</a>
+						</li>					
+					</ul>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송지 추가</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">추가 주문 내역</label>
+					<br /><a href="javascript:;" class="btn btn-sm btn-new-ok">체크된 내역 배송지 추가</a>
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center"><input type="checkbox" name="check-all" id="check-all" value="Y" onchange="checkAll(this, 'list-checkbox')" /></th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">배송건수</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr height="30">
+							<td align="center"><input type="checkbox" name="check[]" class="list-checkbox" value="" /></td>
+							<td align="left">차화임</td>
+							<td align="left">010-1234-5678</td>
+							<td align="left">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						<tr height="30">
+							<td align="center"><input type="checkbox" name="check[]" class="list-checkbox" value="" /></td>
+							<td align="left">유지향</td>
+							<td align="left">010-1234-567</td>
+							<td align="left">대구시 남구 대명동</td>
+							<td align="center">1</td>
+						</tr>
+						<tr height="30">
+							<td align="center"><input type="checkbox" name="check[]" class="list-checkbox" value="" /></td>
+							<td align="left">이유미</td>
+							<td align="left">010-1234-5676</td>
+							<td align="left">대구시 수성구 지산동</td>
+							<td align="center">4</td>
+						</tr>
+						</tbody>
+					</table>
+					
+					<ul class="pagination pull-right">
+						<li>
+							<a href="javascript:;" aria-label="Previous">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_prev.gif" alt="이전 페이지 가기"></span>
+							</a>
+						</li>
+						<li class="active"><a href="javascript:listPaging(1)">1</a></li>	<li>
+							<a href="javascript:;" aria-label="Next">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_next.gif" alt="다음 페이지 가기"></span>
+							</a>
+						</li>					
+					</ul>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송 경로 오류 수정</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">경로 오류 목록</label>
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로 지정</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">배송건수</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+									<option>03경로[34km]</option>
+									<option>04경로[34km]</option>
+									<option>05경로[34km]</option>
+									<option>06경로[34km]</option>
+									<option>07경로[34km]</option>
+									<option>08경로[34km]</option>
+									<option>09경로[34km]</option>
+									<option>10경로[34km]</option>
+									<option>11경로[34km]</option>
+									<option>12경로[34km]</option>
+									<option>13경로[34km]</option>
+									<option>14경로[34km]</option>
+									<option>15경로[34km]</option>
+									<option>16경로[34km]</option>
+									<option>17경로[34km]</option>
+									<option>18경로[34km]</option>
+									<option>19경로[34km]</option>
+									<option>20경로[34km]</option>
+									<option>21경로[34km]</option>
+									<option>22경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+									<option>03경로[34km]</option>
+									<option>04경로[34km]</option>
+									<option>05경로[34km]</option>
+									<option>06경로[34km]</option>
+									<option>07경로[34km]</option>
+									<option>08경로[34km]</option>
+									<option>09경로[34km]</option>
+									<option>10경로[34km]</option>
+									<option>11경로[34km]</option>
+									<option>12경로[34km]</option>
+									<option>13경로[34km]</option>
+									<option>14경로[34km]</option>
+									<option>15경로[34km]</option>
+									<option>16경로[34km]</option>
+									<option>17경로[34km]</option>
+									<option>18경로[34km]</option>
+									<option>19경로[34km]</option>
+									<option>20경로[34km]</option>
+									<option>21경로[34km]</option>
+									<option>22경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">유지향</td>
+							<td align="center">010-1234-567</td>
+							<td align="center">대구시 남구 대명동</td>
+							<td align="center">1</td>
+						</tr>
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+									<option>03경로[34km]</option>
+									<option>04경로[34km]</option>
+									<option>05경로[34km]</option>
+									<option>06경로[34km]</option>
+									<option>07경로[34km]</option>
+									<option>08경로[34km]</option>
+									<option>09경로[34km]</option>
+									<option>10경로[34km]</option>
+									<option>11경로[34km]</option>
+									<option>12경로[34km]</option>
+									<option>13경로[34km]</option>
+									<option>14경로[34km]</option>
+									<option>15경로[34km]</option>
+									<option>16경로[34km]</option>
+									<option>17경로[34km]</option>
+									<option>18경로[34km]</option>
+									<option>19경로[34km]</option>
+									<option>20경로[34km]</option>
+									<option>21경로[34km]</option>
+									<option>22경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">이유미</td>
+							<td align="center">010-1234-5676</td>
+							<td align="center">대구시 수성구 지산동</td>
+							<td align="center">4</td>
+						</tr>
+						</tbody>
+					</table>
+					
+					<ul class="pagination pull-right">
+						<li>
+							<a href="javascript:;" aria-label="Previous">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_prev.gif" alt="이전 페이지 가기"></span>
+							</a>
+						</li>
+						<li class="active"><a href="javascript:listPaging(1)">1</a></li>	<li>
+							<a href="javascript:;" aria-label="Next">
+								<span aria-hidden="true"><img src="images/icon/btn_navi_next.gif" alt="다음 페이지 가기"></span>
+							</a>
+						</li>					
+					</ul>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-ok" data-dismiss="modal">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

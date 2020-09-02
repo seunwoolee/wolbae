@@ -1,0 +1,108 @@
+<div class="guideNew" style="display:none;">
+	<div class="row">
+		<div>
+			<a href="javascript:hideGuide('<?=$menuCode?>');" class="guideClose">
+				<span class="line"></span>
+				<span class="line"></span>
+			</a>
+		</div>
+		<div class="col-md-12">
+			<div class="guideTitle"><i class="fa <? echo "fa-mod-". $menuCode; ?>"></i><? echo $menuTitle; ?></div>
+			<div class="guideSub">
+				<ul>
+					<li><? echo $pageDetail1; ?></li>
+					<li><? echo $pageDetail2; ?></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<div class="guideList"><i class="fa fa-youtube-play" style="color:#e62117;"></i><span>페이지 안내 동영상</span></div>
+			<div class="youtubeWrap"></div>
+		</div>
+		<div class="col-md-3">
+			<div class="guideList"><i class="fa fa-mobile"></i><span><? echo $pageApp; ?></span></div>
+			<div class="guideCont"><img src="images/admGuide/img_<? echo $menuCode; ?>.png" alt="" /></div>
+		</div>
+		
+		<div class="col-md-12 guideCloseAll text-center">
+			<a href="javascript:hideGuide('<?=$menuCode?>');" class="btn btn-lg btn-oil"><? echo $menuTitle; ?>에 대한 소개 영상을 다시 보지 않습니다.</a>
+			<!--
+			<a href="javascript:hideGuide('ALL');" class="btn btn-default">모든 소개 영상을 더이상 보지 않습니다.</a>
+			-->
+		</div>
+	</div>
+</div>
+<script>
+
+
+function hideGuide(menuCode) {
+	$(".guideNew").hide();
+	$(".youtubeWrap").empty();
+
+	$.ajax({
+			url: "ajax/hideGuide.php",
+			data: {"menuCode":menuCode},
+			type: "post",
+			dataType : "json",
+			success: function( json ) {
+				
+			},
+			error: function( xhr, status ) { },
+			complete: function( xhr, status ) { }
+	});
+	$(".menuDep2.on").find(".badge").removeClass("act");
+}
+
+
+var rTime = new Date();
+var timeOut = false;
+var delta = 200;
+$(window).resize(function() {
+	rTime = new Date();
+	if (timeOut === false) {
+		timeOut = true;
+		setTimeout(resizeEnd, delta);
+	}
+});
+
+function resizeEnd() {
+	if (new Date() - rTime < delta) {
+		setTimeout(resizeEnd, delta);
+	} else {
+		timeOut = false;
+		resizeFinish(); // Reset Viewport								
+	}               
+}
+
+function resizeFinish(){
+	var guideHeight = $(".guideNew .row").innerHeight();
+	if(guideHeight > $(window).height()){
+		hideGuide('<?=$menuCode?>');
+	}
+}
+
+function showGuide(pageYoutube) {
+	var addYoutube = '<embed src="https://www.youtube.com/v/' + pageYoutube + '?version=3&loop=1&autoplay=1&playlist=' + pageYoutube + '&vq=hd720" frameborder="0" allowfullscreen></embed>';
+
+	$(".youtubeWrap").append(addYoutube);
+	$(".guideNew").fadeIn(0, function(){
+		var guideHeight = $(".guideNew .row").innerHeight();
+		if(guideHeight > $(window).height()){
+			alert("작은 화면에서는 가이드를 볼수 없습니다.");
+			hideGuide('<?=$menuCode?>');
+		}
+	});
+
+}
+<?
+if($showGuide == true && $pageYoutube != "")
+{
+?>
+	$(document).ready(function(){
+		showGuide("<?=$pageYoutube?>");
+	});
+<?
+}
+?>
+
+</script>

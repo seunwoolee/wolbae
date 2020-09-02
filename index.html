@@ -1,0 +1,171 @@
+<?
+//###################################################
+// 로그인
+// 2016. 08. 18
+//###################################################
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Include
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+include "inc/config.php";
+include "inc/lib.inc.php";
+include "inc/mysql.inc.php";
+include "inc/company.inc.php";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$company = new Company($_POST);
+
+if($company->checkAutoLogin() == true)
+{
+	LIB::Alert("", "main.html");
+	$company->dbClose();
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<!--[if lt IE 10]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- 미디어쿼리 IE호환 -->
+
+<!--[if lt IE 9]>
+ <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<!-- 미디어 쿼리 IE호환 끝 -->
+<title><?=_TITLE?></title>
+<link href="css/common.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap-theme.css" rel="stylesheet" />
+<link href="css/layout2.css" rel="stylesheet" />
+<link rel="shortcut icon" type="image/x-icon" href="images/icon/favicon.png" />
+<script src="js/jquery-1.11.0.min.js"></script>
+
+<script src="js/common.js"></script>
+<script>
+
+//alert('시스템 공지사항\n2018년 04월 01일 ~ 04월 07일까지(7일간)\n시스템 안정화작업을 위해 자동배차시스템을 사용할수 없습니다.\n업무에 참고하시기바랍니다.\n문의 : 010 2801 5348');
+
+function loginCheck()
+{
+	if($("#cid").val().length < 1) {
+		alert("아이디를 입력해 주세요.");
+		$("#cid").focus();
+		return;
+	}
+
+	if($("#password").val().length < 1) {
+		alert("비밀번호를 입력해 주세요.");
+		$("#password").focus();
+		return;
+	}
+
+	if($("#autoLogin").is(":checked") == true) {
+		var autoLogin = "Y";
+	} else {
+		var autoLogin = "N";
+	}
+
+	$.ajax({
+			url: "ajax/login.php",
+			data: {"cid":$("#cid").val(), "password":$("#password").val(), "autoLogin":autoLogin},
+			type: "post",
+			dataType : "json",
+			success: function( json ) {
+				if(json.code == "ERROR") {
+					alert(json.message);
+					return;
+				} else {
+					window.location.replace("main.html");
+				}
+			},
+			error: function( xhr, status ) { alert("로그인 오류! 다시 시도하여 주십시오." + xhr); },
+			complete: function( xhr, status ) { }
+	});
+
+	return false;
+}
+</script>
+<style>
+.tooltip-demo { width:300px; background:#bebebe; padding:5px 7px; border-radius:5px; position:relative; margin:10px auto 0  auto;}
+.tooltip-demo dt { font-size:13px; font-weight:600; color:#000;}
+.tooltip-demo dd { padding-top:5px; font-size:11px; color:#444;}
+.tooltip-demo { /*right:99px;*/}
+.tooltip-demo span { position:absolute; top:-12px; right:17px; color:#bebebe;}
+</style>
+</head>
+<body>
+<div id="login_wrap">
+	<div class="login_content">
+		<h1 class="text-center">
+			<img src="images/common/lgo_login.png" width="280" alt="카택스오일 로고" />
+			<div class="mt5" style="font-size:14px; color:#fff;">관리자 로그인</div>
+		</h1>
+		<div class="btn_guide text-center">
+		<!-- 2017-12-06 박용태 주석
+			<a href="http://cartax.biz/oil_app_manual.pdf" target="_blank">APP 메뉴얼 다운</a>
+			<span>|</span>
+			-->
+			<a href="jbg_adm_manual.pdf" target="_blank">사용자 매뉴얼 다운로드</a>
+			<!--
+			<span>|</span>
+			<a href="http://cartax.biz/cartax_proposal.pdf" target="_blank">소개서 다운</a>
+			-->
+		</div>
+		<form class="form" onsubmit="return loginCheck()">
+			<div>
+				<!-- 로그인 폼 -->
+				<ul class="login_form">
+					<li><input type="text" id="cid" name="cid" class="input_id device" placeholder="아이디" maxlength="15" /></li>
+					<li><input type="password" id="password" name="password" class="input_password device" placeholder="비밀번호" maxlength="15" /></li>				
+				</ul>
+<!-- 2017-08-24 박용태 주석
+				<div class="tooltip-demo">
+					<span style="">▲</span>
+					<dl>
+						<dt>결제를 하기전 데모 계정으로 카택스를 체험해 보세요.</dt>
+						<dd>아이디 : demo   &nbsp; &nbsp; &nbsp; &nbsp; 비밀번호 : demo123</dd>
+					</dl>
+				</div>
+-->
+
+				<div class="mt10 text-center"><label class="login_check"><input type="checkbox" id="autoLogin" name="autoLogin" style="vertical-align:middle;" /> 로그인 상태 유지</label></div>
+				<div class="mt20 text-center"><input type="submit" value="로그인" class="submit device btn btn-lg btn-new-cancle" /></div>
+				<!-- <div class="mt20 center"><input type="button" value="회원가입(1개월무료체험)" class="submit device btn btn_big btn_white" onclick="location.href='joinEvent.html?marketer=<?=$_GET["marketer"]?>'" /></div> -->
+				<!-- 2017-08-24 박용태 주석
+				<div class="mt20 center"><input type="button" value="회원가입" class="submit device btn btn-lg btn-default" onclick="location.href='join.html?marketer=<?=$_GET["marketer"]?>'" /></div>
+				-->
+				<!--
+				<div class="btn_event">
+					<a href="javascript:;" onclick="location.href='joinEvent.html?marketer=<?=$_GET["marketer"]?>'"><img src="images/common/txt_event.png" alt="차량운행일지 기업형 서비스 - 카택스 1개월 무료 체험 이벤트" /></a>
+				</div>
+				<!-- // 로그인 폼 -->
+				
+				<div style="margin-top:15px; color:#fff; text-align:center;vertical-align:middle;"><!-- 2017-08-24 박용태 주석 회원가입 후 결제가 완료 되어야 정상적인 서비스 이용이 가능합니다.<br /> -->( 문의 : <a href="tel:070-8785-4799" style="color:#ffcc00; text-decoration:underline"> 070-8785-4799</a> )</div>
+			</div>
+		</form>
+		<div id="copyright">Copyright ⓒ Cartax, Inc. All Rights Reserved.</div>
+		<!-- 로그인 animate
+		<script>
+		$(document).ready(function(){
+			$(".form").animate({"opacity":"1", "top":"168px"}, 300, "linear");
+		});
+		</script> -->
+	</div>
+</div>
+
+</body>
+</html>

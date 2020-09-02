@@ -1,0 +1,658 @@
+<? 
+include "inc_html/_header.html";
+include "query/vehicleQuery.php";
+include "php/routeColor.php";
+
+/*
+b30c79b1-c642-45a1-8685-cdcfdbecf8ff
+d8eac327-c923-42fe-8d53-4e8bfa1a4cad
+52f76800-8541-4239-bf4d-9ba4810df7b5
+c0a8ce43-7e51-4220-8113-ceb84e78cb5b
+edeb780b-99ab-4bf8-84a1-19c51a1d8e1d
+*/
+
+$define_APIKEY = "b30c79b1-c642-45a1-8685-cdcfdbecf8ff";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+//$deliveryDate		= $_GET["deliveryDate"];
+$deliveryDate		= "2017-12-05";
+$meridiemType		= $_GET["meridiemType"];	// 오전, 오후
+$meridiemFlag		= $_GET["meridiemFlag"];	// 오전, 오후 배차 분할 정보
+$locationId			= $_GET["locationId"];
+
+if($meridiemType == ""){
+	$meridiemType = "0";
+}
+
+if($deliveryDate == ""){
+	$deliveryDate = date("Y-m-d");
+}
+
+if($locationId == ""){
+	$locationId = "0";
+}
+
+if($meridiemFlag == ""){
+	$meridiemFlag = "1";
+}
+
+if($meridiemType == "0"){
+	$memeType = "a";
+} else {
+	$memeType = "b";
+}
+
+//echo "[".$memeType."]<br>";
+//exit;
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+$vehicleQuery = new VehicleQuery();
+$vehicleQuery->init($db);
+
+$companyInfo = $vehicleQuery->getCompanyInfo();
+
+$initLat = $companyInfo['ci_lat'];
+$initLon = $companyInfo['ci_lon'];
+$initGuestId = $companyInfo['ci_guestId'];
+
+?>
+<script src="https://api2.sktelecom.com/tmap/js?version=1&format=javascript&appKey=<?php echo $define_APIKEY; ?>"></script>
+<script type="text/javascript" src="js/colorcode.js"></script>
+<script type="text/javascript" src="js/_vehicleRoute.js" charset="utf-8"></script>
+<script>
+
+var deliveryDate	= "2018-06-14"; //"<?=$deliveryDate?>";		// 배송날짜
+var locationId		= "1";		// 거점ID
+var meridiemType	= "0"; //"<?=$meridiemType?>";		// 오전, 오후
+var meridiemFlag	= "1"; //"<?=$meridiemFlag?>";		// 오전, 오후 배차 분할 플래그
+var apiKey			= "<?=$define_APIKEY?>";	// APIKEY
+
+var vehicleGuestOrderDataList = new Array();
+var vehicleErrorUserList = new Array();
+
+var checkLine = false;
+
+var strArrayNo="";
+
+var strCheckBoxRoute;			// 채크박스 - 경로채크상태값 저장용
+var bCheckBoxAll;				// 채크박스 - 전체경로채크상태값 저장용
+var bCheckBoxLineRemove;		// 채크박스 - 지도 경로선제거 상태값 저장용
+
+
+
+
+
+$(document).ready(function(){
+
+	$("#loadingDataNum").text("잠시만 기다려 주세요.");
+	//loadModal();
+
+	initData();	// 맵 로드부분
+	
+	initView();
+
+});
+
+//로딩 뷰
+function loadModal() {
+	$("#loading").modal({
+		backdrop	:	"static"
+	});
+}
+
+//초기 뷰
+function initView(){
+
+	//alert('');
+	//alert('<?php echo $memeType; ?>');
+
+	//var strTmpUrl = "http://www.jangboja.com/shop/partner/baedal_orderlist.php";
+	//previewAjaxGetOrderData(strTmpUrl, 'a');
+	//previewAjaxGetOrderData('<?php echo $companyInfo['ci_erpUrl']; ?>', '<?php echo $memeType; ?>');
+
+	
+
+}
+
+//초기 데이터
+function initData(){
+	var initLat = "35.819015"; //"<?=$initLat?>";
+	var initLon = "128.524978"; //"<?=$initLon?>";
+	var initGuestId = "admin"; //"<?=$initGuestId?>";
+
+	//alert(initLat + ' ' + initLon + ' ' + initGuestId);
+
+	setInitData(apiKey, initGuestId, initLat, initLon, deliveryDate, locationId, meridiemType);
+	initTmap();	
+}
+
+</script>
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					교차지점 검색
+				</span>
+			</div>
+			<div id="map_div" style="height:100px">
+			</div>
+		</div>
+		<div class="cardCont setCarList" style="padding:0px; height:778px;">
+			<table class="tblBasic table-hover mt10" id="obj_Account">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+					<col>
+				</colgroup>
+				<thead>
+					<tr height="30">
+						<th align="center" >지점명(출발지)</th>
+						<th align="center" >출발지위도</th>
+						<th align="center" >출발지경도</th>
+						<th align="center" >목적지(도착지)</th>
+						<th align="center" >지점<->목적지간 총거리</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	
+	</div>
+	
+	<div id="col-md-3" class="col-md-3">
+		<div class="card">
+			<div>
+				<table>
+				<tr>
+					<!--
+					<td><a onclick="return;LoadCrsArrPoint()" style="cursor:pointer">지점표시</a></td>
+					<td><a onclick="RemoveCrsArrPoint()" style="cursor:pointer">지점삭제</a></td>
+					<td><a onclick="return;AddResult()" style="cursor:pointer">결과데이터</a></td>
+					<td><a onclick="return;SearchStart()" style="cursor:pointer">검색하기</a></td>
+					-->
+				</tr>
+				</table>
+			</div>
+			<div>
+				<table>
+				<tr>
+					<td>목적지 시도<input type="text" id="searchCity_do" size="25" tabindex=1>ex) 대구광역시</td>
+					<td rowspan="6"><input type="button" style="height:140px;width:100px" value="목적지검색" onclick="getAddrToGeo();"> </td>
+				</tr>
+				<tr>
+					<td>목적지 구군<input type="text" id="searchGu_gun" size="25" tabindex=2>ex) 북구</td>
+				</tr>
+				<tr>
+					<td>목적지 면동<input type="text" id="searchDong" size="25" tabindex=3>ex) 태전동</td>
+				</tr>
+				<tr>
+					<td>목적지 번지<input type="text" id="searchBunji" size="25" tabindex=4>ex) 77</td>
+				</tr>
+				<!--
+				<tr>
+					<td>목적지 위도<input type="text" size="30"></td>
+				</tr>
+				<tr>
+					<td>목적지 경도<input type="text" size="30"></td>
+				</tr>
+				-->
+				</table>
+				<table>
+				<tr>
+					<td><input type="button" style="height:50px;width:200px" value="교차검색" onclick="SearchStart();"> </td>
+					<td><input type="button" style="height:50px;width:100px" value="맵 지우기" onclick="RemoveCrsArrPoint();"> </td>
+				</tr>
+				</table>
+			</div>					
+			<div class="cardCont setCarList" style="padding:10px; height:778px;">
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="40">
+							<col width="40">
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+							<tr height="30">
+								<td align="center"><!-- <input type="checkbox" id="checkAll" name="checkAll" onclick="CheckCrsArrPoint()">--></td>
+								<td align="center" class="text-center">번호</td>
+								<td align="center" class="text-center">지점명</td>
+								<td align="left" class="text-center">주소,좌표</td>
+							</tr>
+						</thead>
+					<tbody>
+						<tr height="30">
+							<input type="hidden" id="arrlat0" name="arrlat0" value="35.880786">
+							<input type="hidden" id="arrlon0" name="arrlon0" value="128.53287">
+							<input type="hidden" id="arrName0" name="arrName0" value="유통사업부">
+							<td><input type="checkbox" id="check00" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">01</td>
+							<td align="center">유통사업부</td>
+							<td align="left" style="cursor:pointer">대구광역시 서구 상리동 254-1</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat1" name="arrlat1" value="35.896592">
+							<input type="hidden" id="arrlon1" name="arrlon1" value="128.543389">
+							<input type="hidden" id="arrName1" name="arrName1" value="농산물류센터">
+							<td><input type="checkbox" id="check01" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">02</td>
+							<td align="center">농산물류센터</td>
+							<td align="left" style="cursor:pointer">대구광역시 북구 팔달동 222-5</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat2" name="arrlat2" value="35.929725">
+							<input type="hidden" id="arrlon2" name="arrlon2" value="128.539505">
+							<input type="hidden" id="arrName2" name="arrName2" value="이비즈사업부">
+							<td><input type="checkbox" id="check02" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">03</td>
+							<td align="center">이비즈사업부</td>
+							<td align="left" style="cursor:pointer">대구광역시 북구 태전동 77</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat3" name="arrlat3" value="35.916344">
+							<input type="hidden" id="arrlon3" name="arrlon3" value="128.546007">
+							<input type="hidden" id="arrName3" name="arrName3" value="급식사업부">
+							<td><input type="checkbox" id="check03" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">04</td>
+							<td align="center">급식사업부</td>
+							<td align="left" style="cursor:pointer">대구광역시 북구 태전동 653-1</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat4" name="arrlat4" value="35.839618">
+							<input type="hidden" id="arrlon4" name="arrlon4" value="128.762793">
+							<input type="hidden" id="arrName4" name="arrName4" value="영대점">
+							<td><input type="checkbox" id="check04" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">05</td>
+							<td align="center">영대점</td>
+							<td align="left" style="cursor:pointer">경상북도 경산시 압량면 화랑로 283</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat5" name="arrlat5" value="35.879956">
+							<input type="hidden" id="arrlon5" name="arrlon5" value="128.595228">
+							<input type="hidden" id="arrName5" name="arrName5" value="칠성점">
+							<td><input type="checkbox" id="check05" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">06</td>
+							<td align="center">칠성점</td>
+							<td align="left" style="cursor:pointer">대구광역시 북구 칠성동2가 346-9</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat6" name="arrlat6" value="35.862823">
+							<input type="hidden" id="arrlon6" name="arrlon6" value="128.491226">
+							<input type="hidden" id="arrName6" name="arrName6" value="성서점">
+							<td><input type="checkbox" id="check06" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">07</td>
+							<td align="center">성서점</td>
+							<td align="left" style="cursor:pointer">대구광역시 달서구 신당동 682-1</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat7" name="arrlat7" value="35.819015">
+							<input type="hidden" id="arrlon7" name="arrlon7" value="128.524978">
+							<input type="hidden" id="arrName7" name="arrName7" value="월배점">
+							<td><input type="checkbox" id="check07" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">08</td>
+							<td align="center">월배점</td>
+							<td align="left" style="cursor:pointer">대구광역시 달서구 월성동 1380</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat8" name="arrlat8" value="35.924167">
+							<input type="hidden" id="arrlon8" name="arrlon8" value="128.545979">
+							<input type="hidden" id="arrName8" name="arrName8" value="칠곡점">
+							<td><input type="checkbox" id="check08" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">09</td>
+							<td align="center">칠곡점</td>
+							<td align="left" style="cursor:pointer">대구광역시 북구 태전동 칠곡중앙대로 63길 6</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat9" name="arrlat9" value="35.846728">
+							<input type="hidden" id="arrlon9" name="arrlon9" value="128.536522">
+							<input type="hidden" id="arrName9" name="arrName9" value="감삼점">
+							<td><input type="checkbox" id="check09" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">10</td>
+							<td align="center">감삼점</td>
+							<td align="left" style="cursor:pointer">대구광역시 달서구 감삼동 472-2</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat10" name="arrlat10" value="35.822394">
+							<input type="hidden" id="arrlon10" name="arrlon10" value="128.735347">
+							<input type="hidden" id="arrName10" name="arrName10" value="경산점">
+							<td><input type="checkbox" id="check10" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">11</td>
+							<td align="center">경산점</td>
+							<td align="left" style="cursor:pointer">경상북도 경산시 중방동 874-3</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat11" name="arrlat11" value="35.811003">
+							<input type="hidden" id="arrlon11" name="arrlon11" value="128.526331">
+							<input type="hidden" id="arrName11" name="arrName11" value="진천점">
+							<td><input type="checkbox" id="check11" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">12</td>
+							<td align="center">진천점</td>
+							<td align="left" style="cursor:pointer">대구광역시 달서구 진천로 22</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlat12" name="arrlat12" value="35.866793">
+							<input type="hidden" id="arrlon12" name="arrlon12" value="128.714732">
+							<input type="hidden" id="arrName12" name="arrName12" value="반야월점">
+							<td><input type="checkbox" id="check12" name="checkArr" onclick="LoadCrsArrPoint()"></td>
+							<td align="center" style="cursor:pointer">13</td>
+							<td align="center">반야월점</td>
+							<td align="left" style="cursor:pointer">대구광역시 동구 동호동 107-21</td>
+						</tr>
+
+						<!--
+						<tr height="30">
+							<input type="hidden" id="arrlon13" name="arrlon13" value="">
+							<input type="hidden" id="arrlat13" name="arrlat13" value="">
+							<input type="hidden" id="arrName13" name="arrName13" value="부산 신평점">
+							<td><input type="checkbox" id="check13" name="checkArr"></td>
+							<td align="center" style="cursor:pointer">14</td>
+							<td align="center">부산 신평점</td>
+							<td align="left" style="cursor:pointer">부산광역시 사하구 신산로 177-2</td>
+						</tr>
+						<tr height="30">
+							<input type="hidden" id="arrlon14" name="arrlon14" value="">
+							<input type="hidden" id="arrlat14" name="arrlat14" value="">
+							<input type="hidden" id="arrName14" name="arrName14" value="구미점">
+							<td><input type="checkbox" id="check14" name="checkArr"></td>
+							<td align="center" style="cursor:pointer">15</td>
+							<td align="center">구미점</td>
+							<td align="left" style="cursor:pointer">경상북도 구미시 황상동 337-3</td>
+						</tr>
+						-->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	/*
+	$(document).ready(function(){
+		var mapHeight = $("#map_div").height();
+		var searchHeight = $(".cardSearch").outerHeight();
+		var bottomHeight = $("#btnComplete").outerHeight();
+		$(".setCarList").height(mapHeight - (searchHeight + bottomHeight));
+	});
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+	*/
+	</script>
+</div>
+
+</article>
+
+<div class="copy">
+	<?php include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:1300px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">01경로 상세보기</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">차량 배차 정보</label>
+						
+					<table class="tblBasic table-hover">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로순서</th>
+							<th align="center" class="text-center">주문번호</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">금액</th>
+						</tr>
+						</thead>
+						<tbody id="listDetail">
+						<tr height="30">
+							<td align="center">1</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송 경로 추가</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">경로 추가 목록</label>
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로 지정</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<!--<th align="center" class="text-center">배송건수</th>-->
+						</tr>
+						</thead>
+						<tbody id="listAdd">
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<!--<td align="center">2</td>-->
+						</tr>
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-ok" data-dismiss="modal" onclick="addSave()">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:900px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송 경로 오류 수정</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">경로 오류 목록</label>
+					<h3 style="color:red;"> *주소를 검색하셔서 위,경도를 자동 입력 하실수도 있습니다.</h3>
+					<h3 style="color:red;"> *위도,경도 좌표는 예시형식으로 정확히 입력하세요 위도(예:35.929894), 경도(예:128.539506)</h3>
+					ex)서울특별시 용산구 동자동 43-205 서울역(시,구,동,리(번지),상세주소로 검색하셔야됩니다.)구주소만 사용가능합니다.
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로 지정</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">위도(예:35.929894)</th>
+							<th align="center" class="text-center">경도(예:128.539506)</th>
+							<th align="center" class="text-center">주소</th>
+						</tr>
+						</thead>
+						<tbody id="listAlert">
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+									<option>03경로[34km]</option>
+									<option>04경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">차화임</td>
+							<td align="center">
+								<input type="text"/>
+							</td>
+							<td align="center"><input type="text"/></td>
+							<td align="center"><input type="text"/></td>
+						</tr>
+						</tbody>
+					</table>
+					
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-ok" onClick="errorSave()">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="markerModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:1300px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel2">01경로 상세보기</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label pull-left">차량 배차 변경</label>
+					<label for="recipient-name" class="control-label pull-right" id="orderChange">
+						
+					
+					</label>
+						
+					<table class="tblBasic table-hover">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로순서</th>
+							<th align="center" class="text-center">주문번호</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">금액</th>
+							<th align="center" class="text-center">위도</th>
+							<th align="center" class="text-center">경도</th>
+							<th align="center" class="text-center">검색</th>
+						</tr>
+						</thead>
+						<tbody id="markerDetail">
+						<tr height="30">
+							<td align="center">1</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<!-- <button type="button" class="btn btn-new-ok" data-dismiss="modal" style="display:;" onClick="javascript:window.location.reload();">확인</button> -->
+				<button type="button" class="btn btn-new-ok" style="display:;" onClick="simpleDeguestInfoUpdate()">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" id="loading" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="데이터 업데이트 로딩 바">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+				<h4 class="modal-title" id="myModalLabel">로딩중</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					데이터 로딩 중입니다.
+				</div>
+				<div style="text-align:center; color:#e06732"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>
+				<div style="text-align:center;" class="mt15 f14" id="loadingDataNum">
+				</div>
+				<!--
+				<div class="demo-wrapper html5-progress-bar">
+					<div class="progress-bar-wrapper">
+						<progress id="progressbar" value="0" max="100"></progress>
+					</div>
+				</div>
+				-->
+			</div>
+		</div>
+	</div>
+</form>
+</body>
+</html>
+
+<?php
+$db->close();
+?>

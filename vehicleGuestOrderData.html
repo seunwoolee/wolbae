@@ -1,0 +1,169 @@
+<? 
+include "inc_html/header.html";
+?>
+
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					테스트 배송정보 업데이트
+					<a href="javascript:GuestOrderDataProc();" class="btn btn-sm btn-new-ok pull-right">고객배송정보 업데이트</a>
+				</span>
+			</div>
+			<div id="map" class="cardCont" style="padding:0;">
+			</div>
+		</div>
+	</div>
+	
+	
+	<script>
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+
+	// step01. 고객배송정보업데이트 모달open
+	function GuestOrderDataProc(){
+
+		if(confirm('배송정보를 업데이트 하시겠습니까?')){
+			//$("#modal").modal({ backdrop:false } );	// 백그라운드 클릭시 창 안닫히게.
+			ajaxGuestOrderDataGet();
+		} else {
+			return false;
+		}		
+	}
+
+	// step02. ajax 고객배송정보 가져오긔.
+	function ajaxGuestOrderDataGet(){
+
+		$.ajax({
+			type : "GET"
+			,url : "ajax/vehicleGuestOrderData.ajax.php"	// ERP서버측 URL로 변경해야됩니다.(현재 테스트용이므로, 로컬서버경로를 입력하여 테스트중입니다.)
+			,async : false		// 동기화처리
+			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+			,success : function(data){
+				//alert(data.vehicleCustomerInfo[0].guestId);
+				ajaxAllocateStatusUpdate(data);
+			}
+			,complete : function(){}	// complete Event 호출시 사용
+		});
+	}
+
+	// step03. ajax 고객배송정보 배송완료 유무 확인
+	function ajaxAllocateStatusUpdate(jsonDataGuestOrder){
+		var deliveryDate = "2017-08-01";
+		var locationId = "0";
+		var meridiemType = "0";
+		// ajax 실행부
+		$.ajaxSettings.traditional = true;
+		$.ajax({
+			 type : "POST"
+			,url : "ajax/vehicleAllocateStatusProc.ajax.php"
+			,async : false	// 동기화처리
+			,data : {"deliveryDate":deliveryDate, "locationId":locationId, "meridiemType":meridiemType}
+			,dataType : "json"
+			,success : function(result){
+				if(result.code=='Y'){
+					if(confirm("이미 배차완료를 하셨습니다. 재배차를 하시겠습니까?")){
+						ajaxGuestOrderDataUpdate(jsonDataGuestOrder);
+					}
+					else{
+						return;
+					}
+				}
+				else{
+					ajaxGuestOrderDataUpdate(jsonDataGuestOrder);
+				}
+			}
+			,complete : function(){}
+		});
+
+
+	}
+
+	// step04. ajax 고객배송정보 업데이트
+	function ajaxGuestOrderDataUpdate(jsonDataGuestOrder){
+
+		jsonDataGuestOrder.deliveryDate		="2017-08-01";
+		jsonDataGuestOrder.locationId		="0";
+		jsonDataGuestOrder.meridiemType	="0";
+		// ajax 실행부
+		$.ajaxSettings.traditional = true;
+		$.ajax({
+			 type : "POST"
+			,url : "ajax/vehicleGuestOrderDataProc.ajax.php"
+			,async : false	// 동기화처리
+			,data : JSON.stringify(jsonDataGuestOrder)
+			,contentType : "application/json"
+			,success : function(result){
+				alert(result);
+			}
+			,complete : function(){}
+		});
+	}
+	</script>
+</div>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<!-- <form name="submitForm" method="post" action="post/dutyPost.php" class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true"> -->
+<div class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" aria-hidden="true" id="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="gridSystemModalLabel">고객정보 업데이트 실행중</h4>
+        </div>
+        <div class="modal-body">
+          배송정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+          송배정보를 업데이트 중입니다.<br>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</body>
+</html>

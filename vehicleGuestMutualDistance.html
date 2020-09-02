@@ -1,0 +1,307 @@
+<? 
+include "inc_html/header.html";
+
+//$define_APIKEY = "20c417fd-d3cd-3e04-83a4-378dd7e00581";
+//$define_APIKEY = "2766ebf3-bfb4-3d39-b1f0-1135b7858517";
+
+//진우꺼
+//$define_APIKEY = "648587cf-06c2-340a-84ff-2eb808e559f8";
+$define_APIKEY = "61398797-312c-3e35-9ffc-0621926572e1";
+?>
+
+<html>
+  <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>simpleMap</title>
+        <script src="https://apis.skplanetx.com/tmap/js?version=1&format=javascript&appKey=<?php echo $define_APIKEY; ?>"></script>
+ </head>
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					테스트 배송지 상대경로 업데이트
+					<a href="javascript:updateMutualDistance();" class="btn btn-sm btn-new-ok pull-right">배송지 상대경로 업데이트</a>
+				</span>
+			</div>
+			<div id="map" class="cardCont" style="padding:0;">
+				지도 표시(지도 크기, 높이에 따라 영역 설정)
+			</div>
+		</div>
+	</div>
+	
+	
+	<script>
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+
+	// step01. 
+	function updateMutualDistance(){
+
+		if(confirm('배송지 상대경로를 업데이트 하시겠습니까?')){
+			//$("#modal").modal({ backdrop:false } );	// 백그라운드 클릭시 창 안닫히게.
+			ajaxGuestMutualDistanceDataGet();
+		} else {
+			return false;
+		}		
+	}
+	// step02. ajax 금일 업데이트된 주소가져오기.
+	function ajaxGuestMutualDistanceDataGet(){
+		var deliveryDate = "2017-08-01";
+		$.ajax({
+			type : "POST"
+			,url : "ajax/vehicleGuestMutualDistance.ajax.php"	// 현재 배송정보를 토대로 주소 중복을 제거합니다.
+			,data : {"deliveryDate":deliveryDate}
+			,async : false		// 동기화처리
+			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+			,success : function(data){		
+				compareJusoData(data);
+			}
+			,complete : function(){}	// complete Event 호출시 사용
+		});
+	}
+	// step03. 금일 업데이트된 주소DB와 거리DB 비교
+	function compareJusoData(vehicleGuestInfoData){
+		vehicleGuestInfoData.deliveryDate		="2017-08-01";
+		$.ajaxSettings.traditional = true;
+		$.ajax({
+			 type : "POST"
+			,url : "ajax/vehicleGuestMutualDistanceCompare.ajax.php"
+			,async : false	// 동기화처리
+			,data : JSON.stringify(vehicleGuestInfoData)
+			,dataType : "json"
+			,success : function(data){
+				alert(data['vehicleGuestDistanceData'].length);
+				//initDistanceListData(data['vehicleGuestDistanceData']);
+
+			}
+			,complete : function(){}
+		});
+	}
+
+
+
+	// step03. 주소지점사이 거리값 구하기
+	function initDistanceListData(vehicleGuestDistanceData){
+
+		for(i=0;i<vehicleGuestDistanceData.length;i++){
+			setDistanceListData(vehicleGuestDistanceData[i]);
+		}
+		alert("완료");
+	}
+	// step04. 주소지점사이 거리 데이터 업데이트(실제)
+	function setDistanceListData(vehicleGuestDistanceData){
+		
+			//var routeFormat = new Tmap.Format.KML({extractStyles:true, extractAttributes:true});
+			var guestLon = vehicleGuestDistanceData['guestLon'];
+			var guestLat = vehicleGuestDistanceData['guestLat'];
+			var deguestLon = vehicleGuestDistanceData['deguestLon'];
+			var deguestLat = vehicleGuestDistanceData['deguestLat'];
+
+			var guestId = vehicleGuestDistanceData['guestId'];
+			var deguestId = vehicleGuestDistanceData['deguestId'];
+
+			var guestJusoSubId = vehicleGuestDistanceData['guestJusoSubId'];
+			var deguestJusoSubId = vehicleGuestDistanceData['deguestJusoSubId'];
+
+			var guestDate = vehicleGuestDistanceData['guestDate'];
+			var deguestDate = vehicleGuestDistanceData['deguestDate'];
+
+			var status = vehicleGuestDistanceData['status'];
+
+			var strSerialize = '';
+			var strTotalDistance;
+
+			if(guestLon==deguestLon && guestLat==deguestLat){
+				setEqualLocation(vehicleGuestDistanceData);
+				return;
+			}
+
+			strSerialize += "version=1&format=json";
+			strSerialize += "&startX="+guestLon;
+			strSerialize += "&startY="+guestLat;
+			//strSerialize += "&startName="+encodeURIComponent(varSeq);
+			strSerialize += "&startName="+encodeURIComponent("출발지");
+			strSerialize += "&endX="+deguestLon;
+			strSerialize += "&endY="+deguestLat;
+			strSerialize += "&endName="+encodeURIComponent("도착지");
+			strSerialize += "&appKey=<?php echo $define_APIKEY; ?>";
+			strSerialize += "&searchOption=0";
+			strSerialize += "&reqCoordType=WGS84GEO";
+			strSerialize += "&directionOption=1";
+			strSerialize += "&roadType=16";
+
+			var result;
+			$.ajax({
+				type: "GET"
+				,url: "https://apis.skplanetx.com/tmap/routes"
+				,data : strSerialize
+				,async: false
+				,dataType : "json"
+				,beforeSend : function(xhr){
+				}
+				,success: function(data){
+					if(data!=null){
+						
+						var objFeatures = data['features'];
+						var jsonData = JSON.stringify(objFeatures[0]['properties']);
+						strTotalDistance = objFeatures[0]['properties']['totalDistance'];
+						result = strTotalDistance;
+						
+						$.ajaxSettings.traditional = true;
+						$.ajax({
+							url: "ajax/vehicleGuestMutualDistanceProc.ajax.php",
+							data: {"guestId":guestId, "deguestId":deguestId, "guestLon":guestLon, "guestLat":guestLat,	"deguestLon":deguestLon, "deguestLat":deguestLat,
+							"guestJusoSubId":guestJusoSubId, "deguestJusoSubId":deguestJusoSubId, "status":status,
+							"guestDate":guestDate, "deguestDate":deguestDate,
+							"distance":result, "jsonData":jsonData},
+							type: "post",
+							async : false,
+							dataType : "json",
+							success: function( json ) {
+								//alert("아이디 체크 성공!!" + json.message);
+								//$("#cidCheckerDisp").html(json.message)
+							},
+							error: function( xhr, status ) { 
+								//alert("아이디 체크 오류!!" + xhr); 
+							},
+							complete: function( xhr, status ) { }
+						});	
+						
+					}					
+				}
+			});
+			//doAnything();
+			
+			return result;
+	}
+	
+	// step04. 주소지점사이 거리 데이터 업데이트(테스트)
+	/*
+	function setDistanceListData(vehicleGuestDistanceData){
+	
+		//var routeFormat = new Tmap.Format.KML({extractStyles:true, extractAttributes:true});
+		var guestLon = vehicleGuestDistanceData['guestLon'];
+		var guestLat = vehicleGuestDistanceData['guestLat'];
+		var deguestLon = vehicleGuestDistanceData['deguestLon'];
+		var deguestLat = vehicleGuestDistanceData['deguestLat'];
+
+		var guestId = vehicleGuestDistanceData['guestId'];
+		var deguestId = vehicleGuestDistanceData['deguestId'];
+
+		var guestJusoSubId = vehicleGuestDistanceData['guestJusoSubId'];
+		var deguestJusoSubId = vehicleGuestDistanceData['deguestJusoSubId'];
+
+		var status = vehicleGuestDistanceData['status'];
+
+		var strSerialize = '';
+		var strTotalDistance;
+
+		strSerialize += "version=1&format=json";
+		strSerialize += "&startX="+guestLon;
+		strSerialize += "&startY="+guestLat;
+		//strSerialize += "&startName="+encodeURIComponent(varSeq);
+		strSerialize += "&startName="+encodeURIComponent("출발지");
+		strSerialize += "&endX="+deguestLon;
+		strSerialize += "&endY="+deguestLat;
+		strSerialize += "&endName="+encodeURIComponent("도착지");
+		strSerialize += "&appKey=<?php echo $define_APIKEY; ?>";
+		strSerialize += "&searchOption=0";
+		strSerialize += "&reqCoordType=WGS84GEO";
+		strSerialize += "&directionOption=1";
+		strSerialize += "&roadType=16";
+
+		var result = 200;
+		var jsonData = "test(수정)";
+
+		$.ajaxSettings.traditional = true;
+		$.ajax({
+			url: "ajax/vehicleGuestMutualDistanceProc.ajax.php",
+			data: {"guestId":guestId, "deguestId":deguestId, "guestLon":guestLon, "guestLat":guestLat,	"deguestLon":deguestLon, "deguestLat":deguestLat,
+			"guestJusoSubId":guestJusoSubId, "deguestJusoSubId":deguestJusoSubId, "status":status,
+			"distance":result, "jsonData":jsonData},
+			type: "post",
+			async : false,
+			dataType : "json",
+			success: function( json ) {
+				//alert("아이디 체크 성공!!" + json.message);
+				//$("#cidCheckerDisp").html(json.message)
+			},
+			error: function( xhr, status ) { 
+				//alert("아이디 체크 오류!!" + xhr); 
+			},
+			complete: function( xhr, status ) { }
+		});	
+
+		//doAnything();
+		
+		return result;
+	}
+	*/
+
+	function setEqualLocation(vehicleGuestDistanceData){
+		var guestLon = vehicleGuestDistanceData['guestLon'];
+		var guestLat = vehicleGuestDistanceData['guestLat'];
+		var deguestLon = vehicleGuestDistanceData['deguestLon'];
+		var deguestLat = vehicleGuestDistanceData['deguestLat'];
+
+		var guestId = vehicleGuestDistanceData['guestId'];
+		var deguestId = vehicleGuestDistanceData['deguestId'];
+
+		var guestJusoSubId = vehicleGuestDistanceData['guestJusoSubId'];
+		var deguestJusoSubId = vehicleGuestDistanceData['deguestJusoSubId'];
+
+		var status = vehicleGuestDistanceData['status'];
+
+		$.ajaxSettings.traditional = true;
+		$.ajax({
+			url: "ajax/vehicleGuestMutualDistanceProc.ajax.php",
+			data: {"guestId":guestId, "deguestId":deguestId, "guestLon":guestLon, "guestLat":guestLat,	"deguestLon":deguestLon, "deguestLat":deguestLat,
+			"guestJusoSubId":guestJusoSubId, "deguestJusoSubId":deguestJusoSubId, "status":status, 
+			"distance":"0", "jsonData":""},
+			type: "post",
+			async : false,
+			dataType : "json",
+			success: function( json ) {
+				//alert("아이디 체크 성공!!" + json.message);
+				//$("#cidCheckerDisp").html(json.message)
+			},
+			error: function( xhr, status ) { 
+				//alert("아이디 체크 오류!!" + xhr); 
+			},
+			complete: function( xhr, status ) { }
+		});	
+	}
+
+	</script>
+</div>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+</body>
+</html>

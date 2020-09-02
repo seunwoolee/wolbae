@@ -1,0 +1,683 @@
+<? 
+include "inc_html/header.html";
+include "inc/drivingLog.inc.php";
+include "inc/paging.inc.php";
+include "inc/user.inc.php";
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$companySeq			= $COMPANY_SEQ;
+$LIST_ROWS = 4;
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$today				= date("Y-m-d");
+//$today			= "2017-12-20";
+$toYear				= date("Y");
+
+//거점 정보가져오기
+$ci_guestId = $_SESSION["OMember_id"];
+$db->que = " SELECT * FROM companyInfo WHERE ci_guestId='".$ci_guestId."'";
+$db->query();
+$companyInfo = $db->getRow();
+
+$locationId		= $companyInfo['ci_no'];			// 거점ID
+$locationName	= $companyInfo['ci_locationName'];	// 거점명
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 운행건수, 주행거리
+$totalCount = 100;
+$totalDistance = 10000;
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 신규 운행기록
+$hour24 = 60 * 60 * 24;
+while($row = $db->getRow()) {
+	$startDate = strToTime($row["startDate"]);
+	$startTime = strToTime($row["startTime"]);
+	$stopTime = strToTime($row["stopTime"]);
+
+	$today = date("Y.m.d");
+	$todayAdd = "";
+
+	if($today == date("Y.m.d", $startDate)) {
+		$todayAdd = "spec";
+	}
+
+	if($row["startAddress"] == "") {
+		$row["startAddress"] = "<span style='color:#e74c3c'>출발지 정보 없음</span>";
+	}
+
+	$drivingTime = $stopTime - $startTime;
+	if($drivingTime > 0) {
+		$hour = $drivingTime / 3600;
+		$minute = ($drivingTime % 3600) / 60;
+		$drivingTimeText = sprintf('%02d', $hour). ":". sprintf('%02d', $minute);
+
+		if($drivingTime >= $hour24)
+		{
+			$drivingTimeText = "<font color=red>". $drivingTimeText. "</font>";
+		}
+	} else {
+		$drivingTimeText = "00:00";
+	}
+
+	$LOGS .= "
+				<tr style='cursor:pointer'>
+					<th onclick='popupDrivingLog(". $row["seq"]. ")'></th>
+					<td onclick='popupDrivingLog(". $row["seq"]. ")' class='$todayAdd'>
+						<div class='txtTbl1'>". $row["name"]. "[". $row["distance"]. "km]</div>
+						<div class='txtTbl2'>". $row["startAddress"]. " → ". $row["stopAddress"]. "</div>
+						<div class='txtTbl2'>". date("Y.m.d", $startDate). "(". $drivingTimeText. ")</div>
+					</td>
+				</tr>";
+}
+
+if(empty($LOGS)) {
+	$LOGS = '
+				<tr>
+					<th rowspan="1"></td>
+					<td>
+						<div class="txtTbl1">운행기록이 없습니다.</div>
+						<div class="txtTbl2"></div>
+						<div class="txtTbl2"></div>
+					</td>
+				</tr>';
+}
+
+// 1. 전체 배차 건수
+$db->que = " SELECT COUNT(*) FROM vehicleAllocateResult 
+					WHERE 1=1
+						GROUP BY vr_deliveryDate, vr_meridiemFlag ";
+$db->query();
+$totalVehicleCnt = $db->numRows();
+
+
+// 2. 전체 배송 건수
+$db->que = " SELECT COUNT(*) FROM vehicleAllocateResult 
+					WHERE 1=1 
+					AND vr_deguestId != '".$ci_guestId."'";
+$db->query();
+$totalDeliveryCnt = $db->getOne();
+
+// 3. 전체 배송거리(km)
+$db->que = " SELECT SUM(vr_distanceValue) FROM vehicleAllocateResult WHERE 1=1 AND vr_deguestId != '".$ci_guestId."'";
+$db->query();
+$totalDistanceCnt = $db->getOne();
+$totalDistanceCnt = sprintf("%2.1f", $totalDistanceCnt*0.001)."km";
+
+// 4. 당해 총 배차건수
+$db->que = " SELECT COUNT(*) FROM vehicleAllocateResult 
+					WHERE 1=1
+						AND vr_deliveryDate >= '".$toYear."-01-01'
+						AND vr_deliveryDate <= '".$toYear."-12-31'
+						GROUP BY vr_deliveryDate, vr_meridiemFlag ";
+$db->query();
+$partVehicleCnt = $db->numRows();
+
+// 5. 당해 총 배송건수
+$db->que = " SELECT COUNT(*) FROM vehicleAllocateResult 
+					WHERE 1=1 
+						AND vr_deliveryDate >= '".$toYear."-01-01'
+						AND vr_deliveryDate <= '".$toYear."-12-31'
+						AND vr_deguestId != '".$ci_guestId."'";
+$db->query();
+$partDeliveryCnt = $db->getOne();
+
+// 6. 당해 총 배송거리
+$db->que = " SELECT SUM(vr_distanceValue) FROM vehicleAllocateResult 
+					WHERE 1=1 
+						AND vr_deliveryDate >= '".$toYear."-01-01'
+						AND vr_deliveryDate <= '".$toYear."-12-31'
+						AND vr_deguestId != '".$ci_guestId."'";
+$db->query();
+$partDistanceCnt = $db->getOne();
+$partDistanceCnt = sprintf("%2.1f", $partDistanceCnt*0.001)."km";
+
+// 7. 당일 배송건수
+
+
+// 8. 금일배차내역출력 - 오전
+$TODAYLIST = "";	// 초기화
+$db->que = "SELECT 		 vr_deliveryDate		AS deliveryDate
+						,SUM(vr_distanceValue)	AS distanceValue
+						,COUNT(vr_seq)			AS count
+						,SUM(vr_deguestPay)		AS pay
+						,vr_meridiemType		AS meridiemType
+						,vr_meridiemFlag		AS meridiemFlag
+						,MAX(vr_vehicleNo)		AS vehicleCnt
+							FROM vehicleAllocateResult 
+							WHERE 1=1 
+									AND vr_deliveryDate = '".$today."' 
+									AND vr_meridiemType='0' 
+									AND vr_locationId='".$locationId."' 
+									AND vr_deguestID != 'admin'
+							GROUP BY vr_meridiemFlag ";
+$db->query();
+
+while($row = $db->getRow()){
+	
+	// 출력 년월일
+	$deliveyDateExp = explode("-", $row['deliveryDate']);		
+	$meridiemName = $row['meridiemType']=='0'?'오전':'오후';		
+	$distance = $row['distanceValue'];							
+
+	// 출력 거리
+	if($distance > 999){
+		$distance = sprintf("%2.1f", $distance*0.001)."km";
+	} else{
+		$distance = $distance."m";
+	}
+
+	// 출력 금액
+	$payment = $row['pay'];
+
+	// 출력 배정된 차량수
+	$vehicleCnt = ($row['vehicleCnt']+1);
+
+	$TODAYLIST .= "<tr>
+						<th></th>
+						<td onclick=\"detailTodayVehicle('".$row['deliveryDate']."','".$meridiemName."','".$locationId."','".$row['meridiemFlag']."');\" style=\"cursor:pointer;\">
+							<div class=\"txtTbl1\">".$deliveyDateExp[0]."년 ".$deliveyDateExp[1]."월 ".$deliveyDateExp[2]."일 [$meridiemName] ".$row['meridiemFlag']."번째 </div>
+							<div class=\"txtTbl2\">총 배송거리 : ".$distance." / 배송 기사 인원 : ".$vehicleCnt."명</div>
+							<div class=\"txtTbl2\">총 가격 : ".number_format($payment)."원</div>
+						</td>
+					</tr>";
+}
+
+// 8. 금일배차내역출력 - 오후
+$db->que = "SELECT 		 vr_deliveryDate		AS deliveryDate
+						,SUM(vr_distanceValue)	AS distanceValue
+						,COUNT(vr_seq)			AS count
+						,SUM(vr_deguestPay)		AS pay
+						,vr_meridiemType		AS meridiemType
+						,vr_meridiemFlag		AS meridiemFlag
+						,MAX(vr_vehicleNo)		AS vehicleCnt
+							FROM vehicleAllocateResult 
+							WHERE 1=1 
+									AND vr_deliveryDate = '".$today."' 
+									AND vr_meridiemType='1'
+									AND vr_locationId='".$locationId."' 
+									AND vr_deguestID != 'admin'
+							GROUP BY vr_meridiemFlag ";
+$db->query();
+
+while($row = $db->getRow()){
+	
+	// 출력 년월일
+	$deliveyDateExp = explode("-", $row['deliveryDate']);		
+	$meridiemName = $row['meridiemType']=='0'?'오전':'오후';		
+	$distance = $row['distanceValue'];							
+
+	// 출력 거리
+	if($distance > 999){
+		$distance = sprintf("%2.1f", $distance*0.001)."km";
+	} else{
+		$distance = $distance."m";
+	}
+
+	// 출력 금액
+	$payment = $row['pay'];
+
+	// 출력 배정된 차량수
+	$vehicleCnt = ($row['vehicleCnt']+1);
+
+	$TODAYLIST .= "<tr>
+						<th></th>
+						<td onclick=\"detailTodayVehicle('".$row['deliveryDate']."','".$meridiemName."','".$locationId."','".$row['meridiemFlag']."');\" style=\"cursor:pointer;\">
+							<div class=\"txtTbl1\">".$deliveyDateExp[0]."년 ".$deliveyDateExp[1]."월 ".$deliveyDateExp[2]."일 [$meridiemName] ".$row['meridiemFlag']."번째 </div>
+							<div class=\"txtTbl2\">총 배송거리 : ".$distance." / 배송 기사 인원 : ".$vehicleCnt."명</div>
+							<div class=\"txtTbl2\">총 가격 : ".number_format($payment)."원</div>
+						</td>
+					</tr>";
+}
+?>
+
+<script>
+
+
+
+function popupReceiptDetail(seq){
+	popup("receiptDetail.html?seq=" + seq, 650, 600);
+}
+
+function popupDrivingLog(seq){
+	popup("drivingLogWrite.html?seq=" + seq, 650, 700);
+}
+
+function detailTodayVehicle(refDate, refMeridiemType, refLocationId, refMeridiemFlag){
+	location.href='setCarListTest.html?deliveryDate=' + refDate + '&meridiemType=' + refMeridiemType + '&locationId=' + refLocationId + '&meridiemFlag=' + refMeridiemFlag;
+}
+
+$(document).ready(function() {
+	var sum = 0;
+	var count = 0;
+	$("#table-header th").each(function() {
+		sum += parseInt($(this).attr("width"), 10);
+		count++;
+	});
+
+	$("#table-header th").each(function() {
+		var width = parseInt($(this).attr("width"), 10);
+		var widthRatio = width / sum * 100;
+		$(this).attr("width", widthRatio+"%");
+	});
+
+	$("#emptyRow").attr("colspan", count);
+
+	// 그래프챠트
+	getChartData();
+});
+
+function getChartData() {
+
+	$.ajax({
+		 url: "ajax/vehicleMainGraphData.ajax.php"
+		,async : true	// 동기화처리
+		,data: {"param":""}
+		,type: "post"
+		,dataType : "json"
+		,success: function( data ) {
+			//alert(json);
+			drawChart2(data);
+		}
+		,error: function( xhr, status ) {
+			alert("vehicleMainGraphData.ajax. Error" + xhr); 
+		}
+		,complete: function( xhr, status ) { 
+		}
+	});
+
+}
+</script>
+<script>
+var costOpt;
+
+//function drawChart2(data) {
+function drawChart2(vehicleData) {
+
+
+	/*
+	var costOpt = data[0][1];
+	var costmonths = [];
+	var costamounts = [];
+	var costtype = [];
+	var cost_Distance = [];
+
+	var vehicleCntDistance	= [];
+	var vehicleCnt			= [];
+	var vehicleCntDelivery	= [];
+
+	$.each(data[0], function (f) {
+		if (f > 1){
+			vehicleCntDistance.push(data[0][f]);
+		}
+	}); 
+	
+	$.each(data, function (e) {
+		if (e > 0){
+			costmonths.push(data[e][0]);
+			costamounts.push(data[e][1] * 100);
+		}
+	});
+	
+	for ( var i = 2; i < data[0].length; i++) {
+		var costtypedistance = [];
+		for (var j = 1; j < data.length; j++) { 
+			costtypedistance.push(data[j][i]);
+		};
+		cost_Distance.push({name : costtype[i-2], data: costtypedistance})
+	}
+	*/
+	//alert('test');
+
+
+	//var vehicleCntRoute		= new Array;
+	//var vehicleCntDelivery	= new Array;
+	//var vehicleCntDistance	= new Array;
+
+	var tmpVehicleCntRoute		= vehicleData['vehicleData'][0];
+	var tmpVehicleCntDelivery	= vehicleData['vehicleData'][1];
+	var tmpVehicleCntDistance	= vehicleData['vehicleData'][2];
+
+	//var vehicleCntRoute			= [];
+	//var vehicleCntDelivery		= [];
+	var vehicleCntDistance		= [];
+
+	var vehicleCntRouteSub		= [];
+	var vehicleCntDeliverySub	= [];
+	var vehicleCntDistanceSub	= [];
+
+	for(var i=0;i<12;i++){
+
+		//alert(tmpVehicleCntDelivery[i]);
+		vehicleCntRouteSub.push(tmpVehicleCntRoute[i]);
+		vehicleCntDeliverySub.push(tmpVehicleCntDelivery[i]);
+		vehicleCntDistanceSub.push(tmpVehicleCntDistance[i]);
+	}
+
+	vehicleCntDistance.push({name : 'test1', data : vehicleCntRouteSub});
+	vehicleCntDistance.push({name : 'test2', data : vehicleCntDeliverySub});
+	vehicleCntDistance.push({name : 'test3', data : vehicleCntDistanceSub});
+		
+	/*
+	//alert(data.length);
+	$.each(data[0], function(f) {
+		alert(data[0][f]);
+		vehicleCntRoute.push(data[0][f]);
+	}
+	$.each(data[1], function(f) {
+		vehicleCntRoute.push(data[1][f]);
+	}
+	$.each(data[2], function(f) {
+		vehicleCntRoute.push(data[2][f]);
+	}
+	*/
+
+	/*
+
+
+	for( var i=0;j<data[0].length;i++){
+		vehicleCntRoute[i]		= data[0][i];
+	}
+	for( var i=0;j<data[1].length;i++){
+		vehicleCntDelivery[i]	= data[1][i];
+	}
+	for( var i=0;j<data[2].length;i++){
+		vehicleCntDistance[i]	= data[2][i];
+	}
+	*/
+
+	Highcharts.theme = {
+		colors: ['#3ab54a', '#058dc7', '#ed561b', '#dddf00', '#24cbe5', '#64e572', '#ff9655', '#fff263', '#6af9c4']
+	};
+
+	// Apply the theme
+	Highcharts.setOptions(Highcharts.theme);
+
+	Highcharts.setOptions({
+		lang: {
+			thousandsSep:	',',
+			downloadCSV:	'CSV파일 다운로드',
+			downloadJPEG:	'JPEG이미지 다운로드',
+			downloadPDF:	'PDF파일 다운로드',
+			downloadPNG:	'PNG이미지 다운로드',
+			downloadSVG:	'SVG이미지 다운로드',
+			printChart:		'차트 인쇄'
+		}
+	});
+	//운행거리 차트
+	Highcharts.chart('drivingChart', {
+		chart: {
+			type: 'column'
+		},
+		title: {
+			text: '월별 운행거리 현황'
+		},
+		credits: {
+			enabled: false
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				text: '운행 거리(km)'
+			}
+		},
+		xAxis: {
+			//categories: costmonths,	// x축 카테고리
+			//categories: ['Apples', 'Bananas', 'Oranges'],
+			categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+			title: {
+				text: '월별 운행거리'
+			}
+		},
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},	
+
+		series: vehicleCntDistance,
+        /* 표 데이터 */
+
+		/*
+        series: [
+					vehicleCntDistance
+
+					//{ name: '배차건수', data: [1, 2, 4, 6, 4, 8, 4, 3, 4, 5, 4, 6] },
+					//{ name: '배송건수', data: [5, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7] },
+					//{ name: '배송거리', data: [1, 3, 4, 5, 4, 3, 4, 8, 4, 8, 4, 2] }
+					//{ name: '배차건수', data: vehicleCntRoute },
+					//{ name: '배송건수', data: vehicleCntDelivery },
+					//{ name: '배송거리', data: vehicleCntDistance }
+
+        ],
+		*/
+
+		tooltip: {
+			headerFormat: '<span style="font-size:10px">{point.key} 목적별 운행거리</span><table>',
+			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+				'<td style="padding:0"><b>{point.y} km</b></td></tr>',
+			footerFormat: '</table>',
+			shared: true,
+			useHTML: true
+		},
+
+		responsive: {
+			rules: [{
+				condition: {
+					maxWidth: 500
+				},
+				chartOptions: {
+					legend: {
+						layout: 'horizontal',
+						align: 'center',
+						verticalAlign: 'bottom'
+					}
+				}
+			}]
+		}
+
+	});
+
+}
+</script>
+<div class="row">
+	<div class="col-md-12">
+		<div class="row setChart" style="padding-bottom:30px;">
+			<div class="col-md-4 setChartBlock">
+				<div class="setChart2">
+					<strong><?php echo $totalVehicleCnt; ?></strong>
+					<span>전체 배차 건수</span>
+					<img src="images/main/bgSetCarChart1.png" width="90" alt="" />
+				</div>
+			</div>
+			<div class="col-md-4 setChartBlock">
+				<div class="setChart3">
+					<strong><?php echo number_format($totalDeliveryCnt); ?></strong>
+					<span>전체 배송 건수</span>
+					<img src="images/main/bgSetCarChart2.png" width="65" alt="" />
+				</div>
+			</div>
+			<div class="col-md-4 setChartBlock">
+				<div class="setChart4">
+					<strong><?php echo $totalDistanceCnt; ?></strong>
+					<span>전체 배송 거리(km)</span>
+					<img src="images/main/bgSetCarChart3.png" width="65" alt="" />
+				</div>
+			</div>
+		</div>
+			
+		<div class="row">
+			<div class="col-md-12 mainChart">
+				<div class="col-md-4 mainChartBlock">
+					<i class="fa fa-car"></i>
+					<div class="mainChartTitle"><?=date("Y")?>년 총 배차 건수</div>
+					<div class="mainChartNum"><strong><?php echo number_format($partVehicleCnt); ?></strong>건</div>
+				</div>
+				<div class="col-md-4 mainChartBlock">
+					<i class="fa fa-map-marker"></i>
+					<div class="mainChartTitle"><?php echo date("Y")?>년 총 배송 건수</div>
+					<div class="mainChartNum"><strong><?php echo number_format($partDeliveryCnt); ?></strong>km</div>
+				</div>
+				<div class="col-md-4 mainChartBlock">
+					<i class="fa fa-map-marker"></i>
+					<div class="mainChartTitle"><?php echo date("Y")?>년 총 배송 거리</div>
+					<div class="mainChartNum"><strong><?php echo number_format($partDistanceCnt); ?></strong>km</div>
+				</div>
+			</div>
+		</div>
+		
+		<style>
+		.medals_layout td { padding:5px; font-size:16px; font-weight:600; vertical-align:middle; color:#444;}
+		.medals_layout .titTooltip { font-size:14px; color:#888;}
+		.medals_layout td b { font-size:25px;}
+		</style>
+		<script src="//code.highcharts.com/highcharts.js"></script>
+		<script src="//code.highcharts.com/modules/series-label.js"></script>
+		<script src="//code.highcharts.com/modules/exporting.js"></script>
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card matchHeight">
+					<div class="cardTitle">
+						<span class="titCard">
+							<i class="fa fa-line-chart mr5 cataxI"></i>배송 통계
+						</span>
+					</div>
+					<div class="cardCont">
+						<div id="drivingChart"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card matchHeight">
+					<div class="cardTitle"><span class="titCard"><i class="fa fa-mod-setCarList mr5 cataxI"></i>금일 배차 내역<a href="setCarTodayList.html" class="btn btn-xs btn-new-ok pull-right">더보기</a></span></div>
+					<div class="cardCont">
+						<!-- <div class="mb20"><a href="javascript:;" class="btn btn-new-ok btn-block">이전</a></div> -->
+						<table class="tblListNone table-hover">
+							<tbody>
+							<?php echo $TODAYLIST; ?>
+							</tbody>
+						</table>
+						<!-- <div class="mt20"><a href="javascript:;" class="btn btn-new-ok btn-block">다음</a></div> -->
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-4" style="display:none">
+				<div class="card">
+					<div class="cardTitle"><span class="titCard"><i class="fa fa-pencil mr5 cataxI"></i>수정 내역<!-- <a href="javascript:;" class="btn btn-xs btn-new-ok pull-right">더보기</a> --></span></div>
+					<div class="cardSearch">
+						<select class="btn btn-new-cancle" onchange="search()">
+							<option value="0">수정자</option>
+						</select>
+						<a href="javascript:;" class="btn btn-sm btn-new-ok pull-right"><i class="fa fa-calendar mr5"></i>기간검색</a>
+					</div>
+					<div class="cardCont">
+						<!-- <div class="mb20"><a href="javascript:;" class="btn btn-new-ok btn-block">이전</a></div> -->
+						<table class="tblListNone table-hover">
+							<tbody>
+							<!-- <tr>
+								<th></th>
+								<td>
+									<div class="txtTbl1">관리자</div>
+									<div class="txtTbl2">차량 운행 내역 뉴코란도 32허7777 수정</div>
+									<div class="txtTbl2">17.05.18(08:24)</div>
+								</td>
+							</tr> -->
+							</tbody>
+						</table>
+						<!-- <div class="mt20"><a href="javascript:;" class="btn btn-new-ok btn-block">다음</a></div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 2017-07-05 임시 주석처리
+	<div class="col-md-3">
+		<div class="card">
+			<div class="cardTitle"><span class="titCard"><i class="fa fa-exchange mr5 fa-rotate-90 cataxI"></i>배차 신청 현황<a href="javascript:;" class="btn btn-xs btn-new-ok pull-right">더보기</a></span></div>
+			<div class="cardSearch">
+				<select class="btn btn-new-cancle" onchange="search()">
+					<option value="0">전체 부서</option>
+				</select>
+				<a href="javascript:;" class="btn btn-sm btn-new-ok pull-right"><i class="fa fa-calendar mr5"></i>기간검색</a>
+			</div>
+			<div class="cardCont">
+				<div class="mb20"><a href="javascript:;" class="btn btn-new-ok btn-block">이전</a></div>
+				<table class="tblListNone">
+					<tbody>
+					<tr>
+						<th rowspan="9"></td>
+						<td>
+							<div class="txtTbl1">아우디 45허1234</div>
+							<div class="txtTbl2">강남지사 영업팀 [과장] 박장원</div>
+							<div class="txtTbl3">17.05.24(11:00) ~ 17.05.24(18:00)</div>
+							<a href="javascript:;" class="btn btn-sm btn-new-cancle">미승인</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="txtTbl1">뉴코란도 32허7777</div>
+							<div class="txtTbl2">강북지사 관리팀 [대리] 박용태</div>
+							<div class="txtTbl3">17.05.24(11:00) ~ 17.05.24(18:00)</div>
+							<a href="javascript:;" class="btn btn-sm btn-new-cancle">미승인</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				<div class="mt20"><a href="javascript:;" class="btn btn-new-ok btn-block">다음</a></div>
+			</div>
+		</div>
+	</div>
+	-->
+</div>
+
+<script>
+//높이 맞추기
+var matchH;
+var matchHresize;
+$(".matchHeight").each(function(){
+	var thisHeight = $(this).outerHeight();
+	if (matchH){
+		if(thisHeight > matchH){
+			matchH = thisHeight;
+		}
+	} else {
+		matchH = thisHeight;
+	}
+});
+$(window).load(function(){
+	$(".matchHeight").outerHeight(matchH);
+});
+
+$(window).resize(function(){
+	matchHresize = '';
+	$(".matchHeight").removeAttr("style");
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchHresize){
+			if(thisHeight > matchHresize){
+				matchHresize = thisHeight;
+			}		
+		} else {
+			matchHresize = thisHeight;
+		}
+	});
+	$(".matchHeight").outerHeight(matchHresize);
+});
+</script>
+
+<? include "inc_html/footer.html"; ?>

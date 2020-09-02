@@ -1,0 +1,15 @@
+<!-- 2017-08-28 박용태 주석
+<div class="companyLogo">
+	<span class="img">
+	<? if(empty($company["logoUrl"]) == false) { ?>
+		<br><br>
+		<img src="<?=_DATA_SERVER?><?=$company['logoUrl']?>" />
+	<? } ?>
+	</span>
+</div>
+-->
+<h1><a href="main.html"><img src="images/common/lgo_login.png" width="142" alt="장보고 로고" /></a></h1>
+<div class="companyName"><?=$company['name']?>(<?=$companyInfoSe['ci_locationName']?>)</div>
+<div class="companyCode">지점코드 : <?=$company['ikey']?></div>
+
+<!-- <div><a class="btn btn_small btn-biz" href="sheet/sheet_image.php?seq=<?=$company['seq']?>">견적서 다운로드</a></div> -->

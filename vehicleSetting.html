@@ -1,0 +1,119 @@
+<? 
+include "inc_html/header.html"; 
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$vo_guestId						=	$_SESSION["OMember_id"];
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db->que = "SELECT * FROM vehicleSetting WHERE vt_guestId='". $vo_guestId."'";
+$db->query();
+$vehicleSetting = $db->getRow();
+
+?>
+
+<script>
+function save()
+{
+	if($("#speed").val().length < 1) {
+		alert("운행속도를 입력해 주세요.");
+		$("#speed").focus();
+		return;
+	}
+
+	if($("#time").val().length < 1) {
+		alert("하차시간을 입력해 주세요.");
+		$("#time").focus();
+		return;
+	}
+
+	submitForm.action = "post/vehicleSettingPost.php";
+	submitForm.submit();	
+
+}
+
+</script>
+<form name="submitForm" method="post" action="post/vehicleSettingPost.php" enctype="multipart/form-data" autocomplete="off" >
+<div class="row">
+	<div class="col-md-12 col-lg-12">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">배차 설정</span>
+				
+				<span class="txtCard">
+					※ 배차설정을 변경 하실수 있습니다.
+				</span>
+			</div>
+			<div class="cardCont">
+				<table class="tbl_none">
+					<colgroup>
+						<col width="160" />
+						<col width="" />
+					</colgroup>
+					<tr>
+						<th>운행속도</th>
+						<td>
+							<input type="text" name="speed" id="speed" value="<?=$vehicleSetting['vt_speed']?>" class="input" placeholder="운행속도를 입력해주세요." /> Km
+						</td>
+					</tr>
+					<tr>
+						<th>하차시간</th>
+						<td>
+							<input type="text" name="time" id="time" value="<?=$vehicleSetting['vt_time']?>" class="input" placeholder="하차시간을 설정해주세요." /> 분
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		$(".matchHeight").outerHeight(matchH);
+	});
+
+	$(window).resize(function(){
+		matchHresize = '';
+		$(".matchHeight").removeAttr("style");
+		$(".matchHeight").each(function(){
+			var thisHeight = $(this).outerHeight();
+			if (matchHresize){
+				if(thisHeight > matchHresize){
+					matchHresize = thisHeight;
+				}		
+			} else {
+				matchHresize = thisHeight;
+			}
+		});
+		$(".matchHeight").outerHeight(matchHresize);
+	});
+	</script>
+</div>
+</form>
+
+<div class="center mb20"><input type="button" value="저	장" onclick="save()" class="btn btn-lg btn-new-ok" /></div>
+
+<? include "inc_html/footer.html"; ?>

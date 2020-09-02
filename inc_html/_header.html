@@ -1,0 +1,243 @@
+<?
+//###################################################
+// Header
+// 2016. 08. 18
+//###################################################
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Include
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+include "inc/config.php";
+include "inc/lib.inc.php";
+include "inc/mysql.inc.php";
+include "inc/payment.inc.php";
+
+
+//$LOGIN_ID = "admin";
+/*
+if(strlen($LOGIN_ID) < 2)
+{
+	header('Location:/index.html');
+}
+*/
+$COMPANY_SEQ = 100;
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+$payment = new Payment($db, $COMPANY_SEQ);
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$db->que = "SELECT * FROM company WHERE seq=". $COMPANY_SEQ;
+$db->query();
+$company = $db->getRow();
+
+$db->que = " SELECT * FROM companyInfo WHERE ci_guestId='admin'";
+$db->query();
+$companyInfoSe = $db->getRow();
+
+
+
+$menuInfo["main"]							= "|Main|Main|운행 내역 관리 및 합리적인 지출 관리를 도와드립니다.";
+$menuInfo["department"]						= "C01|회사 관리|부서 관리|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|기업 내 부서를 등록해주세요.|oNLLnQ09kGg|카택스 어플 - 부서 선택 화면";
+$menuInfo["duty"]							= "C01|회사 관리|직책 관리|직급체계 등록이 가능합니다.|직급/직책을 등록하여|앱 사용자가 직책을 설정할수 있게 해주세요.|_R43p_hmfz0|카택스 어플 - 직책 선택 화면";
+$menuInfo["car"]							= "C01|회사 관리|차량 관리|운행중인 차량 정보를 등록하고 개인권한을 부여할 수 있습니다.|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|기업 내 부서를 등록해주세요.|DhWcn2Y2XOQ|카택스 어플 - 차량 선택 화면";
+$menuInfo["user"]							= "C01|회사 관리|사용자 관리|사용자 승인 및 관리가 가능합니다.|운전자가 보낸 카택스 앱 사용요청을 승인하거나|카택스 앱을 사용할 운전자를 등록해 주세요.|V-gB17JFx3A|카택스 어플 - 사용 신청 화면";
+
+$menuInfo["setCar"]							= "C02|차량 배차|차량 수동 배차|최적의 차량 배차 경로를 알려줍니다.";
+$menuInfo["setCarList"]						= "C02|차량 배차|차량 수동 배차|최적의 차량 배차 경로를 알려줍니다.";
+$menuInfo["setCarTodayList"]				= "C02|차량 배차|금일 배차 내역|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarHistory"]					= "C02|차량 배차|과거 배차 내역|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarTest"]						= "C02|차량 배차|차량 자동 배차|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarListTest"]					= "C02|차량 배차|차량 자동 배차|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarListPreview"]				= "C02|차량 배차|배송지역 미리보기|오늘 배송지점을 미리 확인할 수 있습니다.";
+
+$menuInfo["vehicleGuestInfo"]				= "C02|차량 배차|고객정보업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+$menuInfo["vehicleGuestOrderData"]			= "C02|차량 배차|고객배송정보업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+$menuInfo["vehicleGuestMutualDistance"]		= "C02|차량 배차|고객배송지상대경로업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+
+$menuInfo["routeManager"]					= "C03|경로 관리|경로데이터 관리|고객의 주소(좌표)변동으로 인한 구주소데이터 삭제";
+
+
+$menuInfo["setting"]						= "C05|설정|계정 및 회사정보|사용자 설정으로 다양한 활용이 가능합니다.";
+$menuInfo["vehicleSetting"]					= "C05|설정|배차 설정|배차에 관련된 기본값을 설정하실수 있습니다.";
+
+$menuInfo["setMenual"]						= "C06|사용자 메뉴얼";
+
+
+$urls				= explode("/", $_SERVER['PHP_SELF']);
+$menuCode			= explode(".", $urls[count($urls)-1])[0];
+$thisMenuInfo		= explode("|", $menuInfo[$menuCode]);
+
+$categoryCode	= $thisMenuInfo[0];
+$categoryTitle	= $thisMenuInfo[1];
+$menuCode		= $menuCode;
+$menuTitle		= $thisMenuInfo[2];
+$menuSummary	= $thisMenuInfo[3];
+$pageDetail1	= $thisMenuInfo[4];
+$pageDetail2	= $thisMenuInfo[5];
+$pageYoutube	= $thisMenuInfo[6];
+$pageApp		= $thisMenuInfo[7];
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta id="viewport" name="viewport" content="initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<!--[if lt IE 10]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- 미디어쿼리 IE호환 -->
+
+<!--[if lt IE 9]>
+ <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<!-- 미디어 쿼리 IE호환 끝 -->
+<title><?=_TITLE?></title>
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap-theme.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/jquery-ui.css?param=2"  />
+<link rel="stylesheet" type="text/css" media="all" href="css/common.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/layout2.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/jangbogo.css" rel="stylesheet" />
+<link rel="shortcut icon" type="image/x-icon" href="images/icon/favicon.png" />
+
+<link rel="stylesheet" type="text/css" media="all" href="css/font-awesome.min.css?param=2"  />
+
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.4.ui.js"></script>
+<script language='javascript' type="text/javascript" src="js/common.js"></script>
+<script language='javascript' type="text/javascript" src="js/bootstrap.js"></script>
+<!-- <script type="text/javascript" src="js/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="js/jqplot.cursor.min.js"></script>
+<script type="text/javascript" src="js/jqplot.pointLabels.min.js"></script> -->
+
+    <style>
+		input[type=checkbox] {  
+			display: none;  
+		}
+
+		input[type=checkbox]{
+			display: inline-block;  
+			cursor: pointer;  
+			position: relative;  
+			padding-left: 25px;  
+			margin-right: 15px;  
+			font-size: 13px;
+		}
+
+		input[type=checkbox]{     
+
+			content: "";  
+			display: inline-block;  
+		  
+			width: 20px;  
+			height: 20px;  
+		  
+			margin-right: 10px;  
+			position: absolute;  
+			left: 0;  
+			bottom: 1px;  
+			background-color: #ccc;  
+			border-radius: 2px; 
+			box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);  
+		}
+		input[type=checkbox]:checked{ 
+
+			content: "\2713";  /* 체크모양 */
+			text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);  
+			font-size: 18px; 
+			font-weight:800; 
+			color: #fff;  
+			background:#2f87c1;
+			text-align: center;  
+			line-height: 18px;  
+
+		} 
+
+    </style>
+</head>
+<body class="pc slide">
+
+<? include "pageGuide.html"; ?>
+
+<?
+if($company["payment"] != "Y")
+{
+?>
+<style>
+.newCompany { display:-webkit-box; display:-ms-flexbox; display:-webkit-flex; display:flex; -webkit-box-pack:center; -ms-flex-pack:center; -webkit-justify-content:center; justify-content:center; -webkit-box-align:center; -ms-flex-align:center; -webkit-align-items:center; align-items:center;}
+.newCompany { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.7); z-index:999999; display:none;}
+.newCompany .guideWrap .guideTitle { font-size:25px; color:#fff; text-align:center; padding-bottom:0.2em;}
+.newCompany .guideWrap .guideList { font-size:20px; color:#fff; text-align:left; padding-left:20px; border-left:6px solid #4a90e2; margin-bottom:1em;}
+.newCompany .guideWrap .guideTitle strong { font-weight:800; color:#ffcc00;}
+.newCompany .guideWrap .guideSub { font-size:19px; color:#fff; text-align:center;}
+.newCompany .guideWrap .guideSub strong { font-weight:400; text-decoration:underline; color:#ffcc00;}
+.newCompany .guideWrap .guideCompany { font-size:145px; color:#ffcc00; font-weight:800; text-align:center;}
+.newCompany .row { margin-bottom:5em; max-width:1000px; margin:0 auto 5em;}
+.newCompany .row .stebStyle { color:#fff; height:100%; font-size:18px; text-align:center;}
+.newCompany img { max-width:100%; vertical-align:middle;}
+.newCompany .mobHeight { position:relative; margin-bottom:10px; opacity:0.3;}
+.newCompany .progCode { position:absolute; font-size:50px; color:#000; top:20%; left:10%;}
+.newCompany .progName { position:absolute; font-size:21px; color:#000; top:25%; left:10%;}
+.newCompany .listArrow i { font-size:40px; color:#fff; vertical-align:middle;}
+.newCompany .popup_cookie { display:none;}
+.newCompany .popup_next:after { content:"다 음";}
+.newCompany .popup_close:after { content:"종 료";}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	if( getCookie("newCompany") != 'newCompany1' ) {
+		$(".newCompany").css("display", "flex");
+	}
+})
+
+$(".newCompany .popup_cookie").on("click", function(){
+	setCookie("newCompany", 'newCompany1', 1);
+	$(".newCompany").fadeOut(0);
+	return false;
+});
+var guideNum = 0;
+$(".newCompany .popup_next").on("click", function(){
+	guide(guideNum);
+});
+function guide(num) {
+	if(num == "0"){
+		$(".mobHeight1").css("opacity", "1");
+	} else if(num == "1") {
+		$(".mobHeight2").css("opacity", "1");
+		$(".popup_cookie").fadeIn(0);
+		$(".popup_next").addClass("popup_close");
+	} else if(num == "2") {
+		$(".newCompany").fadeOut(0);
+	}
+	guideNum += 1;
+}
+</script>
+<?
+}
+?>
+
+<script>
+function contractExtension() {
+	popup("contractExtension.html", 800, 730);
+}
+//console.log(CurrentFileName);
+</script>
+
+<article id="contents">
+	<div class="block">

@@ -1,0 +1,145 @@
+<? 
+include "inc_html/header.html"; 
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$companySeq			= $COMPANY_SEQ;
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$db->que = "SELECT * FROM company WHERE seq=". $companySeq;
+$db->query();
+$company = $db->getRow();
+
+
+
+$db->que = "SELECT COUNT(*) FROM user WHERE companySeq=". $companySeq. " AND enabled='Y'";
+$db->query();
+$userCount = $db->getOne();
+
+?>
+<script>
+function save() {
+	submitForm.submit();
+}
+
+</script>
+
+
+<form name="submitForm" method="post" action="post/settingAppPost.php" enctype="multipart/form-data" autocomplete="off" >
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="cardTitle">
+					<span class="titCard">운행기록 설정</span>
+				</div>
+				<div class="cardCont">
+					<table class="tbl_none">
+						<colgroup>
+							<col width="160" />
+							<col width="" />
+						</colgroup>
+						<tbody>
+							<th>운행목적 기본값</th>
+							<td>
+								<label><input type="radio" name="defaultPurpose" value="" <?=LIB::isChecked("", $company["defaultPurpose"])?> /> 미선택</label>
+								<label><input type="radio" name="defaultPurpose" value="a" <?=LIB::isChecked("a", $company["defaultPurpose"])?> /> 일반업무</label>
+								<label><input type="radio" name="defaultPurpose" value="e" <?=LIB::isChecked("e", $company["defaultPurpose"])?> /> 출·퇴근</label>
+								<label><input type="radio" name="defaultPurpose" value="g" <?=LIB::isChecked("g", $company["defaultPurpose"])?> /> 비업무용</label>
+							</td>
+						</tr>
+						<tr>
+							<th>운행일자 변경</th>
+							<td>
+								<label><input type="radio" name="lockDate" value="N" <?=LIB::isChecked("N", $company["lockDate"])?> /> 가능</label>
+								<label><input type="radio" name="lockDate" value="Y" <?=LIB::isChecked("Y", $company["lockDate"])?> /> 불가능</label>
+							</td>
+						</tr>
+						<tr>
+							<th>운행시간 변경</th>
+							<td>
+								<label><input type="radio" name="lockTime" value="N" <?=LIB::isChecked("N", $company["lockTime"])?> /> 가능</label>
+								<label><input type="radio" name="lockTime" value="Y" <?=LIB::isChecked("Y", $company["lockTime"])?> /> 불가능</label>
+							</td>
+						</tr>
+						<tr>
+							<th>운행거리 변경</th>
+							<td>
+								<label><input type="radio" name="lockDistance" value="N" <?=LIB::isChecked("N", $company["lockDistance"])?> /> 가능</label>
+								<label><input type="radio" name="lockDistance" value="Y" <?=LIB::isChecked("Y", $company["lockDistance"])?> /> 불가능</label>
+							</td>
+						</tr>
+						<tr>
+							<th>GPS 운행구간 지도 저장</th>
+							<td>
+								<label><input type="radio" name="lockSaveMapPoint" value="N" <?=LIB::isChecked("N", $company["lockSaveMapPoint"])?> /> 개인이 ON, OFF 가능</label>
+								<label><input type="radio" name="lockSaveMapPoint" value="Y" <?=LIB::isChecked("Y", $company["lockSaveMapPoint"])?> /> 무조건 저장</label>
+							</td>
+						</tr>
+						
+						<!-- 우리꺼 t100  다우는 D103 -->
+						<? if($company["ikey"] == "D103") {?>
+							<tr>
+							<th>자동운행 변경</th>
+							<td>
+								<label><input type="radio" name="lockAuto" value="N" <?=LIB::isChecked("N", $company["lockAuto"])?> /> 가능</label>
+								<label><input type="radio" name="lockAuto" value="Y" <?=LIB::isChecked("Y", $company["lockAuto"])?> /> 불가능</label>
+							</td>
+						</tr>
+						<? } ?>
+						
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="card">
+				<div class="cardTitle">
+					<span class="titCard">일반 설정</span>
+				</div>
+				<div class="cardCont">
+					<table class="tbl_none">
+						<tr>
+							<th>기기변경시 재승인</th>
+							<td>
+								<label><input type="radio" name="lockDeviceChange" value="Y" <?=LIB::isChecked("Y", $company["lockDeviceChange"])?> /> 사용함</label>
+								<label><input type="radio" name="lockDeviceChange" value="N" <?=LIB::isChecked("N", $company["lockDeviceChange"])?> /> 사용안함</label>
+								<br /><br />※ 하나의 앱 계정으로 여러명이(복수의 스마트폰 기기) 운행기록을 작성하는 것을 방지할 수 있음.
+							</td>
+						</tr>
+
+						<? if($company["logoEnabled"] == "Y") { ?>
+						<tr>
+							<th>회사로고</th>
+							<td>
+								<input type="file" name="logo"><br /><br />
+								 * 가로 135px / 세로 135px
+								<? if(empty($company["logoUrl"]) == false) { ?>
+									<br><br>
+									<img src="<?=_DATA_SERVER?><?=$company['logoUrl']?>" />
+								<? } ?>
+							</td>
+						</tr>
+						<? } ?>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>
+
+<div class="center mt20"><input type="button" value="확 인" onclick="save()" class="btn btn-lg btn-new-ok" /></div>
+
+<? include "inc_html/footer.html"; ?>

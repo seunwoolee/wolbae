@@ -1,0 +1,53 @@
+<?
+//###################################################
+// Header
+// 2016. 08. 18
+//###################################################
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Include
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+include "inc/config.php";
+include "inc/lib.inc.php";
+include "inc/mysql.inc.php";
+
+
+if(strlen($LOGIN_ID) < 2)
+{
+	header('Location:/oil/index.html');
+}
+
+?>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<!--[if lt IE 10]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- 미디어쿼리 IE호환 -->
+
+<!--[if lt IE 9]>
+ <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<!-- 미디어 쿼리 IE호환 끝 -->
+<title></title>
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap-theme.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/common.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/layout2.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/jquery-ui.css"  />
+<link rel="shortcut icon" type="image/x-icon" href="images/icon/favicon.png" />
+
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.4.ui.js"></script>
+<script language='javascript' type="text/javascript" src="js/common.js"></script>
+</head>
+<body>

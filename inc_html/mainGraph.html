@@ -1,0 +1,213 @@
+<?
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// 주행거리 및 유류비 통계
+$startTime = mktime(23,59,59, date("m")-5, 1, date("Y"));
+$ymd = date("Y-m-01", $startTime);
+
+$db->que = "SELECT SUM(distance) AS distance, SUM(cost) AS cost, year, month  FROM oilCostPaid WHERE companySeq=". $companySeq. " AND ymd>='". $ymd. "' GROUP BY ymd ORDER BY ymd";
+$db->query();
+$oilCostPaids = $db->getRows();
+
+function getIndex($oilCostPaids, $ym)
+{
+	$count = count($oilCostPaids);
+	for($i=0; $i<$count; $i++)
+	{
+		$yearMonth = $oilCostPaids[$i]["year"].$oilCostPaids[$i]["month"];
+		if($ym == $yearMonth)
+		{
+			return $i;
+		}
+	}
+
+	return -1;
+}
+
+
+for($i=0; $i<=5; $i++)
+{
+	$time = mktime(23,59,59, date("m") + ($i-5), 1, date("Y"));
+	$ym = date("Ym", $time);
+	$index = getIndex($oilCostPaids, $ym);
+	if($index == -1)
+	{
+		$oilGraph[$i]["distance"] = 0;
+		$oilGraph[$i]["cost"] = 0;
+		$oilGraph[$i]["year"] = date("Y", $time);
+		$oilGraph[$i]["month"] = date("m", $time);
+	}
+	else
+	{
+		$oilGraph[$i] = $oilCostPaids[$index];
+		if($oilGraph[$i]["distance"] > 0)
+		{
+			$oilGraph[$i]["distance"] = (int) ($oilGraph[$i]["distance"] / 100);
+		}
+
+		if($oilGraph[$i]["cost"] > 0)
+		{
+			$oilGraph[$i]["cost"] = (int) ($oilGraph[$i]["cost"] / 10000);
+		}
+	}
+	
+}
+
+
+$oilGraph = json_encode($oilGraph, JSON_UNESCAPED_UNICODE);
+
+
+//--------------------------------------------------------------------------------
+// 올래 토탈 주행거리 및 유류비 통계
+$db->que = "SELECT SUM(distance) AS distance, SUM(cost) AS cost  FROM oilCostPaid WHERE companySeq=". $companySeq. " AND ymd>='". date("Y-01-01"). "' AND ymd<='". date("Y-12-31 23:59:59"). "'";
+$db->query();
+$total = $db->getRow();
+
+//--------------------------------------------------------------------------------
+// 활성 사용자수
+$db->que = "SELECT COUNT(*) FROM user WHERE companySeq=". $companySeq. "  AND enabled='Y'";
+$db->query();
+$activeUserCount = $db->getOne();
+?>
+
+
+<link rel="stylesheet" type="text/css" media="all" href="css/jquery.jqplot.css" />
+<script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="js/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/counter.js"></script>
+<script type="text/javascript" src="js/jqplot.dateAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.logAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.canvasTextRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.canvasAxisTickRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot.highlighter.min.js"></script>
+
+
+
+<!-- 상단 DATA -->
+<div class="top_info receipt">
+	<div class="beforeClear row">
+		<div class="col-md-4 license chartDiv2">
+			<div>
+				<span class="count">0</span>대<br />
+				<span class="title">등록된 차량</span>
+			</div>
+		</div>
+		<div class="col-md-4 oil_reduce chartDiv2">
+			<div>
+				<span class="count">0</span>만원<br />
+				<span class="title"><?=date("Y")?>년 총 유류비</span>
+			</div>
+		</div>
+		<div class="col-md-4 ride_location chartDiv2">
+			<div>
+				<span class="count">0</span>km<br />
+				<span class="title"><?=date("Y")?>년 총 주행거리</span>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="main-chart w50 mt30">
+	<div class="left-chart">
+		<h2>월별 총 유류비</h2>
+		<div class="label">단위 : 만원</div>
+		<div id="chartOil"></div>
+	</div>
+</div>
+<div class="main-chart w50 mt30">
+	<div class="right-chart">
+		<h2>월별 총 운행거리</h2>
+		<div class="label">단위 : 100KM</div>
+		<div id="chartDrive"></div>
+	</div>
+</div>
+<div class="clear"></div>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		//var now = new Date();
+		//var year= now.getFullYear();	// 올해
+		//$(".oil_reduce b, .ride_location b").html(year);	// 올해 date
+
+
+/*
+		$(".license .count").numCounter({
+			goal	:	"<?=$activeUserCount?>" 		// 등록된 사용자 수
+		});
+		$(".oil_reduce .count").numCounter({
+			goal	:	"<?=$total['cost']?>" 	// 유류비
+		});
+		
+		
+		$(".ride_location .count").numCounter({
+			goal	:	"<?=$total['distance']?>"
+		});*/
+
+		$(".license .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 500,									// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$activeUserCount?>,		// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+
+
+
+		$(".oil_reduce .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 1000,								// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$total['cost']?>,				// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+
+
+
+		$(".ride_location .count").counter({
+			autoStart: true,								// true/false, default: true
+			duration: 1000,								// milliseconds, default: 1500
+			countFrom: 0,									// start counting at this number, default: 0
+			countTo: <?=$total['distance']?>,		// count to this number, default: 0
+			runOnce: true,									// only run the counter once, default: false
+			placeholder: "-",								// replace the number with this before counting,
+																// most useful with autoStart: false. default: undefined
+			easing: "linear",								// see http://gsgd.co.uk/sandbox/jquery/easing
+																// for all available effects, see visual examples:
+																// http://easings.net
+																// default: "easeOutQuad"
+			onStart: function() {},						// callback on start of the counting
+			onComplete: function() {},				// callback on completion of the counting
+			numberFormatter:								// function used to format the displayed numbers.
+			function(number) {
+				number = parseInt(number, 10);
+				return "" + number.format();
+			}
+		});
+	})
+
+	</script>

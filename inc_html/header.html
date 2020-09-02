@@ -1,0 +1,359 @@
+<?
+//###################################################
+// Header
+// 2016. 08. 18
+//###################################################
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Include
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+include "inc/config.php";
+include "inc/lib.inc.php";
+include "inc/mysql.inc.php";
+include "inc/payment.inc.php";
+
+
+if(strlen($LOGIN_ID) < 2)
+{
+	header('Location:/index.html');
+}
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+$payment = new Payment($db, $COMPANY_SEQ);
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$db->que = "SELECT * FROM company WHERE seq=". $COMPANY_SEQ;
+$db->query();
+$company = $db->getRow();
+
+$db->que = " SELECT * FROM companyInfo WHERE ci_guestId='".$_SESSION["OMember_id"]."'";
+$db->query();
+$companyInfoSe = $db->getRow();
+
+
+
+$menuInfo["main"]							= "|Main|Main|운행 내역 관리 및 합리적인 지출 관리를 도와드립니다.";
+$menuInfo["department"]						= "C01|회사 관리|부서 관리|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|기업 내 부서를 등록해주세요.|oNLLnQ09kGg|카택스 어플 - 부서 선택 화면";
+$menuInfo["duty"]							= "C01|회사 관리|직책 관리|직급체계 등록이 가능합니다.|직급/직책을 등록하여|앱 사용자가 직책을 설정할수 있게 해주세요.|_R43p_hmfz0|카택스 어플 - 직책 선택 화면";
+$menuInfo["car"]							= "C01|회사 관리|차량 관리|운행중인 차량 정보를 등록하고 개인권한을 부여할 수 있습니다.|부서(지사)를 등록하면 부서별 운행 내역 및 지출을 확인할 수 있습니다.|기업 내 부서를 등록해주세요.|DhWcn2Y2XOQ|카택스 어플 - 차량 선택 화면";
+$menuInfo["user"]							= "C01|회사 관리|사용자 관리|사용자 승인 및 관리가 가능합니다.|운전자가 보낸 카택스 앱 사용요청을 승인하거나|카택스 앱을 사용할 운전자를 등록해 주세요.|V-gB17JFx3A|카택스 어플 - 사용 신청 화면";
+
+$menuInfo["setCar"]							= "C02|차량 배차|차량 수동 배차|최적의 차량 배차 경로를 알려줍니다.";
+$menuInfo["setCarList"]						= "C02|차량 배차|차량 수동 배차|최적의 차량 배차 경로를 알려줍니다.";
+$menuInfo["setCarTodayList"]				= "C02|차량 배차|금일 배차 내역|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarHistory"]					= "C02|차량 배차|과거 배차 내역|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarTest"]						= "C02|차량 배차|차량 자동 배차|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarListTest"]					= "C02|차량 배차|차량 자동 배차|오늘 진행된 배차 경로를 확인할 수 있습니다.";
+$menuInfo["setCarListPreview"]				= "C02|차량 배차|배송지역 미리보기|오늘 배송지점을 미리 확인할 수 있습니다.";
+
+$menuInfo["vehicleGuestInfo"]				= "C02|차량 배차|고객정보업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+$menuInfo["vehicleGuestOrderData"]			= "C02|차량 배차|고객배송정보업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+$menuInfo["vehicleGuestMutualDistance"]		= "C02|차량 배차|고객배송지상대경로업데이트|최종 진행된 과거 배차 경로를 검색하여 확인할 수 있습니다.";
+
+$menuInfo["routeManager"]					= "C03|경로 관리|경로데이터 관리|고객의 주소(좌표)변동으로 인한 구주소데이터 삭제";
+
+
+$menuInfo["setting"]						= "C05|설정|계정 및 회사정보|사용자 설정으로 다양한 활용이 가능합니다.";
+$menuInfo["vehicleSetting"]					= "C05|설정|배차 설정|배차에 관련된 기본값을 설정하실수 있습니다.";
+
+$menuInfo["setMenual"]						= "C06|사용자 메뉴얼";
+
+
+$urls				= explode("/", $_SERVER['PHP_SELF']);
+$menuCode			= explode(".", $urls[count($urls)-1])[0];
+$thisMenuInfo		= explode("|", $menuInfo[$menuCode]);
+
+$categoryCode	= $thisMenuInfo[0];
+$categoryTitle	= $thisMenuInfo[1];
+$menuCode		= $menuCode;
+$menuTitle		= $thisMenuInfo[2];
+$menuSummary	= $thisMenuInfo[3];
+$pageDetail1	= $thisMenuInfo[4];
+$pageDetail2	= $thisMenuInfo[5];
+$pageYoutube	= $thisMenuInfo[6];
+$pageApp		= $thisMenuInfo[7];
+
+/*foreach($menuName AS $key => $value)
+{
+	if($key == $thisPage)
+	{
+		$on = "on";
+	}
+	else
+	{
+		$on = "";
+	}
+
+	$MENU_LIST .= "<li><a href='". $key. "' class='menuDep1 ". $on. "'><i class='fa fa-home' aria-hidden='true'></i><span>". $value. "</span><b></b></a></li>";
+}*/
+
+
+
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta id="viewport" name="viewport" content="initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<!--[if lt IE 10]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- 미디어쿼리 IE호환 -->
+
+<!--[if lt IE 9]>
+ <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<!-- 미디어 쿼리 IE호환 끝 -->
+<title><?=_TITLE?></title>
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap-theme.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/jquery-ui.css?param=2"  />
+<link rel="stylesheet" type="text/css" media="all" href="css/common.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/layout2.css?param=2" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="all" href="css/jangbogo.css" rel="stylesheet" />
+<link rel="shortcut icon" type="image/x-icon" href="images/icon/favicon.png" />
+
+<link rel="stylesheet" type="text/css" media="all" href="css/font-awesome.min.css?param=2"  />
+
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script language='javascript' type="text/javascript" src="js/jquery-1.11.4.ui.js"></script>
+<script language='javascript' type="text/javascript" src="js/common.js"></script>
+<script language='javascript' type="text/javascript" src="js/bootstrap.js"></script>
+
+
+
+<!-- <script type="text/javascript" src="js/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="js/jqplot.cursor.min.js"></script>
+<script type="text/javascript" src="js/jqplot.pointLabels.min.js"></script> -->
+</head>
+<body>
+
+<? include "pageGuide.html"; ?>
+
+<?
+if($company["payment"] != "Y")
+{
+?>
+<style>
+.newCompany { display:-webkit-box; display:-ms-flexbox; display:-webkit-flex; display:flex; -webkit-box-pack:center; -ms-flex-pack:center; -webkit-justify-content:center; justify-content:center; -webkit-box-align:center; -ms-flex-align:center; -webkit-align-items:center; align-items:center;}
+.newCompany { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.7); z-index:999999; display:none;}
+.newCompany .guideWrap .guideTitle { font-size:25px; color:#fff; text-align:center; padding-bottom:0.2em;}
+.newCompany .guideWrap .guideList { font-size:20px; color:#fff; text-align:left; padding-left:20px; border-left:6px solid #4a90e2; margin-bottom:1em;}
+.newCompany .guideWrap .guideTitle strong { font-weight:800; color:#ffcc00;}
+.newCompany .guideWrap .guideSub { font-size:19px; color:#fff; text-align:center;}
+.newCompany .guideWrap .guideSub strong { font-weight:400; text-decoration:underline; color:#ffcc00;}
+.newCompany .guideWrap .guideCompany { font-size:145px; color:#ffcc00; font-weight:800; text-align:center;}
+.newCompany .row { margin-bottom:5em; max-width:1000px; margin:0 auto 5em;}
+.newCompany .row .stebStyle { color:#fff; height:100%; font-size:18px; text-align:center;}
+.newCompany img { max-width:100%; vertical-align:middle;}
+.newCompany .mobHeight { position:relative; margin-bottom:10px; opacity:0.3;}
+.newCompany .progCode { position:absolute; font-size:50px; color:#000; top:20%; left:10%;}
+.newCompany .progName { position:absolute; font-size:21px; color:#000; top:25%; left:10%;}
+.newCompany .listArrow i { font-size:40px; color:#fff; vertical-align:middle;}
+.newCompany .popup_cookie { display:none;}
+.newCompany .popup_next:after { content:"다 음";}
+.newCompany .popup_close:after { content:"종 료";}
+</style>
+<div class="newCompany">
+	<div class="guideWrap">
+		<div class="guideTitle">제이코프 <strong>‘회사코드’</strong>가 <strong>발급</strong>되었습니다.</div>
+		<div class="guideSub">(카택스 어플 사용자 등록시 <strong>회사코드를 꼭 입력</strong>하셔야 합니다.)</div>
+		<div class="guideCompany"><?=$company['ikey']?></div>
+		<div class="guideList">카택스 어플 회사코드 입력 방법</div>
+		<div class="row">
+			<div class="stebStyle col-md-3">
+				<div class="mobHeight" style="opacity:1;"><img src="images/common/img_new_mobile1.png" alt="" /></div>
+				신규 사용자 등록
+			</div>
+			<div class="col-md-1 listArrow"><i class="fa fa-arrow-right"></i></div>
+			<div class="stebStyle col-md-3">
+				<div class="mobHeight mobHeight1">
+					<div class="progCode"><?=$company['ikey']?></div>
+					<img src="images/common/img_new_mobile2.png" alt="" />
+				</div>
+				회사코드 입력
+			</div>
+			<div class="col-md-1 listArrow"><i class="fa fa-arrow-right"></i></div>
+			<div class="stebStyle col-md-3">
+				<div class="mobHeight mobHeight2">
+					<div class="progName"><?=$company['name']?></div>
+					<img src="images/common/img_new_mobile3.png" alt="" />
+				</div>
+				사용자 정보 입력
+			</div>
+			<script>
+			$(window).load(function(){
+				$(".listArrow").each(function(){
+					var mopHeight = $(this).prev("div").find(".mobHeight img").height();
+					$(this).css("line-height", mopHeight + "px");
+					// alert($(this).find("img").height());
+				});
+			});
+			</script>
+		</div>
+		<div class="text-center">
+			<a href="javascript:;" class="btn btn-lg btn-default popup_cookie">오늘 하루 보지 않기</a>
+			<a href="javascript:;" class="btn btn-lg btn-oil popup_next"></a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	if( getCookie("newCompany") != 'newCompany1' ) {
+		$(".newCompany").css("display", "flex");
+	}
+})
+
+$(".newCompany .popup_cookie").on("click", function(){
+	setCookie("newCompany", 'newCompany1', 1);
+	$(".newCompany").fadeOut(0);
+	return false;
+});
+var guideNum = 0;
+$(".newCompany .popup_next").on("click", function(){
+	guide(guideNum);
+});
+function guide(num) {
+	if(num == "0"){
+		$(".mobHeight1").css("opacity", "1");
+	} else if(num == "1") {
+		$(".mobHeight2").css("opacity", "1");
+		$(".popup_cookie").fadeIn(0);
+		$(".popup_next").addClass("popup_close");
+	} else if(num == "2") {
+		$(".newCompany").fadeOut(0);
+	}
+	guideNum += 1;
+}
+</script>
+<?
+}
+?>
+
+<script>
+function contractExtension() {
+	popup("contractExtension.html", 800, 730);
+}
+//console.log(CurrentFileName);
+</script>
+<div id="header">
+	<div class="rightWrap">
+		<a href="javascript:;" class="slideLnb">
+			<i class="fa fa-list"></i>
+		</a>
+		<div class="rightBtn"><a href="php/logout.php" class="btn btn-sm btn-new-cancle btn_close">로그아웃</a></div>
+		<!-- 2017-08-28 박용태 주석
+		<div class="txtLicense">
+			<? if($licenceExpireTime > 0) { ?>
+				<button class="btn btn-xs btn-new-ok" onclick="location.href='contract.html'"><i class="fa fa-clock-o"></i> 계약연장 신청하기</button>
+			<? } else { ?>
+				<button class="btn btn-xs btn-new-ok" onclick="location.href='contract.html'"><i class="fa fa-clock-o"></i> 사용료 결제하기</button>
+			<? } ?>
+			<?=$licenceExpireDate?>
+		</div>
+		-->
+	</div>
+	<script>
+	var is_device;
+	var now_device;
+	$(window).load(function(){
+		if($(window).outerWidth()<800){
+			is_device = "mobile";
+			$("body").removeClass("pc").addClass("mobile");
+		} else {
+			is_device = "pc";
+			$("body").removeClass("mobile").addClass("pc");
+		}
+		now_device = is_device;
+	});
+	$(window).resize(function(){
+		$("body").css("overflow", "hidden");
+		if($(window).outerWidth()<800){
+			is_device = "mobile";
+			$("body").removeClass("pc").addClass("mobile");
+		} else {
+			is_device = "pc";
+			$("body").removeClass("mobile").addClass("pc");
+		}
+		if(now_device != is_device){
+			$("body").removeClass("slide");
+			now_device = is_device;
+		}
+		$("body").removeAttr("style");
+	});
+	$(".slideLnb").on("click", function(){
+		if($("body").hasClass("slide")){
+			$("body").removeClass("slide");
+		} else {
+			$("body").addClass("slide");
+		}
+	});
+	</script>
+	<div class="contentHeader">
+		<div class="pageIcon"><i class="fa <? echo "fa-mod-". $menuCode; ?>"></i></div>
+		<div class="pageTitle"><? echo $menuTitle; ?></div>
+		<div class="pageSub"><? echo $menuSummary; ?></div>
+		<div class="path">
+			<? if ($categoryCode) echo "<div><i class='fa fa-mod-". $categoryCode. " mr5'></i>". $categoryTitle. "<i class='fa fa-angle-right ml10 mr10'></i></div>"; ?>
+			<div class='active'><i class='fa <? echo "fa-mod-". $menuCode; ?> mr5'></i><? echo $menuTitle; ?></div>
+		</div>
+	</div>
+</div>
+<!-- 2017-08-28 박용태 주석
+<div id="snb">
+	<ul>
+		<?
+		if($pageYoutube != "")
+		{
+		?>
+		<li class="btn_adm_pdf">
+			<a href="http://cartax.biz/oil_adm_manual.pdf" target="_blank">
+				<img src="images/common/ico_question.png" alt="help" />
+				<span>관리자 사용법</span>
+			</a>
+			<a href="javascript:showGuide('<?=$pageYoutube?>');" target="_blank">
+				<i class="fa fa-youtube-play" style="font-size:60px; color:#e62117;"></i>
+				<!-- <div style="text-align:right"><img src="images/common/img_youtube.png" width="60" alt="" /></div>
+				<img src="images/common/ico_question.png" alt="help" />
+				<span><? echo $menuTitle; ?><br />사용 안내 영상</span>
+			</a>
+		</li>
+		<?
+		}
+		?>
+		<li class="btn_app_pdf">
+			<a href="http://cartax.biz/oil_app_manual.pdf" target="_blank"><span>App 사용법</span></a>
+		</li>
+		<li class="btn_cartex_pdf">
+			<a href="http://cartax.biz/cartax_proposal.pdf" target="_blank"><span style="color:#444;">카택스 소개서</span></a>
+		</li>
+	</ul>
+</div>
+ -->
+<article id="contents">
+	<div class="block">
+		<div id="lnb">
+			<div class="profile">
+				<? include "profile_inc.html"; ?>
+			</div>
+			<div class="menu">
+				<? include "menu_inc.html"; ?>
+			</div>
+		</div>

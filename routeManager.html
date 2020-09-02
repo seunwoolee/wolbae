@@ -1,0 +1,105 @@
+<? 
+include "inc_html/header.html"; 
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+
+?>
+
+<script>
+function save() {
+
+	if($("#guestId").val().length < 1) {
+		alert("고객ID를 입력해 주세요.");
+		$("#guestId").focus();
+		return;
+	}
+	
+	if(confirm( $('#guestId').val() + "고객의 경로데이터정보를 삭제하시겠습니까?")){
+		submitForm.action = "post/routeManagerPost.php";
+		submitForm.submit();
+	} else {
+		alert("취소하였습니다.");
+	}
+}
+
+</script>
+<form name="submitForm" method="post" enctype="multipart/form-data" autocomplete="off" >
+<div class="row">
+	<div class="col-md-12 col-lg-12 form-inline">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">경로데이터 관리</span>
+				
+				<span class="txtCard">
+					※ 고객의 주소정보 및 좌표정보가 변경되었을경우, 기존입력되어있는 고객의 경로데이터를 삭제합니다.
+				</span>
+			</div>
+			<div class="cardCont">
+				<table class="tbl_none">
+					<colgroup>
+						<col width="160" />
+						<col width="" />
+					</colgroup>
+					<tr>
+						<th>고객ID</th>
+						<td>
+							<input type="text" name="guestId" id="guestId" value="" class="form-control" style="width:300px;" placeholder="고객ID를 입력하세요." />
+						</td>
+					</tr>
+	
+				</table>
+			</div>
+		</div>
+	</div>
+
+	
+
+	<script>
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		$(".matchHeight").outerHeight(matchH);
+	});
+
+	$(window).resize(function(){
+		matchHresize = '';
+		$(".matchHeight").removeAttr("style");
+		$(".matchHeight").each(function(){
+			var thisHeight = $(this).outerHeight();
+			if (matchHresize){
+				if(thisHeight > matchHresize){
+					matchHresize = thisHeight;
+				}		
+			} else {
+				matchHresize = thisHeight;
+			}
+		});
+		$(".matchHeight").outerHeight(matchHresize);
+	});
+	</script>
+</div>
+</form>
+
+<div class="center mb20"><input type="button" value="삭 제" onclick="save()" class="btn btn-lg btn-new-ok" /></div>
+
+<? include "inc_html/footer.html"; ?>

@@ -1,0 +1,1057 @@
+<? 
+include "inc_html/header.html";
+include "query/vehicleQuery.php";
+include "php/routeColor.php";
+
+$define_APIKEY = "b30c79b1-c642-45a1-8685-cdcfdbecf8ff";
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$deliveryDate		= $_GET["deliveryDate"];
+//$deliveryDate		= "2017-11-01";
+$meridiemType		= $_GET["meridiemType"];	// 오전, 오후
+$meridiemFlag		= $_GET["meridiemFlag"];	// 오전, 오후 배차 분할 정보
+$locationId			= $_GET["locationId"];
+
+if($meridiemType=='오전'){
+	$meridiemType = '0';
+} else{
+	$meridiemType = '1';
+}
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$db = new Mysql();
+$vehicleQuery = new VehicleQuery();
+$vehicleQuery->init($db);
+$resultGroupListData = $vehicleQuery->getMapGroupListData($deliveryDate, $meridiemType, $locationId, $meridiemFlag);
+
+$companyInfo = $vehicleQuery->getCompanyInfo();
+
+$initLat		= $companyInfo['ci_lat'];
+$initLon		= $companyInfo['ci_lon'];
+$initGuestId	= $companyInfo['ci_guestId'];
+
+?>
+<script src="https://api2.sktelecom.com/tmap/js?version=1&format=javascript&appKey=<?php echo $define_APIKEY; ?>"></script>
+<script type="text/javascript" src="js/colorcode.js"></script>
+<script type="text/javascript" src="js/vehicleRoute.js" charset="utf-8"></script>
+<script>
+
+var deliveryDate	= "<?=$deliveryDate?>";		// 배송날짜
+var locationId		= "<?=$locationId?>";		// 거점ID
+var meridiemType	= "<?=$meridiemType?>";		// 오전, 오후
+var meridiemFlag	= "<?=$meridiemFlag?>";		// 오전, 오후 배차 분할 플래그
+var apiKey			= "<?=$define_APIKEY?>";	// APIKEY
+
+var vehicleGuestOrderDataList = new Array();
+var vehicleErrorUserList = new Array();
+
+var checkLine = false;
+
+var strArrayNo="";
+
+var strCheckBoxRoute;			// 채크박스 - 경로채크상태값 저장용
+var bCheckBoxAll;				// 채크박스 - 전체경로채크상태값 저장용
+var bCheckBoxLineRemove;		// 채크박스 - 지도 경로선제거 상태값 저장용
+
+$(document).ready(function(){
+	$("#loadingDataNum").text("잠시만 기다려 주세요.");
+
+	loadModal();
+	loadVehicleList(); // initView() 여기에 포함시켰습니다.
+	//initView();
+	initData();
+});
+
+//로딩 뷰
+function loadModal() {
+	$("#loading").modal({
+		backdrop	:	"static"
+	});
+}
+
+//초기 뷰
+function initView(){
+
+	var date		= "<?=$deliveryDate?>";
+	var time		= "<?=$meridiemType?>";
+	var timeFlag	= "<?=$meridiemFlag?>";
+
+	/*
+	if(time == '0'){
+		time = "오전 ";
+	} else {
+		time = "오후 ";
+	}
+	*/
+
+	date = date.split("-");
+	//$(".col-md-3 .titCard").text(date[0]+"년 "+date[1]+"월 "+date[2]+"일 "+time+" "+ timeFlag + "번째 배송 차량 목록");
+	$("#check-all").prop('checked', true) ;
+
+	checkAll("input:checkbox[id='check-all']", 'setCarItem');
+	ajaxGetMapRouteData();
+}
+
+//초기 데이터
+function initData(){
+	var initLat = "<?=$initLat?>";
+	var initLon = "<?=$initLon?>";
+	var initGuestId = "<?=$initGuestId?>";
+
+	setInitData(apiKey, initGuestId, initLat, initLon, deliveryDate, locationId, meridiemType);
+	initTmap();	
+}
+
+//배송경로 전체 체크
+function allCheck(){
+
+	//checkAll("input:checkbox[id='check-all']", 'setCarItem');
+	checkBoxStatus();
+	checkGroupListData();
+
+	/*
+	$(".setCarItem").each(function(e){
+		if($(this).is(":checked")){
+			$(this).parents(".listItem").addClass("checkItem");
+		}else{
+			$(this).parents(".listItem").removeClass("checkItem");
+		}
+	});
+	*/
+
+}
+
+/*
+function allCheck2(data){
+	if(data) {
+		$(document).find(".listItem").removeClass("checkItem");
+		$(document).find("input[type='checkbox'].setCarItem").attr("checked", false);
+	} else {
+		$(document).find(".listItem").addClass("checkItem");
+		$(document).find("input[type='checkbox'].setCarItem").attr("checked", true);
+	}
+	checkBoxStatus();
+	checkGroupListData();
+	return false;
+}
+*/
+
+//경로 선 출력,미출력
+function lineCheck(bStatus){
+	
+	//var lineIs = $("#check-line").is(":checked");
+	//checkBoxStatus();
+	//lineMapView(strCheckBoxRoute.slice(0, -1), lineIs);
+	checkBoxStatus();
+	lineMapView(strCheckBoxRoute.slice(0, -1), bStatus);
+	
+}
+
+//경로 선 출력,미출력
+function lineCheck2(){
+	checkBoxStatus();
+	checkGroupListData();
+}
+
+// 배차 지도에서 선 지우기 - 특정 경로를 지워보자규
+function displayRouteRemove(){
+	for(var i=0; i<arrMarker.length; i++){
+		for(var j=0; j<arrMarker[i].length;j++){
+			arrMarker[i][j].setVisibility(false);
+		}
+	}
+}
+
+//배송경로 체크 데이터 확인(전체)
+function checkGroupListData(){
+	
+	var nCarItemCount = $(".setCarItem").length;
+
+	for(i=0;i<nCarItemCount;i++){
+		var bStatus = $(".setCarItem").eq(i).prop("checked");
+	}
+
+	// 동적처리 필요
+	$.ajax({
+		type : "GET"
+		,url : "ajax/vehicleMapGroupListData.ajax.php"
+		,async : true		// 동기화처리
+		,data : {
+					"deliveryDate":<?php echo deliveryDate; ?>
+					,"locationId":<?php echo $locationId; ?>
+					,"meridiemType":<?php echo $meridiemType; ?>
+					,"meridiemFlag":<?php echo $meridiemFlag; ?>
+		}
+		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+		,success : function(data){
+			
+			resultGroupListData = data;
+			allMapView(strCheckBoxRoute.slice(0,-1));
+
+		}
+		,error: function( xhr, status ) {}
+		,complete : function(){}
+	});
+	
+}
+
+//배송경로 체크 데이터 확인(단일)
+function checkListData(vehicleNo){
+	
+	checkBoxStatus();
+	var is = $("#map"+vehicleNo).is(":checked");
+	singleMapView(vehicleNo, is);
+
+}
+
+/*
+function checkListDatas(){
+	singleMapView(vehicleNo, is);	
+}
+*/
+
+// 채크박스 상태값 채크
+function checkBoxStatus(){
+	
+	strCheckBoxRoute	= '';	// 채크박스 - 경로채크상태값 초기화
+	//bCheckBoxAll		= '';	// 채크박스 - 전체경로채크상태값 초기화 
+	//bCheckBoxLineRemove	= '';	// 채크박스 - 지도 경로선제거 상태값 초기화
+	var nCarItemCount = $(".setCarItem").length;
+
+	// 1. 경로번호 채크박스 상태값 저장
+	for(i=0;i<nCarItemCount;i++){
+		var bStatus = $(".setCarItem").eq(i).prop("checked");
+		if(bStatus){
+			strCheckBoxRoute = strCheckBoxRoute + String(i) + ",";
+		}
+	}
+
+
+
+	// 2. 전체경로선택상태값 저장
+	bCheckBoxAll = $("#check-all").prop("checked");
+
+	// 3. 경로선제거채크 상태값 저장
+	bCheckBoxLineRemove = $("#check-line").prop("checked");
+
+}
+
+// 채크박스 상태값 복원
+function checkBoxRestore(){
+
+	if(strCheckBoxRoute != "undefined"){
+
+		// 1. 경로번호 채크상태값 복원
+		var aryCheckBoxRoute = (strCheckBoxRoute.slice(0, -1)).split(',');
+
+		// removeClass
+		$(".setCarItem").parents(".listItem").removeClass("checkItem");
+
+		var nElementCnt = $(".setCarItem").length;
+		for(i=0;i<nElementCnt;i++){
+			$(".setCarItem").eq(i).prop("checked", false);
+		}
+
+		for(j=0;j<aryCheckBoxRoute.length;j++){
+			$(".setCarItem").eq(aryCheckBoxRoute[j]).parents(".listItem").addClass("checkItem");
+			$(".setCarItem").eq(aryCheckBoxRoute[j]).prop("checked", true);
+		}
+
+		// 2. 전체경로채크상태값 복원
+		$("#check-all").prop("checked", bCheckBoxAll);
+
+		// 3. 경로선제거채크 상태값 복원
+		$("#check-line").prop("checked", bCheckBoxLineRemove);
+	}
+
+}
+
+
+//초기화 재설정 버튼 클릭
+function reset() {
+
+	if(confirm("초기 재설정을 하시겠습니까?")){
+		updateVehicleAllocateResult('N');
+	} else {
+		return;
+	}
+}
+
+// 브라우저 새로고침없이, 데이터 갱신하긔 ( callBack 사용 )
+function loadVehicleList(complete_call){
+	complete_call = complete_call || function(){ initView(); };
+	$('#col-md-3').load("ajax/vehicleList.ajax.php", {
+														"deliveryDate" : deliveryDate
+														,"meridiemType" : meridiemType
+														,"locationId" : locationId
+														,"meridiemFlag" : meridiemFlag
+													  }, complete_call );
+}
+
+// 브라우저 새로고침없이, 데이터 갱신하긔 ( callBack 사용 )
+function simpleLoadVehicleList(complete_call){
+	complete_call = complete_call || function(){ var resultGroupListDataCnt = <?php echo count($resultGroupListData); ?>; };
+	$('#col-md-3').load("ajax/vehicleList.ajax.php", {
+														"deliveryDate"	: deliveryDate
+														,"meridiemType"	: meridiemType
+														,"locationId"	: locationId
+														,"meridiemFlag"	: meridiemFlag
+													  }, complete_call);
+}
+
+function vehicleRelocation(refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo){
+
+	if(confirm("경로정보를 다시 불러오시겠습니까?")){
+
+		$("#loadingDataNum").text("잠시만 기다려 주세요.");
+		loadModal();
+		
+		$.ajax({
+			type : "POST"
+			,url : "process/vehicleProcessRelocation.php"
+			,async : true		// 동기화처리
+			,data : {
+						"deliveryDate":refDeliveryDate
+						,"locationId":locationId
+						,"meridiemType":refMeridiemType
+						,"meridiemFlag":refMeridiemFlag
+						,"vehicleNo":refVehicleNo
+					}
+			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+			,success : function(data){
+				
+				removeRoute();
+				simpleLoadVehicleList();
+				$("#loading").modal("hide");
+				
+			}
+			,error: function( xhr, status ) {}
+			,complete : function(){ }
+		});
+		
+	} else{
+		return;
+	}
+
+}
+
+//배차 목록 상세보기 클릭
+function detail(vehicleNo, meridiemFlag){
+
+	$.ajax({
+		type : "GET"
+		,url : "ajax/orderUserList.ajax.php"
+		,async : true		// 동기화처리
+		,data : {
+					"deliveryDate":deliveryDate
+					,"locationId":locationId
+					,"meridiemType":meridiemType
+					,"meridiemFlag":meridiemFlag
+					,"vehicleNo":vehicleNo
+				}
+		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+		,success : function(data){
+			
+			$("#listDetail").html("");
+			var resultView			= '';
+			var nTotalPay			= 0;
+			var strDupleJusoFlg		= '';	// 주소 중첩지역 메시지처리
+			var strErrorJusoFlg		= '';	// 주소 오류지역 메시지처리(배송경로오류건, 배송경로추가건 포함)
+
+			var accnoDupleJuso		= '';
+			var accnoDupleJusoCopy	= '';
+			var deguestId			= '';
+			var deguestIdCopy		= '';
+
+			var deguestLat			= '';
+			var deguestLon			= '';
+			var deguestLatCopy		= '';
+			var deguestLonCopy		= '';
+
+			for(var i=0;i<data['orderUserList'].length;i++){
+			
+				var item = data['orderUserList'][i];
+	
+				var number = parseInt(item['vehicleNoIndex']);
+				number +=1;
+				//var number = parseInt(item['no']);
+			
+				var pay = "0";
+				if(item['deguestPay']!=null){
+					pay = numberWithCommas(item['deguestPay']);
+					nTotalPay += Number(item['deguestPay']);
+				}
+
+				accnoDupleJuso	= item['accnoDupleJuso'];
+				deguestId		= item['deguestId'];
+
+				deguestLat = item['deguestLat'];
+				deguestLon = item['deguestLon'];
+
+				// 중첩지역 표시처리 1번째 - 초기 orderData에서 dupleJuso 정보 반영된것
+				if(accnoDupleJuso != '' && (accnoDupleJusoCopy == accnoDupleJuso) && (deguestIdCopy != deguestId)){
+					strDupleJusoFlg = "(중첩지역)";
+				} else {
+
+					accnoDupleJusoCopy = accnoDupleJuso;
+					deguestIdCopy = deguestId;
+					
+					// 중첩지역 표시처리 2번째 - 주소정보 오류건에서 넘어온건, 
+					//if(deguestLat != '' && (deguestLatCopy == deguestLat) && (deguestLonCopy == deguestLon)){
+					//	strDupleJusoFlg = "(중첩지역)";
+					//} else {
+					//	deguestLatCopy = deguestLat;
+					//	deguestLonCopy = deguestLon;
+					//}
+
+				}
+
+				// 배송경로추가건 표시처리 - 배송경로추가건은 오류건으로 처리합니다
+				if(item['errorJusoFlag'] == 'Y'){
+					strErrorJusoFlg = '(배송경로추가건)';
+					number--;
+				}
+				
+				resultView = "<tr height='30'>"+
+								"<td align='center'>"+number+" "+strDupleJusoFlg+" " + strErrorJusoFlg +"</td>"+
+								"<td align='center'>"+item['deguestAccno']+"</td>"+
+								"<td align='center'>"+item['deguestName']+"</td>"+
+								"<td align='center'>"+item['deguestTel']+"</td>"+
+								"<td align='center'>"+item['Juso']+"</td>"+
+								"<td align='center'>"+pay+"원</td>"+
+							"</tr>";
+				$("#listDetail").append(resultView);
+				strDupleJusoFlg = '';
+				strErrorJusoFlg = '';
+			}
+
+			resultView = "<tr height='30'>"+
+							"<td colspan='6' align='center'>합계: " +numberWithCommas(nTotalPay)+ " 원</td>"+
+						 "</tr>";
+			$("#listDetail").append(resultView);		
+			$("#myModalLabel").text((vehicleNo+1) +"번경로 상세보기");
+			$("#detailModal").modal();
+		}
+		,error: function( xhr, status ) {}
+		,complete : function(){}
+	});
+}
+
+//초기 장보고 ERP 배송 데이터 확인
+function ajaxGetJangbogoDataAdd(){
+
+	loadModal();
+	var memetype = "";
+	if(meridiemType=='1'){
+		memetype = "b";
+	} else {
+		memetype = "a";
+	}
+
+	$.ajax({
+		type : "GET"
+		//,url : "http://app.mylawyer.pe.kr/admin/test.php"
+		//,url : "http://www.jangboja.com/shop/partner/baedal_orderlist.php"
+		,url : '<?php echo $companyInfo['ci_erpUrl']; ?>'
+		,async : false		// 동기화처리
+		,dataType : "jsonp"
+		,crossDomain: true
+		,jsonpCallback: "callback"
+		,data : {
+					"jum":"10"
+					,"gbn":memetype
+		}
+		,success : function(data){
+			add(data);
+		}
+		,error: function( xhr, status ) {
+
+		}
+		,complete : function(){ }
+		
+	});
+}
+
+//무조건 새로 추가된 주소건에 대해서만 처리, 동일한 주소에 추가 주문건이 들어와도 무시
+function add(Erp_vehicleGuestOrderData) {
+
+	//alert(deliveryDate + ' ' + locationId + ' ' + meridiemType + ' ' + meridiemFlag);
+	//$("#loading").modal("hide");
+	//return;
+	
+	Erp_vehicleGuestOrderData.deliveryDate	= deliveryDate;		// 배송날짜
+	Erp_vehicleGuestOrderData.locationId	= locationId;		// 거점ID
+	Erp_vehicleGuestOrderData.meridiemType	= meridiemType;		// 오전,오후 구분
+	Erp_vehicleGuestOrderData.meridiemFlag	= meridiemFlag;		// 오전,오후 플래그
+
+	$.ajax({
+		type : "POST"
+		,url : "ajax/addVehicleUserList.ajax.php"
+		,async : true		// 동기화처리
+		//,data : {"deliveryDate":deliveryDate, "locationId":locationId, "meridiemType":meridiemType}
+		,data : JSON.stringify(Erp_vehicleGuestOrderData)
+		,dataType : "json"
+		,success : function(data){	
+			$("#loading").modal("hide");
+
+			if(data['vehicleGuestOrderDataList']==null){
+				alert("추가된 배송경로 정보가 없습니다.");
+				return;
+			}
+			$("#listAdd").html("");
+			var orderView	= "";
+			var resultView	= "";
+			var vehicleAllocateResultList = data['vehicleAllocateResultList'];
+			vehicleGuestOrderDataList = data['vehicleGuestOrderDataList'];
+			for(var j=0;j<vehicleAllocateResultList.length;j++){
+				var itemResult = vehicleAllocateResultList[j];
+				var number = parseInt(itemResult['vehicleNo'])+1;
+				var distance = itemResult["distanceValue"];
+
+				if(distance > 999){
+					distance = (distance*0.001).toFixed(1)+"km";
+				} else {
+					distance = $distance+"m";
+				}
+				resultView += "<option value='"+itemResult['vehicleNo']+"'>"+number+" 경로["+distance+"]</option>";
+			}
+			
+			for(var i=0;i<vehicleGuestOrderDataList.length;i++){
+
+				var itemOrder = vehicleGuestOrderDataList[i];
+				orderView = "<tr height='30'>"+
+								"<td align='center'>"+
+									"<select class='input' name=order"+i+">"+
+										resultView+
+									"</select>"+
+								"</td>"+
+								"<td align='center'>"+itemOrder["guestName"]+"</td>"+
+								//"<td align='center'>"+itemOrder["guestTel"]+"</td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=lat"+i+" id=lat"+i+" style='width:100px;'"+ 
+									"value='"+itemOrder['guestLat']+"' ></input></td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=lon"+i+" id=lon"+i+" style='width:100px;'"+
+									"value='"+itemOrder['guestLon']+"' ></input></td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=juso"+i+" id=juso"+i+" style='width:250px;'"+ 
+									"value='"+itemOrder['guestJuso']+"'></input>"+
+									" <button type='button' class='btn btn-sm btn-new-find' onClick=searchJuso('"+i+"')>검색</button>"+
+								"</td>"+
+								//"<td align='center'>"+itemOrder["guestJuso"]+"</td>"+
+								//"<td align='center'>"+itemOrder["orderCount"]+"</td>"+
+						"</tr>";
+				$("#listAdd").append(orderView);
+				$("#addModal").modal();
+			}
+		}
+		,error: function( xhr, status ) {}
+		,complete : function(){}
+	});
+}
+
+// 배차 완료 확인
+function setVehicleComplete(){
+	if(confirm("배차를 완료하시겠습니까?")){
+		updateVehicleAllocateResult('Y');
+	}	
+}
+
+//배송 경로 오류 클릭
+//function alertModal(listCount, meridiemFlag){
+function getVehicleError(listCount, meridiemFlag){
+
+	//ajaxGuestMutualDistanceDataGet();
+	$.ajax({
+		type : "GET"
+		,url : "ajax/errorVehicleUserList.ajax.php"
+		,async : true		// 동기화처리
+		,data : {
+					"deliveryDate":deliveryDate
+					,"locationId":locationId
+					,"meridiemType":meridiemType
+					,"meridiemFlag":meridiemFlag
+				}
+		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+		,success : function(data){
+			if(data['errorUserList']==null){
+				alert("배송경로 오류 정보가 없습니다.");
+				return;
+			}
+			$("#listAlert").html("");
+			var orderView	= "";
+			var resultView	= "";
+			var vehicleAllocateResultList = data['vehicleAllocateResultList'];
+			vehicleErrorUserList = data['errorUserList'];
+
+			for(var j=0;j<vehicleAllocateResultList.length;j++){
+				var itemResult = vehicleAllocateResultList[j];
+				var number = parseInt(itemResult['vehicleNo']);
+				number += 1;
+				var distance = itemResult["distanceValue"];
+
+				if(distance > 999){
+					distance = (distance*0.001).toFixed(1)+"km";
+				} else {
+					distance = $distance+"m";
+				}
+
+				resultView += "<option value='"+itemResult['vehicleNo']+"'>"+number+" 경로["+distance+"]</option>";
+			}
+			
+			for(var i=0;i<vehicleErrorUserList.length;i++){
+				var itemOrder = vehicleErrorUserList[i];
+				
+				orderView = "<tr height='30'>"+
+								"<td align='center'>"+
+									"<select class='input' name=order"+i+">"+ 
+										resultView+
+									"</select>"+
+								"</td>"+
+								"<td align='center'>"+itemOrder["guestName"]+"</td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=lat"+i+" id=lat"+i+" style='width:100px;'"+ 
+									"value='"+itemOrder['guestLat']+"' ></input></td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=lon"+i+" id=lon"+i+" style='width:100px;'"+
+									"value='"+itemOrder['guestLon']+"' ></input></td>"+
+								"<td align='center'>"+
+									"<input type='text' class='input' name=juso"+i+" id=juso"+i+" style='width:250px;'"+ 
+									"value='"+itemOrder['guestJuso']+"'></input>"+
+									" <button type='button' class='btn btn-sm btn-new-find' onClick=searchJuso('"+i+"')>dd검색</button>"+
+								"</td>"+
+						"</tr>";
+				$("#listAlert").append(orderView);
+			}
+			$("#alertModal").modal();
+		}
+		,error: function( xhr, status ) {}
+		,complete : function(){}
+	});
+}
+
+//선택 경로 변경
+function vehicleIndexChange(vehicleNo, vehicleNoIndex, meridiemFlag){
+
+	var selectVehicleNo = $("select[name=selectChange]").val();
+	if(selectVehicleNo == vehicleNo){
+		alert('같은 경로로 변경할수 없습니다.\n변경될 경로를 다시 선택하세요.');
+		return;
+	}
+
+	checkBoxStatus();	// 채크박스 상태값 저장
+
+	if(confirm("경로를 변경하시겠습니까?")){
+
+		$.ajax({
+			type : "POST"
+			,url : "ajax/changeVehicleNo.ajax.php"
+			,async : true		// 동기화처리
+			,data : {
+						"deliveryDate":deliveryDate
+						,"locationId":locationId
+						,"meridiemType":meridiemType
+						,"meridiemFlag":meridiemFlag
+						,"vehicleNo":vehicleNo
+						,"vehicleNoIndex":vehicleNoIndex
+						,"changeVehicleNo":selectVehicleNo
+					}
+			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+			,success : function(data){
+
+				alert("변경이 완료되었습니다");
+				// 1. 변경전경로 지우기 js 실행
+				removeRoute();
+				simpleLoadVehicleList();
+			}
+			,error: function( xhr, status ) {}
+			,complete : function(){ }
+		});
+		
+	} else{
+		return;
+	}
+
+}
+
+//주소 경로 검색
+function searchJuso(index){
+
+	alert('testst');
+
+	var arrJuso = $("#juso"+index).val().split(" ");
+	var si		= arrJuso[0];
+	var gu		= arrJuso[1];
+	var dong	= arrJuso[2];
+	var bunji	= arrJuso[3];
+	var detail	= arrJuso[4];
+	jusoConvert(si, gu, dong, bunji, detail, index);
+
+}
+
+//주소 경로 검색
+function searchJusoNew(nIndex){
+
+	if($("#deguestJuso"+nIndex).val() == ''){
+		alert('주소를 입력하세요.');
+		return;
+	}
+	var arrJuso = $("#deguestJuso"+nIndex).val().split(" ");
+
+	//for(i=0;i<arrJuso.length;i++){
+	//alert(arrJuso[i]);
+	//}
+
+	var si		= arrJuso[0];	//
+	var gu		= arrJuso[1];
+	var dong	= arrJuso[2];
+	var bunji	= arrJuso[3];
+	var detail	= arrJuso[4];
+	
+	jusoConvertNewAddr(si, gu, dong, bunji, detail, nIndex);
+	
+}
+
+//주소 경로 검색을 통한 위경도 값 가져오기
+function resultJusoLatLon(lat, lon, index){
+	$("#lat"+index).val(lat);
+	$("#lon"+index).val(lon);
+}
+
+//주소 경로 검색을 통한 위경도 값 가져오기
+function resultJusoLatLonNew(lat, lon, index){
+	
+	var nClassCnt = $('.ddd').length;
+
+	for(i=0;i<nClassCnt;i++){
+		$("#deguestLat"+i).val(lat);
+		$("#deguestLon"+i).val(lon);
+	}
+}
+
+//엑셀 다운로드
+function excelDownLoad(){
+	var param = "excel/excelDown.php?deliveryDate="+deliveryDate+"&locationId="+locationId+"&meridiemType="+meridiemType+"&meridiemFlag="+meridiemFlag;
+	window.location.href = param;
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function printPopup(){
+	popup("setCarPrint.html?deliveryDate=" + deliveryDate + "&locationId=" + locationId + "&meridiemType=" + meridiemType + "&meridiemFlag=" + meridiemFlag, 1024, 800);
+}
+
+</script>
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					배차 경로 지도
+					<a href="javascript:ajaxGetJangbogoDataAdd();" class="btn btn-sm btn-new-ok pull-right" <?=$display?>>배송 경로 추가</a> 
+					<a href="javascript:excelDownLoad();" class="btn btn-sm btn-new-biz pull-right mr5">배차 엑셀다운</a>
+					<a href="javascript:printPopup();" class="btn btn-sm btn-new-biz pull-right mr5">인쇄하기</a>
+				</span>
+			</div>
+			<div id="map_div">
+			</div>
+		</div>
+	</div>
+	
+	<div id="col-md-3" class="col-md-3">
+	</div>
+
+	<script>
+	$(document).ready(function(){
+		var mapHeight = $("#map_div").height();
+		var searchHeight = $(".cardSearch").outerHeight();
+		var bottomHeight = $("#btnComplete").outerHeight();
+		$(".setCarList").height(mapHeight - (searchHeight + bottomHeight));
+	});
+	/*
+	//높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+	*/
+	</script>
+</div>
+
+</article>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:1300px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">01경로 상세보기</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">차량 배차 정보</label>
+						
+					<table class="tblBasic table-hover">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로순서</th>
+							<th align="center" class="text-center">주문번호</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">금액</th>
+						</tr>
+						</thead>
+						<tbody id="listDetail">
+						<tr height="30">
+							<td align="center">1</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+							<td align="center">2</td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:900px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송 경로 추가</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">경로 추가 목록</label>
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로 지정</th>
+							<th align="center" class="text-center">주문자명</th>
+							<!-- <th align="center" class="text-center">연락처</th> -->
+							<th align="center" class="text-center">위도(예:35.929894)</th>
+							<th align="center" class="text-center">경도(예:128.539506)</th>
+							<th align="center" class="text-center">주소</th>
+						</tr>
+						</thead>
+						<tbody id="listAdd">
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">차화임</td>
+							<td align="center">010-1234-5678</td>
+							<td align="center">대구시 북구 관음동</td>
+						</tr>
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-ok" data-dismiss="modal" onclick="addSave()">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:1000px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">배송 경로 오류 수정</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">경로 오류 목록</label>
+					<h3 style="color:red;"> *주소를 검색하셔서 위,경도를 자동 입력 하실수도 있습니다.</h3>
+					<h3 style="color:red;"> *위도,경도 좌표는 예시형식으로 정확히 입력하세요 위도(예:35.929894), 경도(예:128.539506)</h3>
+					ex)서울특별시 용산구 동자동 43-205 서울역(시,구,동,리(번지),상세주소로 검색하셔야됩니다.)구주소만 사용가능합니다.
+					<table class="tblBasic table-hover mt10">
+						<colgroup>
+							<col width="">
+							<col width="">
+						</colgroup>
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로 지정</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">위도(예:35.929894)</th>
+							<th align="center" class="text-center">경도(예:128.539506)</th>
+							<th align="center" class="text-center">주소</th>
+						</tr>
+						</thead>
+						<tbody id="listAlert">
+						<tr height="30">
+							<td align="center">
+								<select class="input">
+									<option>01경로[34km]</option>
+									<option>02경로[34km]</option>
+									<option>03경로[34km]</option>
+									<option>04경로[34km]</option>
+								</select>
+							</td>
+							<td align="center">차화임</td>
+							<td align="center">
+								<input type="text"/>
+							</td>
+							<td align="center"><input type="text"/></td>
+							<td align="center"><input type="text"/></td>
+						</tr>
+						</tbody>
+					</table>
+					
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<button type="button" class="btn btn-new-ok" onClick="errorSave()">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script>
+$(document).on("change","#chgColor",function(){
+	var chgColor = $("#chgColor option:selected").val();
+	$("img.chgColor").attr("src", "images/icon/marker_" + chgColor + ".png");
+});
+</script>
+<!-- Modal -->
+<form name="submitForm" method="post" class="modal fade" id="markerModal" tabindex="-1" role="dialog" aria-labelledby="newDepLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width:1350px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel2">배송지 상세보기</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="recipient-name" class="control-label">배송지 정보</label>
+					<table class="tbl_none table-hover mb20">
+						<colgroup>
+							<col width="120">
+							<col width="">
+							<col width="120">
+							<col width="">
+						</colgroup>
+						</thead>
+						<tbody>
+						<tr height="30">
+							<th class="text-left">해당 배송지 경로</th>
+							<td class="text-left nowColor" style='font-weight:600; font-size:14px'></td>
+							<th class="text-left">경로 변경</th>
+							<td class="text-left"><label for="recipient-name" class="form-inline" id="orderChange"></label></td>
+						</tr>
+						</tbody>
+					</table>
+
+					<label class="control-label">배송 물품 내역</label>
+					<table class="tblBasic table-hover">
+						<thead>
+						<tr height="30">
+							<th align="center" class="text-center">경로순서</th>
+							<th align="center" class="text-center">주문번호</th>
+							<th align="center" class="text-center">주문자명</th>
+							<th align="center" class="text-center">연락처</th>
+							<th align="center" class="text-center">주소</th>
+							<th align="center" class="text-center">금액</th>
+							<th align="center" class="text-center">위도</th>
+							<th align="center" class="text-center">경도</th>
+							<th align="center" class="text-center">검색</th>
+						</tr>
+						</thead>
+						<tbody id="markerDetail">
+						</tbody>
+					</table>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="modal-footer" style="background:#f9f9f9;">
+				<!-- <button type="button" class="btn btn-new-ok" data-dismiss="modal" style="display:;" onClick="javascript:window.location.reload();">확인</button> -->
+				<button type="button" class="btn btn-new-ok" data-dismiss="modal" style="display:;" onClick="simpleDeguestInfoUpdate();">저장</button>
+				<button type="button" class="btn btn-new-cancle" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<form name="submitForm" id="loading" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="데이터 업데이트 로딩 바">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+				<h4 class="modal-title" id="myModalLabel">로딩중</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					데이터 로딩 중입니다.
+				</div>
+				<div style="text-align:center; color:#e06732"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>
+				<div style="text-align:center;" class="mt15 f14" id="loadingDataNum">
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+</body>
+</html>
+
+<?php
+$db->close();
+?>

@@ -1,0 +1,494 @@
+<?php 
+include "inc_html/header.html";
+
+$define_APIKEY = "2d7149c9-1a4d-4a57-b2e0-c1a00589a69e";
+
+
+$step			= $_GET["step"];
+$deliveryDate	= $_GET["deliveryDate"];
+$meridiemType	= $_GET["meridiemType"];
+
+$todayDate = date("Y-m-d h:m:s");
+
+$ci_guestId =	$_SESSION["OMember_id"];
+$db->que = "SELECT * FROM companyInfo WHERE ci_guestId='".$ci_guestId."'";
+$db->query();
+$companyInfo = $db->getRow();
+?>
+
+<script>
+$(function() {
+	$("#setDate").datepicker({
+		dateFormat: 'yy-mm-dd',
+		prevText: '이전 달',
+		nextText: '다음 달',
+		monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+		dayNames: ['일','월','화','수','목','금','토'],
+		dayNamesShort: ['일','월','화','수','목','금','토'],
+		dayNamesMin: ['일','월','화','수','목','금','토'],
+		yearSuffix: ' / ',
+		changeMonth : true,
+		changeYear : true,
+		minDate : -1
+	});
+});
+</script>
+<style>
+.cardTab { padding:0; border-bottom:1px solid #dfdfdf; font-size:0; text-align:center;}
+.cardTab a { display:inline-block; padding:20px 32px; color:#737373; font-size:14px;}
+.cardTab a:focus { color:#000; background:#fafafa; font-weight:600;}
+.cardTab .active { color:#000; padding:20px 32px 17px 32px; border-bottom:3px solid #d5610a; font-weight:600;}
+.cardTab .done { background:#eee;}
+.cardTab .badge { background:#777;}
+.cardTab .active .badge { background:#e06732;}
+.cardTab .done .badge { background:#ccc;}
+.cardTab a:active { background:#ececec;}
+.cardCont .done { background:#eee;}
+.stepCont { height:75px; padding:20px 0; border-left:1px solid #eee;}
+.stepCont:first-child { border-left:none;}
+.stepCont .loadingText, .stepCont .afterText { display:none;}
+.done .beforeText, .done .loadingText, .load .beforeText, .done .loadingText, .yet .loadingText, .yet .afterText { display:none;}
+.yet .beforeText, .load .loadingText, .done .afterText { display:block;}
+
+.demo-wrapper {
+margin: 20px auto 0;
+}
+.html5-progress-bar {
+padding: 15px 0;
+border-radius: 3px;
+background-color: #fff;
+}
+.html5-progress-bar progress {
+background-color: #f3f3f3;
+border: 0;
+width: 100%;
+height: 18px;
+border-radius: 2px;
+}
+.html5-progress-bar progress::-webkit-progress-bar {
+background-color: #f3f3f3;
+border-radius: 2px;
+}
+.html5-progress-bar progress::-webkit-progress-value {
+background: #e06732;
+border-radius: 2px;
+}
+.html5-progress-bar progress::-moz-progress-bar {
+background: #e06732;
+border-radius: 2px;
+}
+.html5-progress-bar .progress-value {
+padding: 0px 5px;
+line-height: 20px;
+margin-left: 5px;
+font-size: .8em;
+color: #555;
+height: 18px;
+float: right;
+}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="cardTitle">
+				<span class="titCard">
+					초기 배차 설정
+					<!-- <a href="javascript:moveMapPage();" class="btn btn-sm btn-new-ok pull-right">배차지도 보기</a> -->
+					<a href="setCarTodayList.html" class="btn btn-sm btn-new-ok pull-right">금일 배차내역보기</a>
+				</span>
+			</div>
+			<div class="cardTab">
+				<div class="row" style="margin:0;">
+					<a href="javascript:moveTab(0);" class="col-md-3 active"><span class="badge" style="margin-right:8px;">1</span>배차 일시 정보</a>
+					<a href="javascript:moveTab(1);" class="col-md-3"><span class="badge" style="margin-right:8px;">2</span>고객 정보</a>
+					<a href="javascript:moveTab(4);" class="col-md-3"><span class="badge" style="margin-right:8px;">3</span>배송지 좌표 정보</a>
+					<a href="javascript:moveTab(6);" class="col-md-3"><span class="badge" style="margin-right:8px;">4</span>배송 차량 정보</a>
+				</div>
+			</div>
+			<div class="cardCont" style="padding:0;">
+				<div class="col-md-3 stepCont text-center" id="firstStep">
+					<input type="hidden" name="setTime" id="setTime" value="" />
+					<div class="beforeText form-inline">
+						<input type="text" name="setDate" id="setDate" class="form-control" value="" style="width:150px" placeholder="배차 일시 선택" readonly />
+						<div class="btn-group">
+							<button type="button" data-toggle="dropdown" class="btn dropdown-toggle btn-sm btn-new-ok" style="width:100px;" name="select-time" id="select-time" aria-expanded="false">오전/오후 선택 <span class="caret"></span></button>
+							<ul role="menu" class="dropdown-menu" id="dropdown-menu">
+								<li><a href="javascript:;">오전</a></li>
+								<li><a href="javascript:;">오후</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="loadingText">
+						배차 일시를 업데이트 중입니다.
+					</div>
+					<div class="afterText">
+						2017년 10월 22일 오전 배차 실행
+					</div>
+					<script>
+					$(".dropdown-toggle").parent(".btn-group").find("li").on("click", function(e){
+						var target = $(e.currentTarget);
+						var idx = target.index();
+						var thisValue = $(this).find("a").text();
+						var obj = $(this).parent("ul").prev("button").attr("name");
+						$("#setTime").val(thisValue);
+						$(".dropdown-toggle[name=" + obj + "]").html(thisValue + "<span class='caret'></span>");
+					});
+					</script>
+				</div>
+				<div class="col-md-3 stepCont text-center">
+					<div class="beforeText">
+						고객 정보 업데이트 전입니다.
+					</div>
+					<div class="loadingText">
+						고객 정보 업데이트 중입니다.
+					</div>
+					<div class="afterText">
+						고객정보 업데이트 완료되었습니다.
+					</div>
+				</div>
+				<div class="col-md-3 stepCont text-center">
+					<div class="beforeText">
+						배송지 좌표 업데이트 전입니다.
+					</div>
+					<div class="loadingText">
+						배송지 좌표 업데이트 중입니다.
+					</div>
+					<div class="afterText">
+						배송지 좌표 업데이트 완료되었습니다.
+					</div>
+				</div>
+				<div class="col-md-3 stepCont text-center" id="lastStep">
+					
+					<div class="beforeText form-inline">
+						<input type="text" name="setNum" id="setNum" class="form-control" placeholder="차량 배차 대수 입력" readonly />
+					</div>
+					<div class="loadingText">
+						22대의 배송 경로를 배차 중입니다.
+					</div>
+					<div class="afterText">
+						배송 경로 배차 완료되었습니다.
+					</div>
+				</div>
+
+				<div class="col-md-12 text-right" style="padding:10px 20px; border-top:1px solid #eee;">
+					<a href="javascript:;" class="btn btn-lg btn-new-cancle btn-prev-step">이전</a>
+					<a href="javascript:;" class="btn btn-lg btn-new-ok btn-next-step">다음</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?
+	$nowStep = 0;
+	?>
+
+	<script>
+	// 스텝
+	var nowStep = 0;	
+	var nowAct;
+	var setDate = "";
+	var selectTime = "";
+	var locationId = "<?=$companyInfo['ci_no']?>";
+
+	/*
+	var arr_APIKEY=["edeb780b-99ab-4bf8-84a1-19c51a1d8e1d"
+					,"c0a8ce43-7e51-4220-8113-ceb84e78cb5b"
+					,"52f76800-8541-4239-bf4d-9ba4810df7b5"
+					,"d8eac327-c923-42fe-8d53-4e8bfa1a4cad"];
+	*/
+
+	/*
+	var arr_APIKEY=["01e1abfd-c1fb-4fe6-accc-ed6896de1fea"
+					,"ee9fc076-a5a1-4ae9-bb73-fc3ad7ce6e51"
+					,"7874b1e5-91fa-4727-a39c-7653c16afa98"
+					,"fc5a6d05-b877-4d63-9880-8f60fc02faf0"
+					,"c512d88c-ada2-412c-a145-9d2046af09ca"];
+	*/
+
+	var arr_APIKEY=["0de9ecde-b87c-404c-b7f8-be4ed7b85d4f"];
+
+	$(document).ready(function(){
+		var step = "<?=$step?>";
+		var deliveryDate = "<?=$deliveryDate?>";
+		var meridiemType = "<?=$meridiemType?>";
+
+		if(step==6){
+
+			if(vehicleTime=='1'){
+				vehicleTime = '오후';
+			} else{
+				vehicleTime = '오전';
+			}
+			nowStep = step;
+			nowAct = "+";
+			$("#setDate").val(deliveryDate);
+			$("button[name='select-time']").text("오후 ");
+			locationId = <?=$companyInfo['ci_no']?>;
+			changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+		}
+	});
+
+	function loadModal() {
+		if(nowStep != 1) {
+			$("#loading").modal({
+				backdrop	:	"static"
+			});
+
+			/*
+			if(!Modernizr.meter){
+				alert('Sorry your brower does not support HTML5 progress bar');
+			} else {
+				var progressbar = $('#progressbar'),
+					max = progressbar.attr('max'),
+					time = (1000/max)*5,
+					value = progressbar.val();
+
+				var loading = function() {
+					value += 1;
+					addValue = progressbar.val(value);
+					
+					$('.progress-value').html(value + '%');
+					
+					if (value == max) {
+						clearInterval(animate);
+						$("#loading").modal("hide");
+
+						// 전송중 element 변경
+						nowStep++;
+						progressbar.val(0);
+						value = progressbar.val();
+						changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+					}
+					
+				};
+
+				var animate = setInterval(function() {
+					loading();
+				}, time);
+			};
+			*/
+		} else {
+			
+			nowStep++;
+			changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+		}
+	}
+
+	function changElm(step, changeText) {
+	
+		var apiKey = arr_APIKEY
+		
+		if(checkDate()==false){
+			return;
+		}
+		
+		init(apiKey,locationId,setDate,selectTime);
+		
+		$(".cardTab a").removeClass("active");
+		$(".cardTab a").eq(step).addClass("active");
+		$(".cardTab a").each(function(e){
+			if(e<step) {
+				$(this).addClass("done");
+				$(".stepCont").eq(e).removeClass("load yet").addClass("done");
+			} else {
+				$(this).removeClass("done");
+				$(".stepCont").eq(e).removeClass("done load").addClass("yet");
+			}
+		});
+		if(changeText == 1) {
+
+			if(step==0){
+				var dateStrArr = setDate.split("-");
+				$("#firstStep .afterText").text(dateStrArr[0]+"년 "+dateStrArr[1]+"월 "+dateStrArr[2]+"일 "+selectTime+"배차 실행");
+				vehicleResultCheck();
+			} else if(step==1){
+
+				if(ajaxGetJangbogoData('<?php echo $companyInfo['ci_stcode']; ?>')==false){
+					$("#loading").modal("hide");
+					nowStep-=1;
+					return;
+				}	
+				
+			} else if(step==2){
+
+				if(GuestOrderDataProc()==false){
+					$("#loading").modal("hide");
+					nowStep-=1;
+					return;
+				}
+				$("#loadingDataNum").text("좌표데이터를 받고있습니다");
+
+			} else if(step==3){
+
+				if(GuestAllocateResult()==false){
+					$("#loading").modal("hide");
+					nowStep-=1;
+					return;
+				}
+				$("#loadingDataNum").text("3분정도 소요될수 있습니다.");
+			}
+
+			$(".stepCont").eq(step).removeClass("yet").addClass("load");
+			loadModal();
+		}
+
+		if(step == 0) {
+			$("#setNum").prop("readOnly", true);
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-prev-step").attr("disabled", "disabled");
+			//$(".btn-next-step").text("배차 시작").attr("href", 
+			//"setCarListTest.html?deliveryDate="+setDate+"&meridiemType="+selectTime+"&locationId="+locationId);
+		} else if(step == 1) {
+			$("#setNum").prop("readOnly", true);
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-next-step").text("다음").attr("href", "javascript:;");
+		} else if(step == 2) {
+			$("#setNum").prop("readOnly", true);
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-next-step").text("다음").attr("href", "javascript:;");
+		} else if(step == 3) {
+			$("#setNum").removeAttr("readOnly");
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-next-step").text("다음").attr("href", "javascript:;");
+		} else if(step == 4) {
+			$("#setNum").prop("readOnly", true);
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-next-step").text("배차 시작").attr("href", "javascript:;");
+		} else if(step == 5) {
+			$("#setNum").prop("readOnly", true);
+			$(".btn-prev-step").removeAttr("disabled");
+			$(".btn-next-step").text("배차 시작").attr("href", "setCarListTest.html");
+		}
+		
+	}
+
+	$(".btn-next-step").on("click", function(){
+		nowAct = "+";
+		$(this).blur();
+		
+		if(parseInt(nowStep/2) < 5) {
+			nowStep++;
+			//alert(parseInt(nowStep/3));
+			changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+		}
+	});
+
+	$(".btn-prev-step").on("click", function(){
+		nowAct = "-";
+		$(this).blur();
+		
+		if(nowStep > 0) {
+			nowStep-=2;
+			
+			changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+		}
+	});
+	// 높이 맞추기
+	var matchH;
+	var matchHresize;
+	$(".matchHeight").each(function(){
+		var thisHeight = $(this).outerHeight();
+		if (matchH){
+			if(thisHeight > matchH){
+				matchH = thisHeight;
+			}
+		} else {
+			matchH = thisHeight;
+		}
+	});
+
+	// Step01 날짜 선택 체크
+	function checkDate(){
+		setDate = $("#setDate").val();
+		selectTime = $("button[name='select-time']").text();
+
+		if(setDate==''){
+			nowStep-=1;
+			alert("배차일시를 선택해주세요.");
+			return false;
+
+		}
+		
+		if(selectTime=="오전/오후 선택 "){
+			nowStep-=1;
+			alert("오전/오후를 선택해주세요.");
+			return false;
+	
+		}
+		return true;	
+	}
+	//배차지도 보기
+	function moveMapPage(){
+		if(checkDate()==false){
+			return;
+		}
+		var meridiemType = $("button[name='select-time']").text();
+		window.location.href="setCarListTest.html?deliveryDate="+setDate+"&meridiemType="+selectTime+"&locationId="+locationId;
+	}
+	//상단 순서 탭 이동
+	function moveTab(number){
+		return;
+		nowStep = number;
+		changElm(parseInt(nowStep/2), parseInt(nowStep%2));
+		var dateStrArr = setDate.split("-");
+		$("#firstStep .afterText").text(dateStrArr[0]+"년 "+dateStrArr[1]+"월 "+dateStrArr[2]+"일 "+selectTime+"배차 실행");
+	}
+	$(window).load(function(){
+		var windowH = $(window).outerHeight();
+		var headerH = $("#header").outerHeight();
+		var copyH = $(".copy").outerHeight();
+		var contH = windowH - ( headerH + copyH );
+		//alert($("#lnb").outerHeight());
+		if($("body").hasClass("pc")) {
+			$("#map").height(contH - 235);
+			$(".setCarList").height(contH - 505);
+		}
+	});
+
+	function onlyNumber(obj) {
+		$(obj).keyup(function(){
+			 $(this).val($(this).val().replace(/[^0-9]/g,""));
+		}); 
+	}
+	</script>
+</div>
+
+</article>
+
+<div class="copy">
+	<? include "inc_html/copy.html"; ?>
+</div>
+
+<!-- Modal -->
+<form name="submitForm" id="loading" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" aria-describedby="데이터 업데이트 로딩 바">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+				<h4 class="modal-title" id="myModalLabel">로딩중</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<!-- 데이터 업데이트 중입니다. -->
+					데이터 준비중입니다 잠시만 기다려주십시오.
+				</div>
+				<div style="text-align:center; color:#e06732"><i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i></div>
+				<div style="text-align:center;" class="mt15 f14" id="loadingDataNum">
+				</div>
+				<!--
+				<div class="demo-wrapper html5-progress-bar">
+					<div class="progress-bar-wrapper">
+						<progress id="progressbar" value="0" max="100"></progress>
+					</div>
+				</div>
+				-->
+			</div>
+		</div>
+	</div>
+</form>
+
+<script language="javascript" type="text/javascript" src="js/modernizr.js"></script>
+<script language="javascript" type="text/javascript" src="js/vehicle.js"></script>
+<script src="https://api2.sktelecom.com/tmap/js?version=1&format=javascript&appKey=<?php echo $define_APIKEY; ?>"></script>
+</body>
+</html>

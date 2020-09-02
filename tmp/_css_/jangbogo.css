@@ -1,0 +1,77 @@
+@charset "utf-8";
+#wrap { padding-top:50px; background:#f2f2f2;}
+.navbar-header { background:#e37b40;}
+.navbar-inverse { border:0; background:#fff;}
+.navbar-inverse .navbar-toggle { border-color:#F0CA4D;}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form { background:#fff;}
+.navbar-inverse .navbar-toggle .icon-bar { background:#F0CA4D;}
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus { background:#DE5B49;}
+.navbar-header .navbar-brand { display:inline-block; padding-left:20px; width:270px; color:#fff; font-weight:800;}
+
+/* Hide for mobile, show later */
+.sidebar { display:none;}
+.nav > li > a { padding:15px;}
+.nav-sidebar a {
+	display:block;
+	color:#fff;
+	opacity:0.6;
+}
+.nav-sidebar .active { border-left:3px solid #ed750f;}
+.nav-sidebar .dep1 a,
+.nav-sidebar .dep2 a { position:relative;}
+.nav-sidebar .dep1 { border-bottom:1px solid #1e2129;}
+.nav-sidebar .dep2 { border-top:1px solid #1e2129; background:#2b2e3a;}
+.nav-sidebar .dep1 a { padding:13px 0 13px 32px; font-size:16px;}
+.nav-sidebar .dep2 a { padding:15px 0 15px 45px; font-size:13px;}
+
+.nav-sidebar .active a { padding:13px 0 13px 29px;}
+.nav-sidebar .active .dep2 a { padding:15px 0 15px 42px;}
+.nav-sidebar a:focus { text-decoration:none; background:#272b35;}
+.nav-sidebar a:hover,
+.nav-sidebar a:active { text-decoration:none; background:#272b35; opacity:1;}
+.lnbLabel1 { position:absolute; top:50%; right:25px; margin-top:-19px; display:block; border-radius:50%; width:38px; height:38px; background:#3a3e4a; text-align:center; padding-top:7px;}
+.lnbLabel2 { position:absolute; top:50%; right:30px; margin-top:-14px; display:block; border-radius:50%; width:29px; height:29px; background:#3a3e4a; text-align:center; padding-top:3px;}
+@media (min-width: 768px) {
+	.sidebar {
+		position:fixed;
+		top:50px;
+		bottom:0;
+		left:0;
+		width:270px;
+		z-index:1000;
+		display:block;
+		overflow-x:hidden;
+		overflow-y:auto; /* Scrollable contents if viewport is shorter than content. */
+		background:#303441;
+	}
+	.content { padding-left:270px;}
+}
+
+.container { width:100%; padding:0;}
+.contentTop { padding:20px 0 85px 35px; background:#29292a;}
+.pageTitle { font-size:20px; font-weight:800;}
+.pagePath { color:#fff; font-size:15px;}
+.pagePath span { opacity:0.6;}
+.pagePath span:last-child { opacity:1; font-weight:800;}
+.pagePath span:last-child i { opacity:0.6;}
+
+.contentData { padding:20px 0 20px 20px;}
+.contentData .row { margin:0;}
+.contentData .card { background:#fff; border-radius:2px; box-shadow:0 2px 1px rgba(0, 0, 0, 0.05); background:#fff;}
+.contentData .card .cardTitle { padding:20px; font-size:18px;}
+.contentData .card .cardTitle strong { display:block;}
+
+.contentData .firstContent { margin-top:-80px;}
+
+.footer { padding:10px 0; color:#fff; background:#29292a; font-size:14px; text-align:center;}
+.footer span { opacity:0.6;}
+
+.setChartBlock div { position:relative; padding:60px 20px 20px;}
+.setChartBlock div strong, .setChartBlock div span { display:block; color:#fff;}
+.setChartBlock div strong { font-size:36px;}
+.setChartBlock div span { font-size:14px; font-weight:600;}
+.setChartBlock div img { position:absolute; top:20px; right:20px;}
+.setChart1 { background:#6875bb;}
+.setChart2 { background:#4cadbf;}
+.setChart3 { background:#64aa66;}
+.setChart4 { background:#deb044;}

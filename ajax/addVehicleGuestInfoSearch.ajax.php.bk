@@ -1,0 +1,55 @@
+<?
+header("Content-Type:text/html;charset=UTF-8");
+//###################################################
+// addVehicleDeliveryInsert
+//###################################################
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Include
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+include "../inc/config.php";
+include "../inc/lib.inc.php";
+include "../inc/json.inc.php";
+include "../inc/mysql.inc.php";
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Variable
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+$strSearchType			= $_GET['strSearchType'];
+$strSearchWord			= $_GET['strSearchWord'];
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Class
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+$db = new Mysql();
+
+//Json Class
+$json = new Json();
+
+
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+// Code
+//- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
+
+if($strSearchType == "vg_guestId"){
+	$SearchSql = " AND ".$strSearchType."='".$strSearchWord."'";
+} else {
+	$SearchSql = " AND ".$strSearchType." like '%".$strSearchWord."%' ";
+}
+
+$db->que = "SELECT * FROM vehicleGuestInfo WHERE 1=1 $SearchSql ";
+$db->query();
+$vehicleGuestInfoSearchList = $db->getRows();
+
+
+$json->add("vehicleGuestInfoSearchList", $vehicleGuestInfoSearchList);
+$json->result["resultMessage"] = "고객정보데이터";
+echo $json->getResult();
+$db->close();
+
+exit;
+
+?>
