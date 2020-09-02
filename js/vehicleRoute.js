@@ -127,6 +127,7 @@ function updateFormats() {
 
 //주문 데이터 가져오기 - 주소검색해서 좌표데이터로 변환
 function previewAjaxGetOrderDataReGeo(memeType, stcode){
+	debugger;
 
 	//var vehicleErpUrl = erpUrl;
 
@@ -142,7 +143,6 @@ function previewAjaxGetOrderDataReGeo(memeType, stcode){
 				,"gbn":memeType
 		}
 		,success : function(data){
-
 			if(data == null || data['item'] == ""){
 				alert('주문데이터가 없습니다.');
 				$("#loading").modal("hide");

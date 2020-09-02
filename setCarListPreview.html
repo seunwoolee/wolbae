@@ -37,7 +37,7 @@ if($meridiemType == "0"){
 	$memeType = "b";
 }
 
-echo "[".$memeType."]<br>";
+//echo "[".$memeType."]<br>";
 //exit;
 
 //- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
@@ -76,10 +76,13 @@ var strCheckBoxRoute;			// 채크박스 - 경로채크상태값 저장용
 var bCheckBoxAll;				// 채크박스 - 전체경로채크상태값 저장용
 var bCheckBoxLineRemove;		// 채크박스 - 지도 경로선제거 상태값 저장용
 
+
 $(document).ready(function(){
 
 	$("#loadingDataNum").text("잠시만 기다려 주세요.");
+
 	loadModal();
+	// debugger;
 
 	initData();	// 맵 로드부분
 	
@@ -107,7 +110,6 @@ function initData(){
 	var initLat = "<?=$initLat?>";
 	var initLon = "<?=$initLon?>";
 	var initGuestId = "<?=$initGuestId?>";
-
 	setInitData(apiKey, initGuestId, initLat, initLon, deliveryDate, locationId, meridiemType);
 	initTmap();	
 }
@@ -132,60 +134,17 @@ function orderDataGeoCoding(){
 					배송지역
 					<a href="setCarListPreview.html?meridiemType=1" class="btn btn-sm btn-new-ok pull-right">오후 배송지역 보기</a> 
 					<a href="setCarListPreview.html?meridiemType=0" class="btn btn-sm btn-new-biz pull-right mr5">오전 배송지역 보기</a>
-
-					<!--
-					<a href="setCarListPreview.html?meridiemType=1" class="btn btn-sm btn-new-ok pull-right mr5">(테스트)오후 배송지역 보기</a> 
-					<a href="setCarListPreview.html?meridiemType=0" class="btn btn-sm btn-new-biz pull-right mr5">(테스트)오전 배송지역 보기</a>
-					-->
-
 					<a href="javascript:orderDataGeoCoding();" class="btn btn-sm btn-new-biz pull-right mr5">좌표수집</a>
 				</span>
 			</div>
 			<div id="map_div">
 			</div>
-			<!--
-			<div id="map" class="cardCont" style="padding:0; height:750px; background: url('css/images/bgMap2.png') center center / cover no-repeat;"></div>
-			-->
 		</div>
 	</div>
 	
 	<div id="col-md-3" class="col-md-3">
 	</div>
 
-	<script>
-	/*
-	$(document).ready(function(){
-		var mapHeight = $("#map_div").height();
-		var searchHeight = $(".cardSearch").outerHeight();
-		var bottomHeight = $("#btnComplete").outerHeight();
-		$(".setCarList").height(mapHeight - (searchHeight + bottomHeight));
-	});
-	//높이 맞추기
-	var matchH;
-	var matchHresize;
-	$(".matchHeight").each(function(){
-		var thisHeight = $(this).outerHeight();
-		if (matchH){
-			if(thisHeight > matchH){
-				matchH = thisHeight;
-			}
-		} else {
-			matchH = thisHeight;
-		}
-	});
-	$(window).load(function(){
-		var windowH = $(window).outerHeight();
-		var headerH = $("#header").outerHeight();
-		var copyH = $(".copy").outerHeight();
-		var contH = windowH - ( headerH + copyH );
-		//alert($("#lnb").outerHeight());
-		if($("body").hasClass("pc")) {
-			$("#map").height(contH - 235);
-			$(".setCarList").height(contH - 505);
-		}
-	});
-	*/
-	</script>
 </div>
 
 </article>
