@@ -22,8 +22,6 @@ $db = new Mysql();
 //- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
 // Code
 //- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
-
-
 if($meridiemType == ""){
 	// 0값으로 보냈는데, 값이 사라짐, 0 이외에는 되는데 0일때만 그렇네, 누가 아는사람 수정좀 나중에
 	$meridiemType = "0";
@@ -62,10 +60,12 @@ $vectorNoCurrent;
 //echo "[".count($resultGroupListDataSe)."]<br>";
 $resultListDataSumPay = $vehicleQuery->getMapGroupListDataSumPay($deliveryDate, $meridiemType, $locationId, count($resultGroupListDataSe), $meridiemFlag);
 
+
 for($i=0;$i<count($resultGroupListDataSe);$i++){	
 	$row = $resultGroupListDataSe[$i];
-	
-	//if($vectorNoCurrent==null){
+    LIB::PLog($row);
+
+    //if($vectorNoCurrent==null){
 	//	$vectorNoCurrent = $row['vehicleNo'];
 	//}
 	//if($vectorNoCurrent < $row['vehicleNo']){
@@ -84,7 +84,7 @@ for($i=0;$i<count($resultGroupListDataSe);$i++){
 
 	$db->query();
 	$rowJsonEmpty = $db->getRow();
-	
+
 	// 리셋버튼 활성, 비활성채크
 	/*
 	if($rowJsonEmpty['jsonEmpty'] > 0){

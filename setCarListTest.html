@@ -110,37 +110,9 @@ function initData(){
 
 //배송경로 전체 체크
 function allCheck(){
-
-	//checkAll("input:checkbox[id='check-all']", 'setCarItem');
 	checkBoxStatus();
 	checkGroupListData();
-
-	/*
-	$(".setCarItem").each(function(e){
-		if($(this).is(":checked")){
-			$(this).parents(".listItem").addClass("checkItem");
-		}else{
-			$(this).parents(".listItem").removeClass("checkItem");
-		}
-	});
-	*/
-
 }
-
-/*
-function allCheck2(data){
-	if(data) {
-		$(document).find(".listItem").removeClass("checkItem");
-		$(document).find("input[type='checkbox'].setCarItem").attr("checked", false);
-	} else {
-		$(document).find(".listItem").addClass("checkItem");
-		$(document).find("input[type='checkbox'].setCarItem").attr("checked", true);
-	}
-	checkBoxStatus();
-	checkGroupListData();
-	return false;
-}
-*/
 
 //경로 선 출력,미출력
 function lineCheck(bStatus){
@@ -183,10 +155,10 @@ function checkGroupListData(){
 		,url : "ajax/vehicleMapGroupListData.ajax.php"
 		,async : true		// 동기화처리
 		,data : {
-					"deliveryDate":<?php echo deliveryDate; ?>
-					,"locationId":<?php echo $locationId; ?>
-					,"meridiemType":<?php echo $meridiemType; ?>
-					,"meridiemFlag":<?php echo $meridiemFlag; ?>
+					"deliveryDate":"<?php echo deliveryDate; ?>"
+					,"locationId":"<?php echo $locationId; ?>"
+					,"meridiemType":"<?php echo $meridiemType; ?>"
+					,"meridiemFlag":"<?php echo $meridiemFlag; ?>"
 		}
 		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 		,success : function(data){
@@ -296,7 +268,7 @@ function loadVehicleList(complete_call){
 
 // 브라우저 새로고침없이, 데이터 갱신하긔 ( callBack 사용 )
 function simpleLoadVehicleList(complete_call){
-	complete_call = complete_call || function(){ var resultGroupListDataCnt = <?php echo count($resultGroupListData); ?>; };
+	complete_call = complete_call || function(){ var resultGroupListDataCnt = "<?php echo count($resultGroupListData); ?>"; };
 	$('#col-md-3').load("ajax/vehicleList.ajax.php", {
 														"deliveryDate"	: deliveryDate
 														,"meridiemType"	: meridiemType
@@ -326,10 +298,10 @@ function deliveryAddPopup(){
 		,url : "ajax/addVehicleDeliveryList.ajax.php"
 		,async : true		// 동기화처리
 		,data : {
-					"deliveryDate":<?php echo deliveryDate; ?>
-					,"locationId":<?php echo $locationId; ?>
-					,"meridiemType":<?php echo $meridiemType; ?>
-					,"meridiemFlag":<?php echo $meridiemFlag; ?>
+					"deliveryDate":"<?php echo deliveryDate; ?>"
+					,"locationId":"<?php echo $locationId; ?>"
+					,"meridiemType":"<?php echo $meridiemType; ?>"
+					,"meridiemFlag":"<?php echo $meridiemFlag; ?>"
 				}
 		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 		,success : function(data){
@@ -338,10 +310,6 @@ function deliveryAddPopup(){
 			//$("#deliveryDetail").html("");
 			var selectView="";
 			var vehicleAllocateResultList	= data['vehicleAllocateResultList'];
-			
-			//var vehicleNo = data['orderUserList'][0]['vehicleNo'];
-			//oldVehicleNo = vehicleNo;
-
 			var vehicleNo = "1";
 
 			for(var j=0;j<vehicleAllocateResultList.length;j++){
@@ -361,67 +329,7 @@ function deliveryAddPopup(){
 
 				selectView += "<option value='"+itemResult['vehicleNo']+"'>"+number+"번경로</option>";
 
-
-				//if(itemResult['vehicleNo'] == Number(vehicleNo)){
-				//	//selectView += "<option value='"+itemResult['vehicleNo']+"'>"+number+" 경로["+distance+"]</option>";
-				//	selectView += "<option value='"+itemResult['vehicleNo']+"' selected>"+number+"번경로</option>";
-				//} else {
-				//	selectView += "<option value='"+itemResult['vehicleNo']+"'>"+number+"번경로</option>";
-				//}
-
 			}
-
-
-			//var vehicleNoIndex = data['orderUserList'][0]['vehicleNoIndex'];
-			//var vehicleNoIndex = "1";
-
-			//$("#orderChange").html("");
-			//$("#orderChange").append("<img src='images/icon/marker_" + vehicleNo + ".png' class='chgColor' /><select id='chgColor' class='form-control ml10 mr10' name=selectChange>"+
-			//							selectView+
-			//						"</select>"+
-			//						"<button type='button' class='btn btn-new-ok' onclick=vehicleIndexChange('"+vehicleNo+"','"+vehicleNoIndex+"','"+meridiemFlag+"')>변경</button>");
-	
-			//var accnoDupleJuso ='';
-			//var accnoDupleJusoCopy = '';
-			//var deguestId = '';
-			//var deguestIdCopy = '';
-			//var strDupleJusoFlg = '';
-			
-			/*vehicleDeliveryInsert
-			var resultView = "<tr id='' height='30'>"+
-								"<td align='center'>vehicleNoIndex<input type='text' id='txtvehicleNoIndex' name='txtvehicleNoIndex' size='20' class='form-control' /></td>"+
-								"<td align='center'>deguestAccno<input type='text' id='txtdeguestAccno' name='txtdeguestAccno' size='20' class='form-control' /></td>"+
-								"<td align='center'>deguestName<input type='text' id='txtdeguestName' name='txtdeguestName' size='20' class='form-control' /></td>"+
-								"<td align='center'>deguestTel<input type='text' id='txtdeguestTel' name='txtdeguestTel' size='20' class='form-control' /></td>"+
-								"<td align='center'>deguestJuso<input type='text' id='txtdeguestJuso' name='txtdeguestJuso' size='60' value='주소' class='form-control' /></td>"+
-
-								"<td align='center'>deguestPay<input type='text' id='txtdeguestPay' name='txtdeguestPay' size='10' class='form-control' /></td>"+
-
-								"<td align='center'><input type='text' id='txtdeguestLat' name='txtdeguestLat' size='20' value='위도' class='form-control ddd' /></td>"+
-								"<td align='center'><input type='text' id='txtdeguestLon' name='txtdeguestLon' size='20' value='경도' class='form-control' /></td>"+
-								"<td align='center'><button type='button' class='btn btn-sm btn-new-find' onClick=searchJusoNew('1')>검색</button></td>"+
-								"<td align='center'><button type='button' class='btn btn-sm btn-new-find' onClick=vehicleDeliveryAdd()>추가</button></td>"+
-								"<input type='hidden' id='txtguestJusoSubId' name='txtguestJusoSubId' value='1' />" +
-								"<input type='hidden' id='txtguestIsShop' name='txtguestIsShop' value='1' />" +
-								"<input type='hidden' id='txtguestId' name='txtguestId' value='' />" +
-							  "</tr>";
-			*/
-
-			/*
-			var resultView = "<tr id='deliveryDetail0' height='30'>"+
-								"<td align='center'><select class='input' name=order>" + selectView + "</select></td>"+
-								"<td align='center'>deguestAccno<input type='text' id='txtdeguestAccno' name='txtdeguestAccno' size='10' class='form-control' /></td>"+
-								"<td align='center'>deguestName<input type='text' id='txtdeguestName' name='txtdeguestName' size='10' class='form-control' /></td>"+
-								"<td align='center'>deguestTel<input type='text' id='txtdeguestTel' name='txtdeguestTel' size='10' class='form-control' /></td>"+
-								"<td align='center'>deguestJuso<input type='text' id='txtdeguestJuso' name='txtdeguestJuso' size='30' value='주소' class='form-control' /></td>"+
-								"<td align='center'>deguestPay<input type='text' id='txtdeguestPay' name='txtdeguestPay' size='10' class='form-control' /></td>"+
-								"<td align='center'><input type='text' id='txtdeguestLat' name='txtdeguestLat' size='20' value='위도' class='form-control ddd' /></td>"+
-								"<td align='center'><input type='text' id='txtdeguestLon' name='txtdeguestLon' size='20' value='경도' class='form-control' /></td>"+
-								"<td align='center'><button type='button' class='btn btn-sm btn-new-find' onClick=searchJusoNew('1')>검색</button></td>"+
-							  "</tr>";
-
-			$("#deliveryDetail").append(resultView);
-			*/
 
 			vehicleDeliveryAdd();
 
@@ -538,45 +446,31 @@ function vehicleDeliveryAdd(refIndex){
 		,url : "ajax/addVehicleDeliveryList.ajax.php"
 		,async : true		// 동기화처리
 		,data : {
-					"deliveryDate":<?php echo deliveryDate; ?>
-					,"locationId":<?php echo $locationId; ?>
-					,"meridiemType":<?php echo $meridiemType; ?>
-					,"meridiemFlag":<?php echo $meridiemFlag; ?>
+					"deliveryDate":"<?php echo deliveryDate; ?>"
+					,"locationId":"<?php echo $locationId; ?>"
+					,"meridiemType":"<?php echo $meridiemType; ?>"
+					,"meridiemFlag":"<?php echo $meridiemFlag; ?>"
 				}
 		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 		,success : function(data){
-
-
-			//$("#deliveryDetail").html("");
 			var selectView="";
 			var vehicleAllocateResultList	= data['vehicleAllocateResultList'];
-
-			//var vehicleNo = data['orderUserList'][0]['vehicleNo'];
-			//oldVehicleNo = vehicleNo;
-
 			var vehicleNo = "1";
 
 			for(var j=0;j<vehicleAllocateResultList.length;j++){
-
 				var itemResult = vehicleAllocateResultList[j];
-
 				var number = parseInt(itemResult['vehicleNo']);
 				number += 1;
-
 				var distance = itemResult["distanceValue"];
-
 				if(distance > 999){
 					distance = (distance*0.001).toFixed(1)+"km";
 				} else {
 					distance = distance+"m";
 				}
-
 				selectView += "<option value='"+itemResult['vehicleNo']+"'>"+number+"번경로</option>";
 			}
 
-			//var vehicleNoIndex = data['orderUserList'][0]['vehicleNoIndex'];
 			var vehicleNoIndex = "1";
-
 			var field_no	= parseInt(field_tr_cnt) + 1;
 			var add_html	= "<tr id='" + field_id + field_no + "' height='30'>"+
 								"<input type='hidden' id='txtdeliveryDate' name='txtdeliveryDate[]' value='" + <?php echo deliveryDate; ?> + "'>" + 
@@ -673,71 +567,6 @@ function vehicleDeliveryInsert(){
 		}
 	});
 	if(bCheck == false){ return false };
-	
-	/*
-	$('input[name="txtdeguestTel[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("연락처를 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	$('input[name="txtJuso[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("주소를 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	$('input[name="txtdeguestPay[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("금액을 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	$('input[name="txtdeguestPay[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("금액을 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	$('input[name="txtdeguestLat[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("위도를 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	$('input[name="txtdeguestLon[]"]').each(function(nIndex){
-		if($(this).val() == ""){
-			alert("경도를 입력하세요.");
-			$(this).focus();
-			return false;
-		}
-	});
-	if(bCheck == false){ return false };
-
-	vr_vehicleNoIndex	= $('select[name="txtvehicleNoIndex[]"]').map(function(){ return this.value; }).get();
-	vr_deguestAccno		= $('input[name="txtdeguestAccno[]"]').map(function(){ return this.value; }).get();
-	vr_deguestName		= $('input[name="txtdeguestName[]"]').map(function(){ return this.value; }).get();
-	vr_deguestTel		= $('input[name="txtdeguestTel[]"]').map(function(){ return this.value; }).get();
-	vr_Juso				= $('input[name="txtJuso[]"]').map(function(){ return this.value; }).get();
-	vr_deguestPay		= $('input[name="txtdeguestPay[]"]').map(function(){ return this.value; }).get();
-	vr_deguestLat		= $('input[name="txtdeguestLat[]"]').map(function(){ return this.value; }).get();
-	vr_deguestLon		= $('input[name="txtdeguestLon[]"]').map(function(){ return this.value; }).get();
-	*/
 
 	if(confirm("배송정보를 등록하시겠습니까?")){
 
@@ -786,10 +615,10 @@ function vehicleAdd(){
 			,url : "ajax/vehicleListAdd.ajax.php"
 			,async : true		// 동기화처리
 			,data : {
-						"deliveryDate":<?php echo deliveryDate; ?>
-						,"locationId":<?php echo $locationId; ?>
-						,"meridiemType":<?php echo $meridiemType; ?>
-						,"meridiemFlag":<?php echo $meridiemFlag; ?>
+						"deliveryDate":"<?php echo deliveryDate; ?>"
+						,"locationId":"<?php echo $locationId; ?>"
+						,"meridiemType":"<?php echo $meridiemType; ?>"
+						,"meridiemFlag":"<?php echo $meridiemFlag; ?>"
 					}
 			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 			,success : function(data){
@@ -1426,32 +1255,7 @@ function printPopup(){
 		var bottomHeight = $("#btnComplete").outerHeight();
 		$(".setCarList").height(mapHeight - (searchHeight + bottomHeight));
 	});
-	/*
-	//높이 맞추기
-	var matchH;
-	var matchHresize;
-	$(".matchHeight").each(function(){
-		var thisHeight = $(this).outerHeight();
-		if (matchH){
-			if(thisHeight > matchH){
-				matchH = thisHeight;
-			}
-		} else {
-			matchH = thisHeight;
-		}
-	});
-	$(window).load(function(){
-		var windowH = $(window).outerHeight();
-		var headerH = $("#header").outerHeight();
-		var copyH = $(".copy").outerHeight();
-		var contH = windowH - ( headerH + copyH );
-		//alert($("#lnb").outerHeight());
-		if($("body").hasClass("pc")) {
-			$("#map").height(contH - 235);
-			$(".setCarList").height(contH - 505);
-		}
-	});
-	*/
+
 	</script>
 </div>
 

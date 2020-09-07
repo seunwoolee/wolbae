@@ -39,6 +39,8 @@ class VehicleQuery
 								GROUP BY A.vr_vehicleNo 
 								ORDER BY A.vr_vehicleNo*1 ASC, A.vr_vehicleNoIndex ASC";
 
+
+//		LIB::PLog($this->db->que);
 		/*
 		echo "SELECT 
 							 A.vr_vehicleNo									AS vehicleNo
@@ -84,6 +86,7 @@ class VehicleQuery
 												AND vr_meridiemType='".$meridiemType."' 
 												AND vr_meridiemFlag='".$meridiemFlag."' 
 												AND vr_locationId='".$locationId."' 
+												AND vr_deguestName <> 'guestName'
 												AND vr_vehicleNo='".$i."'";
 			$this->db->query();
 			$row = $this->db->getRows();

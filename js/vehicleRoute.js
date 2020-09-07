@@ -588,6 +588,7 @@ function ajaxGetMapRouteData(){
 				alert("배차가 없습니다33.");
 				return;
 			}
+			debugger;
 			resultMapListData = data['vehicleAllocateResultList'];
 			displayRouteStart();
 			
@@ -731,6 +732,7 @@ function displayRouteStart(){
 	arrVector = new Array();
 	if(checkLine==false){
 		for(j=0;j<resultMapListData.length;j++){
+			debugger;
 			arrVector[j] = new Array();
 			displayRouteLoad(resultMapListData[j]['jsonData'],routeColor[Number(resultMapListData[j]['vehicleNo'])],j,resultMapListData[j]['vehicleNo'],resultMapListData[j]['vehicleNoIndex']);
 			//ajaxTmapData(resultMapListData[j-1]['guestId'],resultMapListData[j]['guestId'],routeColor[resultMapListData[j]['vehicleNo']+5], j, resultMapListData[j]['vehicleNoIndex'],'num');	

@@ -1,0 +1,2708 @@
+2020-09-07 10:33:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:33:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:33:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:33:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:35:58 /setCarListTest.html ==> SELECT 
+							 A.vr_vehicleNo									AS vehicleNo
+							,COUNT(distinct vr_deguestLat,vr_deguestLon)	AS count
+							,SUM(A.vr_distanceValue)						AS sum 
+						    ,SUM(A.vr_deguestPay)							AS deguestPay
+							,A.vr_meridiemFlag								AS meridiemFlag
+							,A.vr_deliveryDate								AS deliveryDate
+								FROM (SELECT * FROM vehicleAllocateResult 
+										WHERE 1=1
+										AND vr_deliveryDate='2020-09-07' 
+										AND vr_meridiemType='0' 
+										AND vr_meridiemFlag='1' 
+										AND vr_locationId='3'  
+										GROUP BY vr_vehicleNo,vr_vehicleNoIndex) AS A 
+								GROUP BY A.vr_vehicleNo 
+								ORDER BY A.vr_vehicleNo*1 ASC, A.vr_vehicleNoIndex ASC
+2020-09-07 10:35:58 /ajax/vehicleList.ajax.php ==> SELECT 
+							 A.vr_vehicleNo									AS vehicleNo
+							,COUNT(distinct vr_deguestLat,vr_deguestLon)	AS count
+							,SUM(A.vr_distanceValue)						AS sum 
+						    ,SUM(A.vr_deguestPay)							AS deguestPay
+							,A.vr_meridiemFlag								AS meridiemFlag
+							,A.vr_deliveryDate								AS deliveryDate
+								FROM (SELECT * FROM vehicleAllocateResult 
+										WHERE 1=1
+										AND vr_deliveryDate='2020-09-07' 
+										AND vr_meridiemType='0' 
+										AND vr_meridiemFlag='1' 
+										AND vr_locationId='3'  
+										GROUP BY vr_vehicleNo,vr_vehicleNoIndex) AS A 
+								GROUP BY A.vr_vehicleNo 
+								ORDER BY A.vr_vehicleNo*1 ASC, A.vr_vehicleNoIndex ASC
+2020-09-07 10:35:58 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:35:58 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:35:58 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 10:35:58 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> SELECT * FROM vehicleAllocateResult 
+											WHERE 1=1 
+												AND vr_deliveryDate='2020-09-07' 
+												AND vr_meridiemType='0' 
+												AND vr_meridiemFlag='1' 
+												AND vr_locationId='3' 
+												AND vr_vehicleNo='0'
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> SELECT * FROM vehicleAllocateResult 
+											WHERE 1=1 
+												AND vr_deliveryDate='2020-09-07' 
+												AND vr_meridiemType='0' 
+												AND vr_meridiemFlag='1' 
+												AND vr_locationId='3' 
+												AND vr_vehicleNo='1'
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> SELECT * FROM vehicleAllocateResult 
+											WHERE 1=1 
+												AND vr_deliveryDate='2020-09-07' 
+												AND vr_meridiemType='0' 
+												AND vr_meridiemFlag='1' 
+												AND vr_locationId='3' 
+												AND vr_vehicleNo='2'
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> SELECT * FROM vehicleAllocateResult 
+											WHERE 1=1 
+												AND vr_deliveryDate='2020-09-07' 
+												AND vr_meridiemType='0' 
+												AND vr_meridiemFlag='1' 
+												AND vr_locationId='3' 
+												AND vr_vehicleNo='3'
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:12:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:14:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:14:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:14:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:14:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:14:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 8
+sum : 40599
+deguestPay : 837700
+meridiemFlag : 1
+deliveryDate : 2020-09-05
+}
+2020-09-07 11:14:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 31549
+deguestPay : 1675360
+meridiemFlag : 1
+deliveryDate : 2020-09-05
+}
+2020-09-07 11:14:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 30612
+deguestPay : 1381050
+meridiemFlag : 1
+deliveryDate : 2020-09-05
+}
+2020-09-07 11:14:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 11
+sum : 13878
+deguestPay : 2084700
+meridiemFlag : 1
+deliveryDate : 2020-09-05
+}
+2020-09-07 11:32:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:32:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:32:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:32:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 11:34:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 9
+sum : 31184
+deguestPay : 1821240
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36954
+deguestPay : 1692450
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 11
+sum : 40426
+deguestPay : 1353510
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 7
+sum : 65864
+deguestPay : 826220
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 9
+sum : 31184
+deguestPay : 1821240
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36954
+deguestPay : 1692450
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 11
+sum : 40426
+deguestPay : 1353510
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:34:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 7
+sum : 65864
+deguestPay : 826220
+meridiemFlag : 1
+deliveryDate : 2020-07-31
+}
+2020-09-07 11:35:16 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 9
+sum : 17639
+deguestPay : 1529570
+meridiemFlag : 1
+deliveryDate : 2020-07-09
+}
+2020-09-07 11:35:16 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 9
+sum : 16154
+deguestPay : 1557750
+meridiemFlag : 1
+deliveryDate : 2020-07-09
+}
+2020-09-07 11:35:16 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 9
+sum : 14886
+deguestPay : 1030300
+meridiemFlag : 1
+deliveryDate : 2020-07-09
+}
+2020-09-07 11:35:16 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 11668
+deguestPay : 1806670
+meridiemFlag : 1
+deliveryDate : 2020-07-09
+}
+2020-09-07 12:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 75163
+deguestPay : 1914100
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 93376
+deguestPay : 1705280
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 75153
+deguestPay : 1773200
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:18 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 14
+sum : 93376
+deguestPay : 1846180
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:23 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:23 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:23 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 12
+sum : 74240
+deguestPay : 1638050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:23 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 15
+sum : 93376
+deguestPay : 1981330
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:27 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:27 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:27 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 11
+sum : 73962
+deguestPay : 1529600
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:27 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 16
+sum : 93376
+deguestPay : 2089780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:30 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:30 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:30 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 10
+sum : 60502
+deguestPay : 1348650
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:30 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 17
+sum : 93376
+deguestPay : 2270730
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 9
+sum : 59679
+deguestPay : 958400
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 18
+sum : 93376
+deguestPay : 2660980
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:45 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:45 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:45 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 10
+sum : 59679
+deguestPay : 1132150
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:45 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 17
+sum : 79779
+deguestPay : 2487230
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 11
+sum : 59679
+deguestPay : 1253350
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 16
+sum : 78516
+deguestPay : 2366030
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 12
+sum : 59679
+deguestPay : 1353400
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:53 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 15
+sum : 74896
+deguestPay : 2265980
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 11
+sum : 40100
+deguestPay : 1990300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:11:56 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 14
+sum : 74524
+deguestPay : 2157630
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 12
+sum : 40100
+deguestPay : 2125350
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 36240
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 13
+sum : 40100
+deguestPay : 2326350
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 11
+sum : 35386
+deguestPay : 1895000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 14
+sum : 40100
+deguestPay : 2506200
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 34640
+deguestPay : 1715150
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 15
+sum : 40100
+deguestPay : 2680400
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 9
+sum : 33974
+deguestPay : 1540950
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:25 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 16
+sum : 40100
+deguestPay : 2786650
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:25 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 8
+sum : 33587
+deguestPay : 1434700
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:25 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:25 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:31 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 17
+sum : 40100
+deguestPay : 3017550
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:31 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 33180
+deguestPay : 1203800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:31 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:31 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 18
+sum : 40100
+deguestPay : 3275250
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 6
+sum : 32245
+deguestPay : 946100
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:36 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 19
+sum : 40100
+deguestPay : 3527500
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 5
+sum : 31072
+deguestPay : 693850
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:39 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 20
+sum : 40100
+deguestPay : 3805500
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 4
+sum : 30840
+deguestPay : 415850
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 21
+sum : 40100
+deguestPay : 3961750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 3
+sum : 29860
+deguestPay : 259600
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 22
+sum : 40100
+deguestPay : 4064350
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 2
+sum : 28919
+deguestPay : 157000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:12:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:00 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 23
+sum : 40100
+deguestPay : 4212450
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:00 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 1
+sum : 12961
+deguestPay : 8900
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:00 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:00 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 22
+sum : 39907
+deguestPay : 4123050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 2
+sum : 12961
+deguestPay : 98300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:11 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 21
+sum : 39223
+deguestPay : 3957550
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:11 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 3
+sum : 12961
+deguestPay : 263800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:11 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:11 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 20
+sum : 38648
+deguestPay : 3712550
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 4
+sum : 12961
+deguestPay : 508800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:14 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 19
+sum : 38576
+deguestPay : 3606350
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 5
+sum : 12961
+deguestPay : 615000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 18
+sum : 38576
+deguestPay : 3471300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 6
+sum : 12961
+deguestPay : 750050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:26 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 17
+sum : 37573
+deguestPay : 2985500
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:26 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 6
+sum : 12961
+deguestPay : 750050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:26 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1947550
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:26 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:29 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 17
+sum : 37573
+deguestPay : 2985500
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:29 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 12961
+deguestPay : 1235850
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:29 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:29 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 16
+sum : 36861
+deguestPay : 2940600
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 8
+sum : 12961
+deguestPay : 1280750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:32 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:38 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 15
+sum : 36192
+deguestPay : 2783100
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:38 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 9
+sum : 12961
+deguestPay : 1438250
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:38 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:38 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:42 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 14
+sum : 32306
+deguestPay : 2662250
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:42 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 12961
+deguestPay : 1559100
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:42 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 13
+sum : 59679
+deguestPay : 1461750
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:42 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 13
+sum : 29690
+deguestPay : 2480700
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 12961
+deguestPay : 1559100
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1643300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:13:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 12
+sum : 15396
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 11
+sum : 12961
+deguestPay : 1943800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1643300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 13
+sum : 70352
+deguestPay : 2022580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:20 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 12
+sum : 15396
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:20 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 12961
+deguestPay : 2008800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:20 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1643300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 12:14:20 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 12
+sum : 57927
+deguestPay : 1957580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:35 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:35 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:35 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:35 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:00:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:01:37 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:01:37 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:01:37 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:01:37 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:02:55 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:02:55 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:02:55 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:02:55 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:02:55 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 8
+sum : 74982
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:24 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 11
+count : 1
+sum : 16412
+deguestPay : 0
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:04:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:10 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:10 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:10 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:10 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:10 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 8
+sum : 74982
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:05:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 11
+count : 1
+sum : 16412
+deguestPay : 0
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:06:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:06:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:06:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:06:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:06:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:12 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:12 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:12 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:12 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:12 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:07:54 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:08:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:08:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:08:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:08:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:08:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:09:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:09:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:09:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:09:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:09:21 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:02 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:10:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:11:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:11:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:11:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:11:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:11:19 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:15:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:22 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 12
+sum : 15396
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 12961
+deguestPay : 2008800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1643300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:15:47 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 12
+sum : 57927
+deguestPay : 1957580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:16:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 7
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:05 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 5
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:16:46 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:17:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:17:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:17:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:17:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 3
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:17:33 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:18:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:18:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:18:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:18:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:18:48 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:28 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:19:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:20:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:20:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:20:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:20:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:20:17 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:21:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:21:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:21:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:21:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:21:43 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:22:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:22:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:22:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:22:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:22:40 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:25:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:25:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31360
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:25:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:25:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:25:06 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:27:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 7
+sum : 32588
+deguestPay : 711170
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:27:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 7
+sum : 31451
+deguestPay : 1365350
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:27:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 7
+sum : 41852
+deguestPay : 1136450
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:27:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 9
+sum : 91394
+deguestPay : 1023316
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:27:52 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 4
+count : 5
+sum : 31031
+deguestPay : 573155
+meridiemFlag : 1
+deliveryDate : 2020-07-06
+}
+2020-09-07 13:29:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 12
+sum : 15396
+deguestPay : 2096000
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:29:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 12
+sum : 12961
+deguestPay : 2008800
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:29:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 14
+sum : 59679
+deguestPay : 1643300
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:29:44 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 12
+sum : 57927
+deguestPay : 1957580
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:30:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 0
+count : 6
+sum : 71875
+deguestPay : 1449050
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:30:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 1
+count : 10
+sum : 64530
+deguestPay : 2088490
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:30:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 2
+count : 8
+sum : 37025
+deguestPay : 2032780
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
+2020-09-07 13:30:01 /ajax/vehicleList.ajax.php ==> Array { 
+vehicleNo : 3
+count : 10
+sum : 82797
+deguestPay : 1934440
+meridiemFlag : 1
+deliveryDate : 2020-09-07
+}
