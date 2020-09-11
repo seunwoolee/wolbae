@@ -257,6 +257,7 @@ function reset() {
 
 // 브라우저 새로고침없이, 데이터 갱신하긔 ( callBack 사용 )
 function loadVehicleList(complete_call){
+	debugger;
 	complete_call = complete_call || function(){ initView(); };
 	$('#col-md-3').load("ajax/vehicleList.ajax.php", {
 														"deliveryDate" : deliveryDate
@@ -641,16 +642,14 @@ function vehicleAdd(){
 }
 
 function vehicleRelocation(refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo){
-	//var getOrderData = ajaxGetMapRouteData();
-	//alert(getOrderData[vehicleAllocateResultList])
+
 	if(confirm("경로정보를 다시 불러오시겠습니까?")){
-		
+
 		$("#loadingDataNum").text("잠시만 기다려 주세요.");
 		loadModal();
-		
 		$.ajax({
 			type : "POST"
-			,url : "process/vehicleProcessRelocation.php"
+			,url : "process/my_vehicleAllocateResultMap.ajax.php"
 			,async : true		// 동기화처리
 			,data : {
 						"deliveryDate":refDeliveryDate
@@ -661,25 +660,16 @@ function vehicleRelocation(refDeliveryDate, refMeridiemType, refMeridiemFlag, re
 					}
 			,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 			,success : function(data){
-				//-1 배차된 경로 변수로 받기 
-				//                                                                    vehicleAllocateResultList_new = data['vehicleAllocateResultList']; //수정 0805 reWrited by J
-				//0. 경유지 거점들의 정보를 받아 와야함.//vehicleProcessRelocation 수정
-				//1. 이 자리에 Tmap 경유지 최적화  코드 삽입
-				//2. 경유지 최적화 후 순서를 vehicleAllocateResult에 규격에 맞게 넣어야 함
-				//
-				removeRoute();
-				simpleLoadVehicleList();
 				$("#loading").modal("hide");
-				
+				getReRouteByTmap(data.viaPoints, refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo);
 			}
-			,error: function( xhr, status ) {}
+			,error: function( xhr, status ) {$("#loading").modal("hide");}
 			,complete : function(){ }
 		});
-		
+
 	} else{
 		return;
 	}
-
 }
 
 //배차 목록 상세보기 클릭

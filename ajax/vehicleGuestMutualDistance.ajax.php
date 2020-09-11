@@ -52,8 +52,10 @@ $db->que = " SELECT ve_seq AS seq
 								AND ve_meridiemFlag='".$meridiemFlag."'
 									GROUP BY ve_guestId,ve_guestJusoSubId,ve_isShop 
 									ORDER BY ve_guestId ASC";
+
 $db->query();
 $vehicleGuestInfoData = $db->getRows();
+
 // 고객정보 테이블 조회하여 오늘 업데이트된 주소데이터를 가져온다.
 
 /*

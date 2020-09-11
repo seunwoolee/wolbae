@@ -1,6 +1,7 @@
 <?php
 include "inc_html/header.html";
 
+
 $year				= $_GET["year"];
 $month				= $_GET["month"];
 $locationId			= $_GET["locationId"];
@@ -34,18 +35,6 @@ $locationId = $db->getOne();
 $amCount = "0";
 $pmCount = "0";
 
-/******************************************************************************************
-$db->que = "SELECT 		count(distinct vr_deliveryDate) AS vehicleCount
-						,vr_meridiemType				AS meridiemType 
-							FROM vehicleAllocateResult 
-							WHERE vr_deliveryDate >= '".$year."-".$month."-01 00:00:00' AND 
-									vr_deliveryDate < '".$year."-".$month."-".$endDay." 24:00:00' AND 
-									vr_deliveryDate!= '".$today."' AND 
-									vr_locationId='".$locationId."' 
-							GROUP BY vr_meridiemType
-							ORDER BY vr_meridiemType ASC";
-******************************************************************************************/
-
 // 오전배차갯수 구하긔
 $db->que = "SELECT 		count(*) AS vehicleCount
 							FROM vehicleAllocateStatus 
@@ -56,18 +45,7 @@ $db->que = "SELECT 		count(*) AS vehicleCount
 								AND vs_locationId='".$locationId."'
 								AND vs_vehicleEndStatus='Y'
 								AND vs_meridiemType='0'";
-/*
-if($_SERVER['REMOTE_ADDR'] == '118.220.204.2'){
-echo "SELECT 		count(*) AS vehicleCount
-							FROM vehicleAllocateStatus 
-							WHERE 1=1
-								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
-								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
-								AND vs_deliveryDate!= '".$today."' 
-								AND vs_locationId='".$locationId."'
-								AND vs_meridiemType='0'<br>";
-}
-*/
+
 $db->query();
 $row = $db->getRow();
 $amCount = $row['vehicleCount'];
@@ -82,15 +60,6 @@ $db->que = "SELECT 		count(*) AS vehicleCount
 								AND vs_locationId='".$locationId."'
 								AND vs_vehicleEndStatus='Y'
 								AND vs_meridiemType='1'";
-/*
-echo "SELECT 		count(*) AS vehicleCount
-							FROM vehicleAllocateStatus 
-							WHERE 1=1
-								AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
-								AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
-								AND vs_deliveryDate!= '".$today."' 
-								AND vs_locationId='".$locationId."'
-								AND vs_meridiemType='1'"; */
 
 $db->query();
 $row = $db->getRow();
@@ -113,18 +82,6 @@ $db->que = "SELECT 		*
 							AND vs_meridiemType='".$meridiemType."'
 							AND vs_vehicleEndStatus='Y'
 							ORDER BY vs_deliveryDate DESC";
-
-/*
-echo "SELECT 		*
-						FROM vehicleAllocateStatus 
-						WHERE 1=1
-							AND vs_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
-							AND vs_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
-							AND vs_deliveryDate!= '".$today."' 
-							AND vs_locationId='".$locationId."'
-							AND vs_meridiemType='".$meridiemType."'
-							ORDER BY vs_deliveryDate DESC<br>"; */
-
 $db->query();
 $row = $db->getRows();
 
@@ -146,20 +103,6 @@ for($i=0;$i<$meridiemCount;$i++){
 								AND vr_meridiemType = '".$row[$i]['vs_meridiemType']."'
 								AND vr_meridiemFlag = '".$row[$i]['vs_meridiemFlag']."' 
 								AND vr_locationId='".$row[$i]['vs_locationId']."'"; 
-	/*
-	echo "SELECT	vr_deliveryDate AS deliveryDate,
-						SUM(vr_distanceValue) AS distanceValue,
-						COUNT(vr_seq) AS count,
-						SUM(vr_deguestPay) AS pay,
-						vr_meridiemFlag
-							FROM vehicleAllocateResult 
-							WHERE 1=1
-								AND vr_deliveryDate = '".$row[$i]['vs_deliveryDate']."'
-								AND vr_meridiemType = '".$row[$i]['vs_meridiemType']."'
-								AND vr_meridiemFlag = '".$row[$i]['vs_meridiemFlag']."' 
-								AND vr_locationId='".$row[$i]['vs_locationId']."'"; 
-	echo "<br>";
-	*/
 
 	$db->query();
 	$result = $db->getRow();
@@ -171,26 +114,6 @@ for($i=0;$i<$meridiemCount;$i++){
 
 }
 
-//월 배차 조회
-/*************************************************************************************
-$db->que = "SELECT 		vr_deliveryDate AS deliveryDate
-						,sum(vr_distanceValue)	AS distanceValue
-						,count(vr_seq)			AS count
-						,sum(vr_deguestPay)		AS pay
-						,vr_meridiemFlag
-							FROM vehicleAllocateResult 
-								WHERE 1=1
-									AND vr_deliveryDate >= '".date("Y-m-d", mktime(0, 0, 0, $month, 1, $year))." 00:00:00' 
-									AND vr_deliveryDate < '".date("Y-m-d", mktime(0, 0, 0, $month+1, 0, $year))." 24:00:00' 
-									AND vr_deliveryDate != '".$today."' 
-									AND vr_meridiemType = '".$meridiemType."' 
-									AND vr_locationId='".$locationId."' 
-										GROUP BY vr_deliveryDate 
-										ORDER BY vr_deliveryDate DESC"; 
-*************************************************************************************/
-
-//$db->query();
-//$vehicleList = $db->getRows();
 
 for($i=0;$i<count($vehicleList);$i++){	
 

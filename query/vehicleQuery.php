@@ -3,7 +3,7 @@ class VehicleQuery
 {
 	var $db;
 	function Vehicle()
-	{	
+	{
 	}
 
 	function init($db){
@@ -38,39 +38,6 @@ class VehicleQuery
 										GROUP BY vr_vehicleNo,vr_vehicleNoIndex) AS A 
 								GROUP BY A.vr_vehicleNo 
 								ORDER BY A.vr_vehicleNo*1 ASC, A.vr_vehicleNoIndex ASC";
-
-
-//		LIB::PLog($this->db->que);
-		/*
-		echo "SELECT 
-							 A.vr_vehicleNo									AS vehicleNo
-							,COUNT(distinct vr_deguestLat,vr_deguestLon)	AS count
-							,SUM(A.vr_distanceValue)						AS sum 
-						    ,SUM(A.vr_deguestPay)							AS deguestPay
-								FROM (SELECT * FROM vehicleAllocateResult 
-										WHERE 1=1
-										AND vr_deliveryDate='".$deliveryDate."' 
-										AND vr_meridiemType='".$meridiemType."' 
-										AND vr_meridiemFlag='".$meridiemFlag."' 
-										AND vr_locationId='".$locationId."'  
-										GROUP BY vr_vehicleNo,vr_vehicleNoIndex) AS A 
-								GROUP BY A.vr_vehicleNo 
-								ORDER BY A.vr_vehicleNo*1 ASC, A.vr_vehicleNoIndex ASC";
-		*/
-
-
-		/*
-		$this->db->que = " SELECT 
-							 vr_vehicleNo		AS vehicleNo 
-							,count(distinct vr_deguestLat,vr_deguestLon)		AS count 
-							,sum(distinct vr_distanceValue)	AS sum 
-								FROM vehicleAllocateResult 
-								WHERE vr_deliveryDate='".$deliveryDate."' AND 
-								vr_meridiemType='".$meridiemType."' AND 
-								vr_locationId='".$locationId."'
-								GROUP BY vr_vehicleNo 
-								ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex ASC";
-		*/
 		$this->db->query();
 		return $this->db->getRows();
 	}
@@ -88,6 +55,7 @@ class VehicleQuery
 												AND vr_locationId='".$locationId."' 
 												AND vr_deguestName <> 'guestName'
 												AND vr_vehicleNo='".$i."'";
+//			LIB::PLog($this->db->que);
 			$this->db->query();
 			$row = $this->db->getRows();
 
@@ -103,7 +71,7 @@ class VehicleQuery
 			if(count($row) > 0){
 				for($j=0;$j<count($row);$j++){
 					$nSumPay += $row[$j]['vr_deguestPay'];
-					
+
 					$accnoDupleJuso = $row[$j]['vr_accnoDupleJuso'];
 					$deguestId = $row[$j]['vr_deguestId'];
 					if($accnoDupleJuso != '' && ($accnoDupleJusoCopy == $accnoDupleJuso) && ($deguestIdCopy != $deguestId)){
@@ -121,27 +89,9 @@ class VehicleQuery
 				$list[$i]['nAccnoDupleCnt'] = 0;				// 중첩갯수 저장
 			}
 		}
-
 		return $list;
 	}
 
-	/*
-	function getErrorVehicleCount($deliveryDate, $meridiemType, $locationId, $meridiemFlag){
-		$this->db->que = "SELECT count(ve_seq) AS errorCount 
-							FROM vehicleGuestOrderData 
-								WHERE 1=1
-									AND ve_deliveryDate = '".$deliveryDate."' 
-									AND ve_meridiemType='".$meridiemType."' 
-									AND ve_meridiemFlag='".$meridiemFlag."' 
-									AND ve_locationId='".$locationId."' 
-									AND ve_guestId != 'admin' 
-									AND ve_isJuso = 'N' 
-									AND ve_errorJusoFlag != 'Y'
-										GROUP BY ve_guestId,ve_guestJusoSubId,ve_isShop ";
-		$this->db->query();
-		return $this->db->affected_rows();
-	}
-	*/
 	function getErrorVehicleCount($deliveryDate, $meridiemType, $locationId, $meridiemFlag){
 		$this->db->que = "SELECT count(ve_seq) AS errorCount 
 							FROM vehicleGuestOrderData 
@@ -154,10 +104,10 @@ class VehicleQuery
 									AND ve_isJuso = 'N' 
 									AND ve_errorJusoFlag != 'Y' ";
 		$this->db->query();
-		
+
 		return $this->db->getOne();
 	}
-	
+
 	function getVehicleComplete($deliveryDate, $meridiemType, $locationId, $meridiemFlag){
 
 		$this->db->que = "SELECT vs_vehicleEndStatus AS vehicleEndStatus 
@@ -172,7 +122,7 @@ class VehicleQuery
 
 	}
 
-	
+
 }
 
 

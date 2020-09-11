@@ -1,0 +1,260 @@
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='321794' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='546294' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='345440' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='472968' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='admin' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='343963' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='436301' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='405441' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='517141' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='343629' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='343629' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='517141' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='405441' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='436301' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='343963' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='admin' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='472968' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='345440' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='546294' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            
+2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
+                    vehicleAllocateResult.vr_vehicleNoIndex,
+					vehicleAllocateResult.vr_deguestId
+					FROM vehicleAllocateResult
+                    
+                WHERE 1=1
+                AND vr_deguestId ='321794' 
+                AND vr_deliveryDate='2020-09-11' 
+                AND vr_meridiemType='0' 
+                AND vr_meridiemFlag='1' 
+                AND vr_locationId='3'
+                AND vr_vehicleNo='3' 
+            

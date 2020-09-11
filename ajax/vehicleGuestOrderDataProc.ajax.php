@@ -71,9 +71,7 @@ $db->query();
 
 
 //3. 거점서버DB에 ERP데이터 등록
-
 for($i=0;$i<count($PARAM['item']);$i++){		// 실서버 적용시 RAPAM 배열ID 변경해야됩니다.
-
 	unset($DATA);
 	
 	// 셈플코드임 (고객배송정보 insert )
@@ -110,7 +108,6 @@ for($i=0;$i<count($PARAM['item']);$i++){		// 실서버 적용시 RAPAM 배열ID 
 	$DATA["ve_isRoad"]			= $PARAM['item'][$i]['isRoad'];			// 신주소,구주소
 	$DATA["ve_createDate"]		= date(("Y-m-d H:i:s"), time());		// 생성날짜
 	
-
 	if((empty($PARAM['item'][$i]['juso'])) || ($PARAM['item'][$i]['lat']==null) || ($PARAM['item'][$i]['lon']==null)){
 		$DATA["ve_isJuso"]			= "N";
 	}
@@ -118,12 +115,6 @@ for($i=0;$i<count($PARAM['item']);$i++){		// 실서버 적용시 RAPAM 배열ID 
 	$db->Insert("vehicleGuestOrderData", $DATA, " vehicleGuestOrderData Insert Error ");
 	//주소 및 위,경도 공백 및 0값 체크
 	
-//	if((!empty($PARAM['Erp_vehicleGuestOrderData'][$i]['juso'])) && 
-//		(!empty($PARAM['Erp_vehicleGuestOrderData'][$i]['lat'])) && (!empty($PARAM['Erp_vehicleGuestOrderData'][$i]['lon'])) && ($PARAM['Erp_vehicleGuestOrderData'][$i]['lat']!=0) && 
-//		($PARAM['Erp_vehicleGuestOrderData'][$i]['lon']!=0)){
-//
-//		$db->Insert("vehicleGuestOrderData", $DATA, " vehicleGuestOrderData Insert Error ");
-//	}
 
 }
 //4. 출발지 주소도 등록

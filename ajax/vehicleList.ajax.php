@@ -63,8 +63,6 @@ $resultListDataSumPay = $vehicleQuery->getMapGroupListDataSumPay($deliveryDate, 
 
 for($i=0;$i<count($resultGroupListDataSe);$i++){	
 	$row = $resultGroupListDataSe[$i];
-    LIB::PLog($row);
-
     //if($vectorNoCurrent==null){
 	//	$vectorNoCurrent = $row['vehicleNo'];
 	//}

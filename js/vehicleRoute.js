@@ -74,13 +74,13 @@ $(function() {
 //초기화 함수
 function initTmap(){
 	$("#map_div").html("");
-	
+
 	map = new Tmap.Map({div:'map_div',
-						width:'100%', 
+						width:'100%',
 						height:'768px',
 						transitionEffect:"resize",
 						animation:true
-					}); 
+					});
 
 	format = new Tmap.Format.GeoJSON({
 											'internalProjection': map.baseLayer.projection,
@@ -184,7 +184,7 @@ function previewAjaxGetOrderDataReGeo(memeType, stcode){
 		}
 		,complete : function(){
 		}	// complete Event 호출시 사용
-	});	
+	});
 }
 
 
@@ -201,7 +201,7 @@ function timedLoopSetGeoCodingListData(refData, refLength){
 		if(nIndexGeoCoding < refData.length) {
 			timedLoopSetGeoCodingListData(refData, refLength);
 		} else {
-			
+
 		}
 
 	}, 200);
@@ -218,7 +218,7 @@ function setSearchGeoCodingListData(jusoData, accnoData, i, len){
 	searchJusoNewRe(jusoData, accnoData, i, len);
 
 
-	
+
 }
 
 //주문 데이터 가져오기 - 미리보기
@@ -238,8 +238,8 @@ function previewAjaxGetOrderDataRe(memeType, stcode){
 //		,jsonpCallback: "callback" ( 외부도메인 접속시에는 주석해제 )
 		,data : {
 				//"jum":"10"			// 11:반야월, 6:월배, 배센:10
-				//"jum":"0023"			// 
-				//"jum":"0003"			// 
+				//"jum":"0023"			//
+				//"jum":"0003"			//
 				"jum":stcode
 				,"gbn":memeType
 		}
@@ -255,7 +255,7 @@ function previewAjaxGetOrderDataRe(memeType, stcode){
 
 			//resultOrderListData = data['vehicleGuestOrderDataList'];
 			resultOrderListData = data['item'];
-		
+
 
 			//alert(resultOrderListData.length);
 
@@ -333,7 +333,7 @@ function previewAjaxGetOrderDataRe(memeType, stcode){
 
 //지도 데이터 가져오기
 function previewAjaxGetOrderData(erpUrl, memeType){
-	
+
 	var vehicleErpUrl = erpUrl;
 
 	$.ajax({
@@ -422,7 +422,7 @@ function onClickAccnoRe(strLat, strLon, strJuso){
 
 
 	searchJusoNewRe(strJuso, nIndex);
-	
+
 	//map.setCenter(new Tmap.LonLat(strLon,strLat).transform(pr_4326, pr_3857), 19);
 }
 
@@ -432,7 +432,7 @@ function onClickAccno(strLat, strLon){
 
 //지도 데이터 가져오기
 function previewAjaxGetOrderDataList(refData){
-	
+
 	$.ajax({
 		type : "GET"
 		,url : "ajax/previewVehicleList.ajax.php"
@@ -456,7 +456,7 @@ function previewAjaxGetOrderDataList(refData){
 			}
 			resultMapListData = data['vehicleAllocateResultList'];
 			displayRouteStart();
-			
+
 		}
 		,error: function( xhr, status ) {
  			displayRouteCompanyMarker(initLon, initLat);
@@ -464,7 +464,7 @@ function previewAjaxGetOrderDataList(refData){
 			$("#loading").modal("hide");
 		}
 		,complete : function(){
-			
+
 		}	// complete Event 호출시 사용
 	});
 }
@@ -486,7 +486,7 @@ function previewDisplayMarkerRe(refData){
 	}
 
 	map.setCenter(new Tmap.LonLat(initLon, initLat).transform(pr_4326, pr_3857), 13);
-	
+
 	$("#loading").modal("hide");
 
 }
@@ -496,7 +496,7 @@ function previewDisplayMarker(refData){
 
 	displayRouteCompanyMarker(initLon, initLat);
 	arrMarker = new Array();
-	
+
 	var nIndex = 1;
 	for(i=0;i<refData['item'].length;i++){
 		if(refData['item'][i]['lat'] > 0 && refData['item'][i]['lon'] > 0){
@@ -506,7 +506,7 @@ function previewDisplayMarker(refData){
 	}
 
 	map.setCenter(new Tmap.LonLat(initLon, initLat).transform(pr_4326, pr_3857), 13);
-	
+
 	$("#loading").modal("hide");
 
 }
@@ -528,17 +528,17 @@ function previewDisplayRouteMarker(list, varSeq){
 	var style = "position:absolute; z-index:1; color:#000; margin:3px 0 0 0; width:100%; text-align:center; font-weight:bold;";
 	var number = parseInt(list['vehicleNoIndex']);
 	number += 1;
-	
+
 	if(list['vehicleNoIndex'] > 9){
 		style = "position:absolute; z-index:1; color:#000; margin:3px 0 0 0; width:100%; text-align:center; font-weight:bold;";
 	}
 	var span="<span style='"+style+"'>"+varSeq+"</span>";
 	var iconHtml = new Tmap.IconHtml('<div style="text-align:center;">'+span+'<img src="images/icon/marker_0.png" /></div>', size, offset);
-		
+
 	/*******************************************마커 커스텀 끝*******************************************************/
 
 	var lon = list['lon'];
-	var lat = list['lat'];	
+	var lat = list['lat'];
 	var marker = new Tmap.Marker(new Tmap.LonLat(lon, lat).transform(pr_4326, pr_3857), iconHtml);
 	var popup;
 	var html = list['guestName']+"</br>"+list['Juso']+"</br>"+list['guestTel'];
@@ -548,7 +548,7 @@ function previewDisplayRouteMarker(list, varSeq){
 							new Tmap.Size(300, 80),
 							html,
 							true
-							); 
+							);
 
 	arrPopup[varSeq] = popup;
 	map.addPopup(popup);
@@ -591,7 +591,7 @@ function ajaxGetMapRouteData(){
 			debugger;
 			resultMapListData = data['vehicleAllocateResultList'];
 			displayRouteStart();
-			
+
 		}
 		,error: function( xhr, status ) {
  			displayRouteCompanyMarker(initLon, initLat);
@@ -599,7 +599,7 @@ function ajaxGetMapRouteData(){
 			$("#loading").modal("hide");
 		}
 		,complete : function(){
-			
+
 		}	// complete Event 호출시 사용
 	});
 }
@@ -628,7 +628,7 @@ function tmpAjaxGetMapRouteData(){
 			}
 			resultMapListData = data['vehicleAllocateResultList'];
 			displayRouteStart();
-			
+
 		}
 		,error: function( xhr, status ) {
  			displayRouteCompanyMarker(initLon, initLat);
@@ -636,7 +636,7 @@ function tmpAjaxGetMapRouteData(){
 			$("#loading").modal("hide");
 		}
 		,complete : function(){
-			
+
 		}	// complete Event 호출시 사용
 	});
 }
@@ -660,7 +660,7 @@ function allMapView(strArr){
 		}
 	}
 
-	// 마크지우긔 
+	// 마크지우긔
 	for(var i=0; i<arrVector.length; i++){
 
 		for(var j=0; j<arrVector[i].length;j++){
@@ -673,14 +673,14 @@ function allMapView(strArr){
 		// 지도경로선 제거 채크박스가 채크해제되어 있으면, 지도경로선 표시안하긔
 		if(!bCheckBoxLineRemove){
 			for(var i=0;i<strArrSplit.length;i++){
-				
+
 				for(var j=0;j<arrVector[strArrSplit[i]].length;j++){
 					arrVector[strArrSplit[i]][j].setVisibility(true);
 				}
 			}
 		}
 		for(var i=0;i<strArrSplit.length;i++){
-			
+
 			for(var j=0;j<arrMarker[strArrSplit[i]].length;j++){
 				arrMarker[strArrSplit[i]][j].setVisibility(true);
 			}
@@ -702,7 +702,7 @@ function singleMapView(num, is){
 			arrVector[num][i].setVisibility(is);
 		}
 	}
-	
+
 	for(var j=0; j<arrMarker[num].length;j++){
 		arrMarker[num][j].setVisibility(is);
 	}
@@ -732,20 +732,19 @@ function displayRouteStart(){
 	arrVector = new Array();
 	if(checkLine==false){
 		for(j=0;j<resultMapListData.length;j++){
-			debugger;
 			arrVector[j] = new Array();
 			displayRouteLoad(resultMapListData[j]['jsonData'],routeColor[Number(resultMapListData[j]['vehicleNo'])],j,resultMapListData[j]['vehicleNo'],resultMapListData[j]['vehicleNoIndex']);
-			//ajaxTmapData(resultMapListData[j-1]['guestId'],resultMapListData[j]['guestId'],routeColor[resultMapListData[j]['vehicleNo']+5], j, resultMapListData[j]['vehicleNoIndex'],'num');	
+			//ajaxTmapData(resultMapListData[j-1]['guestId'],resultMapListData[j]['guestId'],routeColor[resultMapListData[j]['vehicleNo']+5], j, resultMapListData[j]['vehicleNoIndex'],'num');
 		}
 	}
 	setTimeout("displayMarkerDelay()",100);
-} 
+}
 
 
 
 // 배차 지도에서 선 그리기
 function displayRouteLoad(data, color, num, vehicleNo, vehicleNoIndex){
-
+	debugger
 	// 지도상에 그려질 스타일을 설정합니다
 	// null일때 값이 없더라도 빈 레이어라도 그려줘야됨...중요
 	if(data==null){
@@ -784,9 +783,9 @@ function displayRouteLoad(data, color, num, vehicleNo, vehicleNoIndex){
 	vectorLayer.events.register("featuresadded", vectorLayer, onDrawnFeatures); // 그리기 완료 이벤트 생성
 
 	map.addLayer(vectorLayer);
-	
+
 	var geoForm = format.read(data);
-	
+
 	// 변환된 데이터를 레이어에 그립니다
 	// 그리고 싶은 부분만 발췌해서 그리는 것도 가능합니다
 	vectorLayer.addFeatures(geoForm);
@@ -819,7 +818,7 @@ function removeRoute(){
 			map.removeLayer(arrVector[i][j]);
 		}
 	}
-	
+
 	var nCntMarkNo = arrMarker.length;
 	for(i=0;i<nCntMarkNo;i++){
 		var nCntMarkNoIndex = arrMarker[i].length;
@@ -880,14 +879,14 @@ function simpleDisplayRouteStart(){
 	//배차 지도에서 선 그리기
 	arrVector = new Array();
 	if(checkLine==false){
-		
+
 		for(j=0;j<resultMapListData.length;j++){
 			arrVector[j] = new Array();
 			simpleDisplayRouteLoad(resultMapListData[j]['jsonData'],routeColor[Number(resultMapListData[j]['vehicleNo'])],j,resultMapListData[j]['vehicleNo'],resultMapListData[j]['vehicleNoIndex']);
 		}
 	}
 	setTimeout("simpleDisplayMarkerDelay()", 0);
-} 
+}
 
 // 배차 지도에서 선 그리기
 function simpleDisplayRouteLoad(data, color, num, vehicleNo, vehicleNoIndex){
@@ -931,7 +930,7 @@ function simpleDisplayRouteLoad(data, color, num, vehicleNo, vehicleNoIndex){
 	map.addLayer(vectorLayer);
 
 	var geoForm = format.read(data);
-	
+
 	// 변환된 데이터를 레이어에 그립니다
 	// 그리고 싶은 부분만 발췌해서 그리는 것도 가능합니다
 	vectorLayer.addFeatures(geoForm);
@@ -951,12 +950,12 @@ function simpleDisplayMarkerDelay(){
 			count++;
 		}
 	}
-	
+
 	$("#markerModal").modal("hide");
 
 	if(typeof strCheckBoxRoute != "undefined"){
-		// UI변경은 
-		allMapView(strCheckBoxRoute.slice(0, -1));	
+		// UI변경은
+		allMapView(strCheckBoxRoute.slice(0, -1));
 		checkBoxRestore();
 	}
 }
@@ -988,7 +987,7 @@ function displayMarkerDelay(){
 
 //배차 지도에서 마커 그리기
 function displayRouteMarker(list, varSeq){
-	
+	debugger;
 	if(markerNoCurrent==null){
 		markerNoCurrent = parseInt(list['vehicleNo']);
 	}
@@ -1020,17 +1019,17 @@ function displayRouteMarker(list, varSeq){
 	if(list['errorJusoFlag'] == 'Y'){
 		number--;
 	}
-	
+
 	if(list['vehicleNoIndex'] > 9){
 		style = "position:absolute; z-index:1; color:#000; margin:3px 0 0 0; width:100%; text-align:center; font-weight:bold;";
 	}
 	var span="<span style='"+style+"'>"+number+"</span>";
 	var iconHtml = new Tmap.IconHtml('<div style="text-align:center;">'+span+'<img src="images/icon/marker_'+list['vehicleNo']+'.png" /></div>', size, offset);
-		
+
 	/*******************************************마커 커스텀 끝*******************************************************/
 
 	var lon = list['deguestLon'];
-	var lat = list['deguestLat'];	
+	var lat = list['deguestLat'];
 	var marker = new Tmap.Marker(new Tmap.LonLat(lon, lat).transform(pr_4326, pr_3857), iconHtml);
 	var popup;
 	var html = list['guestName']+"</br>"+list['Juso']+"</br>"+list['guestTel'];
@@ -1039,7 +1038,7 @@ function displayRouteMarker(list, varSeq){
 							,new Tmap.LonLat(lon, lat).transform(pr_4326, pr_3857)
 							,new Tmap.Size(300, 80)
 							,html
-							,true); 
+							,true);
 
 	arrPopup[varSeq] = popup;
 	map.addPopup(popup);
@@ -1066,11 +1065,11 @@ function displayRouteCompanyMarker(varLon, varLat){
 
 	var span="<span style='"+style+"'>S</span>";
 	var iconHtml = new Tmap.IconHtml('<div style="text-align:center;">'+span+'<img src="images/icon/marker_green.png" /></div>', size, offset);
-		
+
 	/*******************************************마커 커스텀 끝*******************************************************/
 
 	var lon = varLon;
-	var lat = varLat;	
+	var lat = varLat;
 	var marker = new Tmap.Marker(new Tmap.LonLat(lon, lat).transform(pr_4326, pr_3857), iconHtml);
 	var popup;
 	var html = ""+
@@ -1079,7 +1078,7 @@ function displayRouteCompanyMarker(varLon, varLat){
 				new Tmap.LonLat(lon, lat).transform(pr_4326, pr_3857),
 				new Tmap.Size(300, 80),
 				html,true
-				); 
+				);
 
 	arrPopup[0] = popup;
 	map.addPopup(popup);
@@ -1126,7 +1125,7 @@ function markerClick(latlon){
 	index = parseInt(index);
 
 	//var oldVehicleNo = '';
-	
+
 	$.ajax({
 		type : "GET"
 		,url : "ajax/markerPopupData.ajax.php"
@@ -1173,7 +1172,7 @@ function markerClick(latlon){
 				}
 
 			}
-			
+
 			//if(data['orderUserList'][0]['guestId']!=''){
 				index +=1;
 			//}
@@ -1186,13 +1185,13 @@ function markerClick(latlon){
 										selectView+
 									"</select>"+
 									"<button type='button' class='btn btn-new-ok' onclick=vehicleIndexChange('"+vehicleNo+"','"+vehicleNoIndex+"','"+meridiemFlag+"')>변경</button>");
-	
+
 			var accnoDupleJuso ='';
 			var accnoDupleJusoCopy = '';
 			var deguestId = '';
 			var deguestIdCopy = '';
 			var strDupleJusoFlg = '';
-			
+
 			for(var i=0;i<data['orderUserList'].length;i++){
 				var item = data['orderUserList'][i];
 				var pay = "0";
@@ -1215,7 +1214,7 @@ function markerClick(latlon){
 					accnoDupleJusoCopy = accnoDupleJuso;
 					deguestIdCopy = deguestId;
 				}
-				
+
 				/*
 				var resultView = "<tr height='30'>"+
 								"<td align='center'>"+index+" "+ strDupleJusoFlg +"</td>"+
@@ -1264,12 +1263,12 @@ function markerClick(latlon){
 	});
 }
 
-// 
+//
 function simpleDeguestInfoUpdate() {
 
 	alert(simpleDeguestInfoList.length);
 	return;
-	
+
 	for(var i=0;i<simpleDeguestInfoList.length;i++){
 		//var selectVehicleNo = $("select[name=order"+i+"]").val();
 		var juso = $("#deguestJuso"+i).val();
@@ -1287,7 +1286,7 @@ function simpleDeguestInfoUpdate() {
 
 		var guestPay = $("#guestPay"+i).val();
 		var accnoDupleJuso = $("#accnoDupleJuso"+i).val();
-		
+
 		// 같은 경로는 변경못하게 처리
 		if(juso==''){
 			alert("주소를 입력하세요.");
@@ -1297,7 +1296,7 @@ function simpleDeguestInfoUpdate() {
 			alert("위도경도를 정확히 입력하세요.");
 			return;
 		}
-		
+
 		simpleDeguestInfoList[i]['seq']				= seq;
 		simpleDeguestInfoList[i]['guestJuso']		= juso;
 		simpleDeguestInfoList[i]['guestLat']		= lat;
@@ -1313,7 +1312,7 @@ function simpleDeguestInfoUpdate() {
 
 		simpleDeguestInfoList[i]['guestPay']		= guestPay;
 		simpleDeguestInfoList[i]['accnoDupleJuso']	= accnoDupleJuso;
-		
+
 	}
 
 	//for(var i=0;i<simpleDeguestInfoList.length;i++){
@@ -1321,7 +1320,7 @@ function simpleDeguestInfoUpdate() {
 	//}
 
 	loadModal();
-	
+
 	var object = new Object();
 	object.simpleDeguestInfoList =  simpleDeguestInfoList;
 	object.deliveryDate = deliveryDate;
@@ -1341,7 +1340,7 @@ function simpleDeguestInfoUpdate() {
 			ajaxGuestMutualDistanceDataGet();
 		}
 		,complete : function(){}
-	});	
+	});
 
 	return;
 }
@@ -1372,11 +1371,11 @@ function addSave(){
 		,data : JSON.stringify(object)
 		,contentType : "application/json"
 		,success : function(result){
-			addVehicleResultData();	
+			addVehicleResultData();
 		}
 		,complete : function(){}
 	});
-	
+
 }
 
 //배송 경로 vehicleOrder,vehicleResult 테이블 데이터 추가
@@ -1388,7 +1387,7 @@ function addVehicleResultData(){
 	object.vehicleGuestOrderDataList =  vehicleGuestOrderDataList;
 	object.deliveryDate = deliveryDate;
 	object.locationId	= locationId;
-	object.meridiemType	= meridiemType; 
+	object.meridiemType	= meridiemType;
 	object.meridiemFlag	= meridiemFlag;
 
 	// ajax 실행부
@@ -1419,124 +1418,20 @@ function addVehicleResultData(){
 }
 //step05. 위 경도 주소 확인시 문제 발견
 function ajaxGuestInfoFailCheck(vehicleOrderData){
-	
+
 	for(var i=0;i<vehicleOrderData.length;i++){
 		var item = vehicleOrderData[i];
 		checkLatLonConvert(item, i, vehicleOrderData.length);
 	}
 }
 
-/* API구버전용
-//위도 경도 변환
-function checkLatLonConvert(item, i, length){
-	var strSerialize = '';
-	
-	strSerialize += "version=1&format=json";
-	strSerialize += "&lat="+item['guestLat'];
-	strSerialize += "&lon="+item['guestLon'];
-	strSerialize += "&addressType="+"A00";
-	strSerialize += "&appKey="+apiKey;
-	strSerialize += "&coordType=WGS84GEO";
-	var result;
-	$.ajax({
-		type: "GET"
-		,url: "https://apis.skplanetx.com/tmap/geo/reversegeocoding"
-		,data : strSerialize
-		,async: true
-		,dataType : "json"
-		,beforeSend : function(xhr){
-		}
-		,success: function(data){
-			var city_do = data.addressInfo.city_do;
-			if(city_do=='대구광역시' || city_do=='경상북도'){
-				
-			} else {
-				ajaxGuestInfoFailUpdate(item['guestId'], item['guestJusoSubId'], item['isShop']);
-			}
-		}
-		,error: function( xhr, status ) {
-			if(xhr.status=='400'){
-				ajaxGuestInfoFailUpdate(item['guestId'], item['guestJusoSubId'], item['isShop']);
-			}
-		}
-		,complete : function(){
-			if(i==length-1){
-				ajaxGuestMutualDistanceDataGet();
-			}
-		}
-	});
-}
-*/
-
-//위도 경도 변환
-function checkLatLonConvert(item, i, length){
-
-	var strSerialize = '';
-	
-	strSerialize += "version=1&format=json";
-	strSerialize += "&lat="+item['guestLat'];
-	strSerialize += "&lon="+item['guestLon'];
-	strSerialize += "&addressType="+"A00";
-	strSerialize += "&appKey="+apiKey;
-	strSerialize += "&coordType=WGS84GEO";
-	var result;
-	$.ajax({
-		type: "GET"
-		,url: "https://api2.sktelecom.com/tmap/geo/reversegeocoding"
-		,data : strSerialize
-		,async: true
-		,dataType : "json"
-		,beforeSend : function(xhr){
-		}
-		,success: function(data){
-			var city_do = data.addressInfo.city_do;
-			if(city_do=='대구광역시' || city_do=='경상북도'){
-				
-			} else {
-				ajaxGuestInfoFailUpdate(item['guestId'], item['guestJusoSubId'], item['isShop']);
-			}
-		}
-		,error: function( xhr, status ) {
-			if(xhr.status=='400'){
-				ajaxGuestInfoFailUpdate(item['guestId'], item['guestJusoSubId'], item['isShop']);
-			}
-		}
-		,complete : function(){
-			if(i==length-1){
-				ajaxGuestMutualDistanceDataGet();
-			}
-		}
-	});
-}
-//step06. 위 경도 주소 확인시 문제 발견 체크 업데이트
-function ajaxGuestInfoFailUpdate(guestId,guestJusoSubId,isShop){
-	// ajax 실행부
-	$.ajaxSettings.traditional = true;
-	$.ajax({
-		 type : "POST"
-		,url : "ajax/checkLatLonUpdate.ajax.php"
-		,async : true	// 동기화처리
-		,data : {
-					"deliveryDate":deliveryDate
-					,"locationId":locationId
-					,"meridiemType":meridiemType
-					,"guestId":guestId
-					,"guestJusoSubId":guestJusoSubId
-					,"isShop":isShop
-					,"isAddVehicle":"Y"
-				}
-		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
-		,success : function(result){}
-		,complete : function(){}
-	});
-}
 /****************************************배송 경로 오류 데이터 처리*************************************************************/
 
 //배송 경로 오류 저장
 function errorSave(){
 
 	if(confirm("배송경로 오류건을 수정하시겠습니까?\n입력되지 않은 좌표정보는 반영되지 않습니다. ")){
-		
+
 		checkBoxStatus();
 
 		for(var i=0;i<vehicleErrorUserList.length;i++){
@@ -1544,7 +1439,7 @@ function errorSave(){
 			var juso = $("#juso"+i).val();
 			var lat = $("#lat"+i).val();
 			var lon = $("#lon"+i).val();
-			
+
 			//if(juso==''){
 			//	alert("주소를 입력하세요.");
 			//	return;
@@ -1553,7 +1448,7 @@ function errorSave(){
 			//	alert("위도경도를 정확히 입력하세요.");
 			//	return;
 			//}
-			
+
 			vehicleErrorUserList[i]['vehicleNo'] = selectVehicleNo;
 			vehicleErrorUserList[i]['guestJuso'] = juso;
 			vehicleErrorUserList[i]['guestLat'] = lat;
@@ -1562,7 +1457,7 @@ function errorSave(){
 		}
 
 		loadModal();
-		
+
 		var object = new Object();
 		object.vehicleErrorUserList =  vehicleErrorUserList;
 		object.deliveryDate = deliveryDate;
@@ -1570,7 +1465,7 @@ function errorSave(){
 		object.meridiemType = meridiemType;
 		object.meridiemFlag = meridiemFlag;
 
-		// ajax 실행부	
+		// ajax 실행부
 		$.ajaxSettings.traditional = true;
 		$.ajax({
 			 type : "POST"
@@ -1585,8 +1480,8 @@ function errorSave(){
 				simpleLoadVehicleList();
 			}
 			,complete : function(){}
-		});	
-	
+		});
+
 	}
 
 	return;
@@ -1609,7 +1504,7 @@ function ajaxGuestMutualDistanceDataGet(){
 				}
 		,async : true		// 동기화처리
 		,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
-		,success : function(data){		
+		,success : function(data){
 			compareJusoData(data);
 		}
 		,complete : function(){}	// complete Event 호출시 사용
@@ -1628,10 +1523,10 @@ function compareJusoData(vehicleGuestInfoData){
 		,async : true	// 동기화처리
 		,data : JSON.stringify(vehicleGuestInfoData)
 		,dataType : "json"
-		,success : function(data){	
-			
+		,success : function(data){
+
 			if(data['vehicleGuestDistanceData']==null){
-				
+
 				removeRoute();
 				simpleLoadVehicleList();
 				//alert('배송경로 오류건에 정보가 업데이트 되었습니다.');
@@ -1648,120 +1543,13 @@ function compareJusoData(vehicleGuestInfoData){
 function initDistanceListData(vehicleGuestDistanceData){
 	for(i=0;i<vehicleGuestDistanceData.length;i++){
 		setDistanceListData(vehicleGuestDistanceData[i], i, vehicleGuestDistanceData.length);
-	}	
-}
-
-/* API구버전
-//주소지점사이 거리 데이터 업데이트(실제)
-function setDistanceListData(vehicleGuestDistanceData, i, len){
-
-	var guestLon = vehicleGuestDistanceData['guestLon'];
-	var guestLat = vehicleGuestDistanceData['guestLat'];
-	var deguestLon = vehicleGuestDistanceData['deguestLon'];
-	var deguestLat = vehicleGuestDistanceData['deguestLat'];
-
-	var guestId = vehicleGuestDistanceData['guestId'];
-	var deguestId = vehicleGuestDistanceData['deguestId'];
-
-	var guestJusoSubId = vehicleGuestDistanceData['guestJusoSubId'];
-	var deguestJusoSubId = vehicleGuestDistanceData['deguestJusoSubId'];
-
-	var guestIsShop = vehicleGuestDistanceData['guestIsShop'];
-	var deguestIsShop = vehicleGuestDistanceData['deguestIsShop'];
-
-	var guestDate = vehicleGuestDistanceData['guestDate'];
-	var deguestDate = vehicleGuestDistanceData['deguestDate'];
-
-	var updateDate = vehicleGuestDistanceData['updateDate'];
-
-	var status = vehicleGuestDistanceData['status'];
-
-	var strSerialize = '';
-	var strTotalDistance;
-	
-	
-	if(guestLon==deguestLon && guestLat==deguestLat){
-		setEqualLocation(vehicleGuestDistanceData,i,len);
-		return;
 	}
-
-	strSerialize += "version=1&format=json";
-	strSerialize += "&startX="+guestLon;
-	strSerialize += "&startY="+guestLat;
-	//strSerialize += "&startName="+encodeURIComponent(varSeq);
-	strSerialize += "&startName="+encodeURIComponent("출발지");
-	strSerialize += "&endX="+deguestLon;
-	strSerialize += "&endY="+deguestLat;
-	strSerialize += "&endName="+encodeURIComponent("도착지");
-	strSerialize += "&appKey="+apiKey;
-	strSerialize += "&searchOption=0";			// 
-	strSerialize += "&reqCoordType=WGS84GEO";	// 
-	strSerialize += "&directionOption=1";		//
-	strSerialize += "&roadType=16";				// 
-
-	var result;
-		
-	$.ajax({
-		type: "GET"
-		,url: "https://apis.skplanetx.com/tmap/routes"
-		,data : strSerialize
-		,async: true
-		,dataType : "json"
-		,beforeSend : function(xhr){
-		}
-		,success: function(data){
-			if(data!=null){
-				var jsonData = JSON.stringify(data);
-				var objFeatures = data['features'];
-				//var jsonData = JSON.stringify(objFeatures[0]['properties']);
-				//var jsonData = JSON.stringify(objFeatures);
-
-				strTotalDistance = objFeatures[0]['properties']['totalDistance'];
-				result = strTotalDistance;
-
-				$.ajaxSettings.traditional = true;
-				$.ajax({
-					url: "ajax/vehicleGuestMutualDistanceProc.ajax.php"
-					,data: {
-								"guestId":guestId
-								,"deguestId":deguestId
-								,"guestLon":guestLon
-								,"guestLat":guestLat
-								,"deguestLon":deguestLon
-								,"deguestLat":deguestLat
-								,"guestJusoSubId":guestJusoSubId
-								,"deguestJusoSubId":deguestJusoSubId
-								,"status":status
-								,"guestDate":guestDate
-								,"deguestDate":deguestDate
-								,"updateDate":updateDate
-								,"guestIsShop":guestIsShop
-								,"deguestIsShop":deguestIsShop
-								,"distance":result
-								,"jsonData":jsonData
-							}
-					,type: "POST"
-					,async : true
-					,dataType : "json"
-					,success: function( json ) {
-					}
-					,error: function( xhr, status ) {
-					}
-					,complete: function( xhr, status ) { 
-						setLoadingNum(i, len);
-					}
-				});	
-			}					
-		}
-		
-	});
-	return result;
 }
-*/
+
 
 //주소지점사이 거리 데이터 업데이트(실제)
 function setDistanceListData(vehicleGuestDistanceData, i, len){
-
+	debugger;
 	var guestLon = vehicleGuestDistanceData['guestLon'];
 	var guestLat = vehicleGuestDistanceData['guestLat'];
 	var deguestLon = vehicleGuestDistanceData['deguestLon'];
@@ -1785,8 +1573,8 @@ function setDistanceListData(vehicleGuestDistanceData, i, len){
 
 	var strSerialize = '';
 	var strTotalDistance;
-	
-	
+
+
 	if(guestLon==deguestLon && guestLat==deguestLat){
 		setEqualLocation(vehicleGuestDistanceData,i,len);
 		return;
@@ -1802,13 +1590,13 @@ function setDistanceListData(vehicleGuestDistanceData, i, len){
 	strSerialize += "&appKey="+apiKey;
 
 	strSerialize += "&searchOption=10";			// 0:교통최적+추천(기본값), 1:교통최적+무료우선, 2:교통최적+최소시간, 3:교통최적+초보, 4:교통최적+고속도로우선, 10:최단
-	strSerialize += "&reqCoordType=WGS84GEO";	// 
+	strSerialize += "&reqCoordType=WGS84GEO";	//
 	strSerialize += "&resCoordType=EPSG3857";
 	strSerialize += "&directionOption=0";		// 0:주행방향 비우선(기본값), 1:주행방향우선
 	strSerialize += "&roadType=16";				// 32:가까운도로(기본값), 16:일반도로, 8:지하도, 4:고가도, 2:도시 고속도로, 1:고속도로, 0:미선택
 
 	var result;
-		
+
 	$.ajax({
 		type: "GET"
 		,url: "https://api2.sktelecom.com/tmap/routes"
@@ -1818,6 +1606,7 @@ function setDistanceListData(vehicleGuestDistanceData, i, len){
 		,beforeSend : function(xhr){
 		}
 		,success: function(data){
+			debugger;
 			if(data!=null){
 				var jsonData = JSON.stringify(data);
 				var objFeatures = data['features'];
@@ -1852,13 +1641,13 @@ function setDistanceListData(vehicleGuestDistanceData, i, len){
 					}
 					,error: function( xhr, status ) {
 					}
-					,complete: function( xhr, status ) { 
+					,complete: function( xhr, status ) {
 						setLoadingNum(i, len);
 					}
-				});	
-			}					
+				});
+			}
 		}
-		
+
 	});
 	return result;
 }
@@ -1913,18 +1702,18 @@ function setEqualLocation(vehicleGuestDistanceData,i,len){
 		,dataType : "json"
 		,success: function( json ) {
 		}
-		,error: function( xhr, status ) {  
+		,error: function( xhr, status ) {
 		}
-		,complete: function( xhr, status ) { 
+		,complete: function( xhr, status ) {
 			setLoadingNum(i,len);
 		}
-	});	
+	});
 }
 
 // 로딩 텍스트 변경
 function setLoadingNum(i,len){
 	$("#loadingDataNum").text(i+" / "+len);
-	
+
 	if(i==len-1){
 		$("#loadingDataNum").text("배송지 좌표정보 업데이트 완료하였습니다.");
 		$("#loading").modal("hide");
@@ -1962,11 +1751,11 @@ function updateVehicleAllocateResult(is){
 				window.location.href = "setCarTest.html?step=6&deliveryDate="+deliveryDate+"&meridiemType="+meridiemType;
 			}
 		}
-		,error: function( xhr, status ) { 
-			//alert("error" + xhr.status); 
+		,error: function( xhr, status ) {
+			//alert("error" + xhr.status);
 		}
 		,complete: function( xhr, status ) {  }
-	});	
+	});
 }
 
 
@@ -1975,7 +1764,7 @@ function updateVehicleAllocateResult(is){
 function jusoConvert(si, gu, dong, bunji, detail, index){
 
 	var strSerialize = '';
-	
+
 	strSerialize += "version=1&format=json";
 	strSerialize += "&city_do="+si;
 	strSerialize += "&gu_gun="+gu;
@@ -1985,7 +1774,7 @@ function jusoConvert(si, gu, dong, bunji, detail, index){
 	strSerialize += "&addressFlag="+"F01";
 	strSerialize += "&appKey="+apiKey;
 	strSerialize += "&coordType=WGS84GEO";
-	
+
 	//strSerialize += "version=1&format=json";
 	//strSerialize += "&city_do="+"대구광역시";
 	//strSerialize += "&gu_gun="+"달서구";
@@ -2005,7 +1794,7 @@ function jusoConvert(si, gu, dong, bunji, detail, index){
 		,beforeSend : function(xhr){
 		}
 		,success: function(data){
-			//alert(JSON.stringify(data));	
+			//alert(JSON.stringify(data));
 			//alert(data.coordinateInfo.newLat+","+data.coordinateInfo.newLon);
 			resultJusoLatLon(data.coordinateInfo.lat,data.coordinateInfo.lon,index);
 		}
@@ -2015,15 +1804,15 @@ function jusoConvert(si, gu, dong, bunji, detail, index){
 		,complete : function(){
 
 		}
-		
-	});	
+
+	});
 }
 */
 
 function jusoConvert(si, gu, dong, bunji, detail, index){
 
 	var strSerialize = '';
-	
+
 	strSerialize += "version=1&format=json";
 	strSerialize += "&city_do="+si;
 	strSerialize += "&gu_gun="+gu;
@@ -2032,7 +1821,7 @@ function jusoConvert(si, gu, dong, bunji, detail, index){
 	strSerialize += "&addressFlag="+"F00";		// F00:구분없음, F01:구주소(지번),	F02:신주소(도로명주소)
 	strSerialize += "&appKey="+apiKey;
 	strSerialize += "&coordType=WGS84GEO";
-	
+
 	var result;
 	$.ajax({
 		type: "GET"
@@ -2056,14 +1845,14 @@ function jusoConvert(si, gu, dong, bunji, detail, index){
 		,complete : function(){
 
 		}
-		
-	});	
+
+	});
 }
 
 /* API구버전용
 function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 	var strSerialize = '';
-	
+
 	strSerialize += "version=1&format=json";
 	strSerialize += "&city_do="+si;
 	strSerialize += "&gu_gun="+gu;
@@ -2073,7 +1862,7 @@ function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 	strSerialize += "&addressFlag="+"F01";
 	strSerialize += "&appKey="+apiKey;
 	strSerialize += "&coordType=WGS84GEO";
-	
+
 	//strSerialize += "version=1&format=json";
 	//strSerialize += "&city_do="+"대구광역시";
 	//strSerialize += "&gu_gun="+"달서구";
@@ -2093,10 +1882,10 @@ function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 		,beforeSend : function(xhr){
 		}
 		,success: function(data){
-			//alert(JSON.stringify(data));	
+			//alert(JSON.stringify(data));
 			//alert(data.coordinateInfo.newLat+","+data.coordinateInfo.newLon);
 			resultJusoLatLonNew(data.coordinateInfo.lat,data.coordinateInfo.lon,index);
-		
+
 		}
 		,error: function( xhr, status ) {
 			if(xhr.status == 400){
@@ -2107,8 +1896,8 @@ function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 		,complete : function(){
 
 		}
-		
-	});	
+
+	});
 }
 */
 
@@ -2135,7 +1924,7 @@ function jusoConvertDelivery(si, gu, dong, bunji, detail, index){
 	strSerialize += "&coordType=WGS84GEO";
 
 
-	
+
 	var result;
 	$.ajax({
 		type: "GET"
@@ -2162,7 +1951,7 @@ function jusoConvertDelivery(si, gu, dong, bunji, detail, index){
 		,complete : function(){
 
 		}
-	});	
+	});
 }
 
 
@@ -2176,7 +1965,7 @@ function searchJusoNewRe(strJuso, strAccno, nIndex, nLength){
 	}
 	var arrJuso = $("#deguestJuso"+nIndex).val().split(" ");
 	*/
-	
+
 	//alert(strJuso);
 
 	if(strJuso == ''){
@@ -2195,10 +1984,10 @@ function searchJusoNewRe(strJuso, strAccno, nIndex, nLength){
 	var dong	= arrJuso[2];
 	var bunji	= arrJuso[3];
 	var detail	= arrJuso[4] + ' ' + arrJuso[5];
-	
+
 	jusoConvertNewAddrRe(strAccno, si, gu, dong, bunji, detail, nIndex, nLength);
 
-	
+
 }
 
 //주소 경로 검색
@@ -2219,9 +2008,9 @@ function searchJusoNew(nIndex){
 	var dong	= arrJuso[2];
 	var bunji	= arrJuso[3];
 	var detail	= arrJuso[4] + ' ' + arrJuso[5];
-	
+
 	jusoConvertNewAddr(si, gu, dong, bunji, detail, nIndex);
-	
+
 }
 
 function jusoConvertNewAddrRe(accno, si, gu, dong, bunji, detail, index, length){
@@ -2236,7 +2025,7 @@ function jusoConvertNewAddrRe(accno, si, gu, dong, bunji, detail, index, length)
 	strSerialize += "&addressFlag="+"F00";		// F00:구분없음, F01:구주소(지번),	F02:신주소(도로명주소)
 	strSerialize += "&appKey="+apiKey;
 	strSerialize += "&coordType=WGS84GEO";
-	
+
 	var result;
 	$.ajax({
 		type: "GET"
@@ -2273,7 +2062,7 @@ function jusoConvertNewAddrRe(accno, si, gu, dong, bunji, detail, index, length)
 		,complete : function(){
 			setLoadingNum(index, length);
 		}
-	});	
+	});
 }
 
 
@@ -2283,7 +2072,7 @@ function erpUpdateGeoCoding(accno, lat, lon){
 	// DevX : lon
 	// DevY : lat
 
-	
+
 	// ajax 실행부
 	$.ajaxSettings.traditional = true;
 	$.ajax({
@@ -2315,7 +2104,7 @@ function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 	strSerialize += "&addressFlag="+"F00";		// F00:구분없음, F01:구주소(지번),	F02:신주소(도로명주소)
 	strSerialize += "&appKey="+apiKey;
 	strSerialize += "&coordType=WGS84GEO";
-	
+
 	var result;
 	$.ajax({
 		type: "GET"
@@ -2342,13 +2131,96 @@ function jusoConvertNewAddr(si, gu, dong, bunji, detail, index){
 		,complete : function(){
 
 		}
-	});	
+	});
 }
 
 function onlyNumber(obj) {
     $(obj).keyup(function(){
          $(this).val($(this).val().replace(/[^0-9]/g,""));
-    }); 
+    });
 }
 
 
+
+//***********************************************이승우*******************************************************//
+function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo) {
+	var locations = {};
+	for(let i=0; i < viaPoints.length; i++){
+		locations[viaPoints[i].viaPointId] = {}
+		locations[viaPoints[i].viaPointId].lat = viaPoints[i].viaX
+		locations[viaPoints[i].viaPointId].lon = viaPoints[i].viaY
+	}
+
+	var start = {lat: "35.929894", lon: "128.539506"};
+
+	var headers = {};
+	headers["appKey"] = "0de9ecde-b87c-404c-b7f8-be4ed7b85d4f";
+
+	$.ajax({
+		type: "POST",
+		headers: headers,
+		url: "https://apis.openapi.sk.com/tmap/routes/routeOptimization30?version=1&format=json",
+		async: false,
+		contentType: "application/json",
+		data: JSON.stringify({
+			"reqCoordType": "WGS84GEO",
+			"resCoordType": "EPSG3857",
+			"startName": "출발",
+			"startX": start.lon,
+			"startY": start.lat,
+			"startTime": "201711121314",
+			"endName": "도착",
+			"endX": start.lon,
+			"endY": start.lat,
+			"searchOption": "0",
+			"viaPoints": viaPoints
+		}),
+		success: function (response) {
+            var jsonData = JSON.stringify(response); // index가 0인 첫번째에 들어감
+            var indexs = [];
+            console.log(refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo);
+			var resultFeatures = response.features;
+
+			for (var i in resultFeatures) {
+				var geometry = resultFeatures[i].geometry;
+				var properties = resultFeatures[i].properties;
+
+				if (geometry.type === "LineString") {
+				    console.log(properties.viaPointId, properties.index);
+				    if(locations[properties.viaPointId]){
+						temp = {id: properties.viaPointId, index: properties.index};
+						indexs.push(temp);
+					}
+				}
+			}
+
+
+			$.ajax({
+				type : "POST"
+				,url : "../process/my_insertResult.ajax.php"
+				,async : true		// 동기화처리
+				,data : {
+				    "jsonData": jsonData
+				    ,"indexs": indexs
+                    ,"deliveryDate":refDeliveryDate
+					,"locationId":locationId
+					,"meridiemType":refMeridiemType
+					,"meridiemFlag":refMeridiemFlag
+					,"vehicleNo":refVehicleNo
+				}
+				,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
+				,success : function(data){
+					window.location.reload();
+					$("#loading").modal("hide");
+				}
+				,error: function( xhr, status ) {$("#loading").modal("hide");}
+				,complete : function(){ }
+			});
+
+		},
+		error: function (request, status, error) {
+			console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+		}
+	});
+
+}
