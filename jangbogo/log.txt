@@ -1,260 +1,298 @@
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+2020-09-11 15:40:03 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='321794' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-08' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='0'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:42:15 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='546294' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-08' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='0'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 502199
+index : 1
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 568453
+index : 2
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 550640
+index : 3
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 345368
+index : 4
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343267
+index : 5
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 514892
+index : 6
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 336374
+index : 7
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 345422
+index : 8
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 489612
+index : 9
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 502967
+index : 10
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343295
+index : 11
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 511604
+index : 12
+}
+2020-09-11 15:42:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 342253
+index : 13
+}
+2020-09-11 15:45:39 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='345440' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-08' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='0'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 342253
+index : 1
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 511604
+index : 2
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 343295
+index : 3
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 502967
+index : 4
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 550640
+index : 5
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 345368
+index : 6
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 343267
+index : 7
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 489612
+index : 8
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 345422
+index : 9
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 336374
+index : 10
+}
+2020-09-11 15:45:40 /process/my_insertResult.ajax.php ==> Array { 
+id : 514892
+index : 11
+}
+2020-09-11 15:45:41 /process/my_insertResult.ajax.php ==> Array { 
+id : 343610
+index : 12
+}
+2020-09-11 15:45:41 /process/my_insertResult.ajax.php ==> Array { 
+id : 385341
+index : 13
+}
+2020-09-11 15:45:41 /process/my_insertResult.ajax.php ==> Array { 
+id : 568453
+index : 14
+}
+2020-09-11 15:45:41 /process/my_insertResult.ajax.php ==> Array { 
+id : 502199
+index : 15
+}
+2020-09-11 15:46:05 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='472968' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-08' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='1'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 333762
+index : 1
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 439372
+index : 2
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 344594
+index : 3
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 458369
+index : 4
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 340275
+index : 5
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 523130
+index : 6
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 344217
+index : 7
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 344840
+index : 8
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 342717
+index : 9
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 338678
+index : 10
+}
+2020-09-11 15:46:06 /process/my_insertResult.ajax.php ==> Array { 
+id : 289395
+index : 11
+}
+2020-09-11 15:47:09 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='admin' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-02' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='0'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 550640
+index : 1
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 393696
+index : 2
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 472160
+index : 3
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 340178
+index : 4
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 343576
+index : 5
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 536340
+index : 6
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 538421
+index : 7
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 345450
+index : 8
+}
+2020-09-11 15:47:10 /process/my_insertResult.ajax.php ==> Array { 
+id : 318256
+index : 9
+}
+2020-09-11 15:47:34 /process/my_vehicleAllocateResultMap.ajax.php ==>  SELECT DISTINCT(vehicleAllocateResult.vr_deguestId) AS viaPointId,
+					vr_deguestName		AS viaPointName,
+					vehicleAllocateResult.vr_deguestLon AS viaX, 
+					vehicleAllocateResult.vr_deguestLat AS viaY
 					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='343963' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='436301' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='405441' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='517141' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:55:48 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='343629' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='343629' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='517141' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='405441' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='436301' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='343963' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='admin' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='472968' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='345440' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='546294' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
-2020-09-11 10:57:39 /process/my_insertResult.ajax.php ==>  SELECT 
-                    vehicleAllocateResult.vr_vehicleNoIndex,
-					vehicleAllocateResult.vr_deguestId
-					FROM vehicleAllocateResult
-                    
-                WHERE 1=1
-                AND vr_deguestId ='321794' 
-                AND vr_deliveryDate='2020-09-11' 
-                AND vr_meridiemType='0' 
-                AND vr_meridiemFlag='1' 
-                AND vr_locationId='3'
-                AND vr_vehicleNo='3' 
-            
+                    WHERE 1=1
+                    AND vr_deliveryDate='2020-09-02' 
+                    AND vr_meridiemType='1' 
+                    AND vr_meridiemFlag='1' 
+                    AND vr_locationId='3'
+                    AND vr_vehicleNo='2'
+                    AND vr_deguestName NOT IN ('guestName', 'admin')
+                    ORDER BY vr_vehicleNo*1 ASC, vr_vehicleNoIndex*1 ASC
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343566
+index : 1
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343602
+index : 2
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343817
+index : 3
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 487427
+index : 4
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 547058
+index : 5
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 343565
+index : 6
+}
+2020-09-11 15:47:35 /process/my_insertResult.ajax.php ==> Array { 
+id : 402622
+index : 7
+}
