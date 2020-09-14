@@ -49,6 +49,7 @@ $output;
 $return_var;
 //$exePath = "../tsptest/TSP ".$deliveryDate." ".$meridiemType." ".$locationId." ".$vehicleCount;
 $exePath = "../tsptest/TSP_wolbae ".$deliveryDate." ".$meridiemType." ".$meridiemFlag." ".$locationId." ".$vehicleCount;
+//$exePath = "../tsptest/TSP_wolbae ".$deliveryDate." ".$meridiemType." ".$meridiemFlag." ".$locationId." ".$vehicleCount." &> /dev/null &";
 
 exec($exePath, $output, $return_var);
 

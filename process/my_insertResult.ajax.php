@@ -27,6 +27,7 @@ $json = new Json();
 //- - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - - + - -
 $jsonData = $_POST["jsonData"];    // 배송날짜
 $indexs = $_POST["indexs"];    // 배송날짜
+$totalDistance = $_POST["totalDistance"];    // 배송날짜
 $deliveryDate = $_POST["deliveryDate"];    // 배송날짜
 $locationId = $_POST["locationId"];        // 거점ID
 $meridiemType = $_POST["meridiemType"];    // 오전,오후
@@ -46,7 +47,9 @@ $WHERE = "
 $db->que = "DELETE FROM vehicleAllocateResult ".$WHERE;
 $db->query();
 
+
 foreach ($indexs as $index) {
+    LIB::PLog($index);
     $WHERE = "
                 WHERE 1=1
                 AND vr_deguestId ='" . $index['id'] . "' 
@@ -68,6 +71,7 @@ foreach ($indexs as $index) {
 
         $DATA["vr_vehicleNoIndex"] = intval($index['index']) - 1;
         $DATA["vr_jsonData"] = $firstIndexFalg ? $jsonData : null;
+        $DATA["vr_distanceValue"] = $firstIndexFalg ? intval($totalDistance) : 0;
 
         $db->Update("vehicleAllocateResult", $DATA, $WHERE, " vehicleAllocateResult UPDATE Error ");
         $firstIndexFalg = false;

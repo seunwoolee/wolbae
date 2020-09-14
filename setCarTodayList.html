@@ -50,23 +50,10 @@ while($row = $db->getRow()){
 }
 
 
-//월 배차 조회
-/*************************************************************************************
 $db->que = "SELECT 		vr_deliveryDate AS deliveryDate
-						,sum(vr_distanceValue)	AS distanceValue
-						,count(vr_seq)			AS count
-						,sum(vr_deguestPay)		AS pay
-							FROM vehicleAllocateResult 
-							WHERE vr_deliveryDate = '".$today."' AND 
-									vr_meridiemType='".$meridiemType."' AND 
-									vr_locationId='".$locationId."' 
-							GROUP BY vr_deliveryDate 
-							ORDER BY vr_deliveryDate DESC"; 
-*************************************************************************************/
-$db->que = "SELECT 		vr_deliveryDate AS deliveryDate
-						,sum(vr_distanceValue)	AS distanceValue
-						,count(vr_seq)			AS count
-						,sum(vr_deguestPay)		AS pay
+						,sum(vr_distanceValue) AS distanceValue
+						,Count(DISTINCT(vehicleAllocateResult.vr_deguestId)) AS count
+						,sum(vr_deguestPay) AS pay
 						,vr_meridiemFlag
 							FROM vehicleAllocateResult 
 							WHERE 1=1 

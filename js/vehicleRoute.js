@@ -2151,6 +2151,8 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 		locations[viaPoints[i].viaPointId].lon = viaPoints[i].viaY
 	}
 
+	debugger;
+
 	var start = {lat: "35.929894", lon: "128.539506"};
 
 	var headers = {};
@@ -2176,16 +2178,17 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 			"viaPoints": viaPoints
 		}),
 		success: function (response) {
+			debugger;
             var jsonData = JSON.stringify(response); // index가 0인 첫번째에 들어감
             var indexs = [];
-            console.log(refDeliveryDate, refMeridiemType, refMeridiemFlag, refVehicleNo);
 			var resultFeatures = response.features;
+			var totalDistance = response.properties.totalDistance;
 
 			for (var i in resultFeatures) {
 				var geometry = resultFeatures[i].geometry;
 				var properties = resultFeatures[i].properties;
 
-				if (geometry.type === "LineString") {
+				if (geometry.type === "Point") {
 				    console.log(properties.viaPointId, properties.index);
 				    if(locations[properties.viaPointId]){
 						temp = {id: properties.viaPointId, index: properties.index};
@@ -2202,6 +2205,7 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 				,data : {
 				    "jsonData": jsonData
 				    ,"indexs": indexs
+				    ,"totalDistance": totalDistance
                     ,"deliveryDate":refDeliveryDate
 					,"locationId":locationId
 					,"meridiemType":refMeridiemType

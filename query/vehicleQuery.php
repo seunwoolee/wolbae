@@ -55,7 +55,6 @@ class VehicleQuery
 												AND vr_locationId='".$locationId."' 
 												AND vr_deguestName <> 'guestName'
 												AND vr_vehicleNo='".$i."'";
-//			LIB::PLog($this->db->que);
 			$this->db->query();
 			$row = $this->db->getRows();
 

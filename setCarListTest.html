@@ -57,15 +57,76 @@ var vehicleAllocateResultList_new = ""; //전체 경로
 var strCheckBoxRoute;			// 채크박스 - 경로채크상태값 저장용
 var bCheckBoxAll;				// 채크박스 - 전체경로채크상태값 저장용
 var bCheckBoxLineRemove;		// 채크박스 - 지도 경로선제거 상태값 저장용
+var maxRouteNumber = 0;
 
 $(document).ready(function(){
 	$("#loadingDataNum").text("잠시만 기다려 주세요.");
 
 	loadModal();
+	getMissingOrder();
 	loadVehicleList(); // initView() 여기에 포함시켰습니다.
 	//initView();
 	initData();
 });
+
+function saveMissingOrder() {
+	var guestId = $('#guestId').val();
+	var routeNumber = $('#routeNumber option:selected').val();
+	
+	console.log(guestId, routeNumber); 
+	$.ajax({
+		type : "POST"
+		,url : "process/my_insertMissingOrder.ajax.php"
+		,async : true
+		,data : {
+				 "guestId":guestId,
+				 "routeNumber":routeNumber
+				}
+		,dataType : "json"
+		,success : function(data){alert("수정 완료");}
+		,error: function( xhr, status ) {alert("실패");}
+		,complete : function(){ }
+	});	
+}
+
+
+function onMissingOrderClicked(guestId) {
+	$('#guestId').val(guestId);
+	$('#missingOrderModal').modal('show');
+}
+
+function getMissingOrder() {
+	$.ajax({
+		type : "POST"
+		,url : "process/my_getMissingOrder.ajax.php"
+		,async : true
+		,data : {
+					"deliveryDate":"<?php echo $deliveryDate; ?>"
+					,"locationId":"<?php echo $locationId; ?>"
+					,"meridiemType":"<?php echo $meridiemType; ?>"
+				}
+		,dataType : "json"
+		,success : function(data){
+			
+			maxRouteNumber = data.maxRouteNumber; 	
+			$.each(data.missingOrders, function(index, row){
+				var li = '<li class="list-group-item" style="cursor: pointer" onclick="onMissingOrderClicked(\'' +row.ve_guestId+ '\');">' + row.ve_guestName + '</li>';
+				$('.missing-group').append(li);
+			})
+			
+			for(var i = 1; i <= maxRouteNumber; i++){
+				var option = $("<option value="+i+">"+i+"</option>");
+				$('#routeNumber').append(option);
+			}
+			
+		}
+		,error: function( xhr, status ) {$("#loading").modal("hide");}
+		,complete : function(){ }
+	});	
+}
+
+
+
 
 //로딩 뷰
 function loadModal() {
@@ -257,7 +318,6 @@ function reset() {
 
 // 브라우저 새로고침없이, 데이터 갱신하긔 ( callBack 사용 )
 function loadVehicleList(complete_call){
-	debugger;
 	complete_call = complete_call || function(){ initView(); };
 	$('#col-md-3').load("ajax/vehicleList.ajax.php", {
 														"deliveryDate" : deliveryDate
@@ -1237,6 +1297,16 @@ function printPopup(){
 	
 	<div id="col-md-3" class="col-md-3">
 	</div>
+	
+	<div id="col-md-3" class="col-md-3">
+		<div class="card">
+		  <div class="cardTitle">
+			<span class="titCard">누락된 주문</span>
+		  </div>
+		  <ul class="missing-group">
+		  </ul>
+		</div>
+	</div>
 
 	<script>
 	$(document).ready(function(){
@@ -1663,6 +1733,31 @@ $(document).on("change","#chgColor",function(){
 		</div>
 	</div>
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="missingOrderModal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">누락 주문 추가</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+			<input id="guestId" type="hidden" name="guestId"></input>
+			<label for="exampleFormControlSelect1">경로를 선택해주세요</label>
+			<select name="routeNumber" class="form-control form-control-lg" id="routeNumber"></select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" onclick="saveMissingOrder();">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
 

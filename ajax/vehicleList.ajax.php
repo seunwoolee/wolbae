@@ -121,28 +121,32 @@ for($i=0;$i<count($resultGroupListDataSe);$i++){
 							<div class="tripDetails">
 								<div class="middleBox">
 									<div class="distance stat">'.$distance.'</div>
-									<div class="duration stat">'.((int)$row['count']-1).$strDupleFlg.'건</div>
+									<div class="duration stat">'.((int)$row['count']).$strDupleFlg.'건</div>
 									<div class="totalPrice stat">'.number_format($resultListDataSumPay[$i]['nSumPay']).' 원</div>
 								</div>
 							</div>
 						</div>
 					</a>
 				</div>';
-	
-	/*
-	$LIST .= "<tr height='30'>
-				<td align='center'>
-					<input type='checkbox' id='map".$vectorNoCount."' name='map[".$vectorNoCount."]' class='setCarItem' style='margin:0;' onchange='checkListData(".$vectorNoCount.");' vertical-align:'middle' /> <b>".$number." 경로</b> <font style='color:".$color."'>■</font>
-				</td>
-				<!-- <td align='center' style='cursor:pointer' onclick='detail(".$row['vehicleNo'].",".$row['meridiemFlag'].");'></td> -->
-				<td align='center' style='cursor:pointer' onclick='detail(".$row['vehicleNo'].",".$row['meridiemFlag'].");'>".$distance."</td>
-				<td align='center' style='cursor:pointer' onclick='detail(".$row['vehicleNo'].",".$row['meridiemFlag'].");'>".((int)$row['count']-1).$strDupleFlg."</td>
-				<!-- <td align='center' style='cursor:pointer' onclick='vehicleRelocation(\"".$row['deliveryDate']."\",\"".$meridiemType."\",\"".$row['meridiemFlag']."\",\"".$row['vehicleNo']."\");'>리셋</td> -->
-				".$listReset."
-				<td align='center' style='cursor:pointer' onclick='detail(".$row['vehicleNo'].",".$row['meridiemFlag'].");'><b>".number_format($resultListDataSumPay[$i]['nSumPay'])." 원</b></td>
-			 </tr>";
-	*/
-				//<td align='center' style='cursor:pointer' onclick='detail(".$row['vehicleNo'].");'><b>".number_format($row['deguestPay'])." 원</b></td>
+//	$LIST2 .= '<div class="listItem checkItem">'.$listReset.'<span class="driveCheck">
+//					<label class="driveLabel" style="background:'.$color.'">
+//						<input type="checkbox" id="map'.$vectorNoCount.'" name="map['.$vectorNoCount.']" class="setCarItem" style="margin:0;" onchange="checkListData('.$vectorNoCount.');" vertical-align:"middle" checked="true" /> 선택
+//					</label></span>
+//					<a href="javascript:;" onclick="detail('.$row['vehicleNo'].','.$row['meridiemFlag'].');">
+//						<div class="driveIndex"><img src="images/icon/marker_'.$row['vehicleNo'].'.png" width="12" /><strong style="margin-left:5px; color:'.$color.'">'.$number.'경로</strong>
+//						</div>
+//						<div class="trip">
+//							<div class="tripDetails">
+//								<div class="middleBox">
+//									<div class="distance stat">'.$distance.'</div>
+//									<div class="duration stat">'.((int)$row['count']-1).$strDupleFlg.'건</div>
+//									<div class="totalPrice stat">'.number_format($resultListDataSumPay[$i]['nSumPay']).' 원</div>
+//								</div>
+//							</div>
+//						</div>
+//					</a>
+//				</div>';
+
 	$vectorNoCount++;
 }
 
