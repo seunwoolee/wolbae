@@ -73,13 +73,15 @@ function saveMissingOrder() {
 	var guestId = $('#guestId').val();
 	var routeNumber = $('#routeNumber option:selected').val();
 	
-	console.log(guestId, routeNumber); 
 	$.ajax({
 		type : "POST"
 		,url : "process/my_insertMissingOrder.ajax.php"
 		,async : true
 		,data : {
 				 "guestId":guestId,
+				 "deliveryDate":deliveryDate,
+				 "locationId":locationId,
+				 "meridiemType":meridiemType,
 				 "routeNumber":routeNumber
 				}
 		,dataType : "json"

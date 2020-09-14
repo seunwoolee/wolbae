@@ -36,28 +36,41 @@ $routeNumber = $_POST["routeNumber"];
 
 $WHERE = "
 			WHERE 1=1
-			AND ve_deguestId ='" . $guestId . "' 
+			AND ve_guestId ='" . $guestId . "' 
 			AND ve_deliveryDate='" . $deliveryDate . "' 
 			AND ve_meridiemType='" . $meridiemType . "' 
 			AND ve_locationId='" . $locationId . "'
 		";
 			
-$db->que = " SELECT * FROM vehicleGuestOrderData " + $WHERE;
+$db->que = " SELECT * FROM vehicleGuestOrderData $WHERE";
+
 $db->query();
-$order = $db->getRow();
+$orders = $db->getRows();
+LIB::PLog($orders);
 
+for($i=0; $i<count($orders); $i++)
+{
+	$DATA["vr_deliveryDate"]			= $orders[$i]['ve_deliveryDate'];
+	$DATA["vr_meridiemType"]			= $orders[$i]['ve_meridiemType'];
+	$DATA["vr_deguestAccno"]			= $orders[$i]['ve_accno'];
+	$DATA["vr_deguestName"]			= $orders[$i]['ve_guestName'];
+	$DATA["vr_deguestPay"]			= $orders[$i]['ve_pay'];
+	$DATA["vr_deguestId"]			= $orders[$i]['ve_guestId'];
+	$DATA["vr_deguestLat"]			= $orders[$i]['ve_guestLat'];
+	$DATA["vr_deguestLon"]			= $orders[$i]['ve_guestLon'];
+	$DATA["vr_Juso"]			= $orders[$i]['ve_guestJuso'];
+	$DATA["vr_locationId"]			= $orders[$i]['ve_locationId'];
+	$DATA["vr_distanceValue"]			= 0;
+	$DATA["vr_meridiemFlag"]			= '1';
+	$DATA["vr_vehicleNo"]			= intval($routeNumber) - 1;
+	$DATA["vr_vehicleNoIndex"]			= 100;
+	
+	$DATA["vr_deguestJusoSubId"]			= '1';
+	$DATA["vr_deguestIsShop"]			= '0';
 
-$DATA["vg_guestId"]			= $order['guestId'];
-$DATA["vg_guestId"]			= $order['guestId'];
-$DATA["vg_guestId"]			= $order['guestId'];
-$DATA["vg_guestId"]			= $order['guestId'];
-$DATA["vg_guestId"]			= $order['guestId'];
-
-if((empty($vehicleGuestOrderDataList[$i]['guestJuso'])) || ($vehicleGuestOrderDataList[$i]['guestLat']==0) || ($vehicleGuestOrderDataList[$i]['guestLon']==0)){
-	$DATA["vg_isJuso"]			= "N";
+	$db->Insert("vehicleAllocateResult", $DATA, " vehicleGuestInfo Insert Error ");		
 }
 
-$db->Insert("vehicleGuestInfo", $DATA, " vehicleGuestInfo Insert Error ");
 
 
 
