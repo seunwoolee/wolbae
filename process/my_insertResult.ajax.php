@@ -38,7 +38,7 @@ $firstIndexFalg = true;
 
 $WHERE = "
                 WHERE 1=1
-                AND vr_deguestName IN ('admin', 'guestName') 
+                AND vr_deguestName IN ('admin', 'guestName', 'chilgok') 
                 AND vr_deliveryDate='" . $deliveryDate . "' 
                 AND vr_meridiemType='" . $meridiemType . "' 
                 AND vr_locationId='" . $locationId . "'

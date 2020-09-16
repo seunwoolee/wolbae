@@ -807,7 +807,8 @@ function GuestAllocateResult(){
 				}
 				$("#loading").modal("hide");
 				var meridiemType = $("button[name='select-time']").text();
-				window.location.href="setCarListTest.html?deliveryDate="+deliveryDate+"&meridiemType="+meridiemType+"&locationId="+locationId+"&meridiemFlag="+meridiemFlag;
+				// window.location.href="setCarListTest.html?deliveryDate="+deliveryDate+"&meridiemType="+meridiemType+"&locationId="+locationId+"&meridiemFlag="+meridiemFlag;
+				window.location.href="setCarTodayList.html";
 
 			},
 			error: function( xhr, status ) { },

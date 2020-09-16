@@ -47,11 +47,10 @@ $db->query();
 //2. 리눅스를 통한 TCP 배차 실행
 $output;
 $return_var;
-//$exePath = "../tsptest/TSP ".$deliveryDate." ".$meridiemType." ".$locationId." ".$vehicleCount;
 $exePath = "../tsptest/TSP_wolbae ".$deliveryDate." ".$meridiemType." ".$meridiemFlag." ".$locationId." ".$vehicleCount;
-//$exePath = "../tsptest/TSP_wolbae ".$deliveryDate." ".$meridiemType." ".$meridiemFlag." ".$locationId." ".$vehicleCount." &> /dev/null &";
 
-exec($exePath, $output, $return_var);
+exec($exePath." > /dev/null 2>/dev/null &", $output, $return_var);
+
 
 if($return_var=='0'){
 	$json->add("code", "Y");
