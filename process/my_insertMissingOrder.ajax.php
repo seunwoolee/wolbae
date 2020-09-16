@@ -43,6 +43,7 @@ $WHERE = "
 		";
 			
 $db->que = " SELECT * FROM vehicleGuestOrderData $WHERE";
+LIB::PLog($db->que);
 
 $db->query();
 $orders = $db->getRows();
@@ -63,7 +64,7 @@ for($i=0; $i<count($orders); $i++)
 	$DATA["vr_distanceValue"]			= 0;
 	$DATA["vr_meridiemFlag"]			= '1';
 	$DATA["vr_vehicleNo"]			= intval($routeNumber) - 1;
-	$DATA["vr_vehicleNoIndex"]			= 100;
+	$DATA["vr_vehicleNoIndex"]			= 998;
 	
 	$DATA["vr_deguestJusoSubId"]			= '1';
 	$DATA["vr_deguestIsShop"]			= '0';

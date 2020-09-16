@@ -813,7 +813,7 @@ function GuestAllocateResult(){
 			error: function( xhr, status ) { },
 			complete: function( xhr, status ) { }
 		});
-		
+
 	} else {
 		return false;
 	}	

@@ -38,7 +38,7 @@ $initGuestId	= $companyInfo['ci_guestId'];
 <script src="https://api2.sktelecom.com/tmap/js?version=1&format=javascript&appKey=<?php echo $define_APIKEY; ?>"></script>
 <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=<?php echo $define_APIKEY; ?>"></script>
 <script type="text/javascript" src="js/colorcode.js"></script>
-<script type="text/javascript" src="js/vehicleRoute.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/vehicleRoute.js?v=2" charset="utf-8"></script>
 <script>
 
 var deliveryDate	= "<?=$deliveryDate?>";		// 배송날짜
@@ -72,7 +72,7 @@ $(document).ready(function(){
 function saveMissingOrder() {
 	var guestId = $('#guestId').val();
 	var routeNumber = $('#routeNumber option:selected').val();
-	
+
 	$.ajax({
 		type : "POST"
 		,url : "process/my_insertMissingOrder.ajax.php"
@@ -85,7 +85,14 @@ function saveMissingOrder() {
 				 "routeNumber":routeNumber
 				}
 		,dataType : "json"
-		,success : function(data){alert("수정 완료");}
+		,success : function(data){
+			window.location.reload();
+			// removeRoute();
+			// simpleLoadVehicleList();
+			// $('#missingOrderModal').modal('hide');
+			// $('.missing-group').append(li);
+			// alert("수정 완료");
+		}
 		,error: function( xhr, status ) {alert("실패");}
 		,complete : function(){ }
 	});	
@@ -109,17 +116,22 @@ function getMissingOrder() {
 				}
 		,dataType : "json"
 		,success : function(data){
-			
-			maxRouteNumber = data.maxRouteNumber; 	
-			$.each(data.missingOrders, function(index, row){
-				var li = '<li class="list-group-item" style="cursor: pointer" onclick="onMissingOrderClicked(\'' +row.ve_guestId+ '\');">' + row.ve_guestName + '</li>';
-				$('.missing-group').append(li);
-			})
-			
-			for(var i = 1; i <= maxRouteNumber; i++){
-				var option = $("<option value="+i+">"+i+"</option>");
-				$('#routeNumber').append(option);
+			$('.missing-group').empty();
+			maxRouteNumber = data.maxRouteNumber;
+			if(data.missingOrders){
+				$.each(data.missingOrders, function(index, row){
+					var li = '<li class="list-group-item" style="cursor: pointer" onclick="onMissingOrderClicked(\'' +row.ve_guestId+ '\');">' + row.ve_guestName + '</li>';
+
+					console.log(li);
+					$('.missing-group').append(li);
+				})
+
+				for(var i = 1; i <= maxRouteNumber; i++){
+					var option = $("<option value="+i+">"+i+"</option>");
+					$('#routeNumber').append(option);
+				}
 			}
+
 			
 		}
 		,error: function( xhr, status ) {$("#loading").modal("hide");}

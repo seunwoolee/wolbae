@@ -35,21 +35,30 @@ $meridiemFlag = $_POST["meridiemFlag"];    // 오전,오후 분할 플래그
 $vehicleNo = $_POST["vehicleNo"];
 $firstIndexFalg = true;
 
+
 $WHERE = "
                 WHERE 1=1
                 AND vr_deguestName IN ('admin', 'guestName') 
                 AND vr_deliveryDate='" . $deliveryDate . "' 
                 AND vr_meridiemType='" . $meridiemType . "' 
-                AND vr_meridiemFlag='" . $meridiemFlag . "' 
                 AND vr_locationId='" . $locationId . "'
-                AND vr_vehicleNo='" . $vehicleNo . "' 
             ";
+
+// $WHERE = "
+                // WHERE 1=1
+                // AND vr_deguestName IN ('admin', 'guestName') 
+                // AND vr_deliveryDate='" . $deliveryDate . "' 
+                // AND vr_meridiemType='" . $meridiemType . "' 
+                // AND vr_meridiemFlag='" . $meridiemFlag . "' 
+                // AND vr_locationId='" . $locationId . "'
+                // AND vr_vehicleNo='" . $vehicleNo . "' 
+            // ";
+
 $db->que = "DELETE FROM vehicleAllocateResult ".$WHERE;
 $db->query();
 
 
 foreach ($indexs as $index) {
-    LIB::PLog($index);
     $WHERE = "
                 WHERE 1=1
                 AND vr_deguestId ='" . $index['id'] . "' 

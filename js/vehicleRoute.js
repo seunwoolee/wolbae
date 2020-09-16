@@ -2178,7 +2178,6 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 			"viaPoints": viaPoints
 		}),
 		success: function (response) {
-			debugger;
             var jsonData = JSON.stringify(response); // index가 0인 첫번째에 들어감
             var indexs = [];
 			var resultFeatures = response.features;
@@ -2197,6 +2196,7 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 				}
 			}
 
+			debugger;
 
 			$.ajax({
 				type : "POST"
@@ -2214,7 +2214,9 @@ function getReRouteByTmap(viaPoints, refDeliveryDate, refMeridiemType, refMeridi
 				}
 				,dataType : "json"	// 응답의 결과로 반환되는 데이터의 종류
 				,success : function(data){
-					window.location.reload();
+					removeRoute();
+					simpleLoadVehicleList();
+					// window.location.reload();
 					$("#loading").modal("hide");
 				}
 				,error: function( xhr, status ) {$("#loading").modal("hide");}
